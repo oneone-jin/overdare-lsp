@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as os from "os";
-import { fetch } from "undici";
+
 import {
   CloseAction,
   CloseHandlerResult,

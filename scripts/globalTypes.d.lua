@@ -19345,3 +19345,10 @@ declare function PluginManager(): PluginManager
 @[deprecated {use = 'game:GetService("DebuggerManager")'}]
 declare function DebuggerManager(): DebuggerManager
 
+declare extern type ODPlayer with
+    Name: string
+    Health: number
+    function Kick(self, reason: string): ()
+end
+
+declare player: ODPlayer
