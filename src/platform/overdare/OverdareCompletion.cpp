@@ -1,5 +1,6 @@
 #include "Platform/OverdarePlatform.hpp"
 
+#include <algorithm>
 #include <unordered_set>
 
 #include "Luau/TimeTrace.h"
@@ -202,6 +203,46 @@ std::optional<Luau::AutocompleteEntryMap> OverdarePlatform::completionCallback(
     }
 
     return std::nullopt;
+}
+
+void OverdarePlatform::handleCompletion(
+    const TextDocument& textDocument, const Luau::SourceModule& module, Luau::Position position, std::vector<lsp::CompletionItem>& items)
+{
+    // Type-annotation completion (`local x: |`, etc.) is Luau core's own autocomplete
+    // behaviour, not something routed through completionCallback's tag system - so unlike
+    // GetService/Instance.new/IsA, there's no metadata whitelist hook for it upstream. Post-
+    // filter here instead: drop any suggested Instance-derived class name that isn't a real
+    // OVERDARE class, leaving non-Instance types (Vector3, CFrame, generic aliases, etc.)
+    // alone since CLASSES only enumerates Instance subclasses.
+    std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
+    if (!metadata.has_value() || metadata->CLASSES.empty())
+        return;
+
+    auto instanceType = workspaceFolder->frontend.globals.globalScope->lookupType("Instance");
+    if (!instanceType)
+        return;
+    auto* instanceCtv = Luau::get<Luau::ExternType>(instanceType->type);
+    if (!instanceCtv)
+        return;
+
+    std::unordered_set<std::string> validClasses(metadata->CLASSES.begin(), metadata->CLASSES.end());
+
+    items.erase(std::remove_if(items.begin(), items.end(),
+                    [&](const lsp::CompletionItem& item)
+                    {
+                        if (item.kind != lsp::CompletionItemKind::Interface)
+                            return false;
+
+                        auto ty = workspaceFolder->frontend.globals.globalScope->lookupType(item.label);
+                        if (!ty)
+                            return false;
+                        auto* ctv = Luau::get<Luau::ExternType>(ty->type);
+                        if (!ctv || !Luau::isSubclass(ctv, instanceCtv))
+                            return false;
+
+                        return validClasses.find(item.label) == validClasses.end();
+                    }),
+        items.end());
 }
 
 const char* OverdarePlatform::handleSortText(

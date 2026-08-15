@@ -148,6 +148,9 @@ public:
     std::optional<Luau::AutocompleteEntryMap> completionCallback(const std::string& tag, std::optional<const Luau::ExternType*> ctx,
         std::optional<std::string> contents, const Luau::ModuleName& moduleName) override;
 
+    void handleCompletion(
+        const TextDocument& textDocument, const Luau::SourceModule& module, Luau::Position position, std::vector<lsp::CompletionItem>& items) override;
+
     const char* handleSortText(const Luau::Frontend& frontend, const std::string& name, const Luau::AutocompleteEntry& entry,
         const std::unordered_set<std::string>& tags) override;
 
