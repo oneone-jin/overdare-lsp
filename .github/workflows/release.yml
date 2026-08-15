@@ -25,51 +25,21 @@ jobs:
           release_name: ${{ github.ref }}
           draft: true
 
-  build-plugin:
-    needs: ["create-release"]
-    name: Build Roblox Studio Plugin
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ok-nick/setup-aftman@v0.4.2
-
-      - name: Build Plugin
-        run: rojo build plugin --output Luau.rbxm
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Luau.rbxm
-          path: Luau.rbxm
-
-      - name: Upload Plugin to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.create-release.outputs.upload_url }}
-          asset_path: Luau.rbxm
-          asset_name: Luau.rbxm
-          asset_content_type: application/octet-stream
-
-      - name: Publish Plugin to Roblox
-        env:
-          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
-        working-directory: plugin
-        run: |
-          rojo build test.project.json --output plugin_place.rbxl
-          lune run cloud/execute_task.luau plugin_place.rbxl cloud/publishing_task.luau
-
   dist:
     needs: ["create-release"]
     strategy:
       fail-fast: false
       matrix:
         include:
+          # crash-reporting is false across the board for now: this fork has no Sentry
+          # project of its own configured (no SENTRY_AUTH_TOKEN secret), so leaving these
+          # true would fail the "Upload debug symbols" step on every release before it ever
+          # reaches the OpenVSX/Marketplace publish steps. Flip back to true per-platform
+          # once a real Sentry project + token are set up.
           - os: windows-latest
             artifact-name: luau-lsp-win64
             code-target: [win32-x64, win32-arm64]
-            crash-reporting: true
+            crash-reporting: false
           - os: ubuntu-22.04
             artifact-name: luau-lsp-linux-x86_64
             code-target: [linux-x64]
@@ -81,7 +51,7 @@ jobs:
           - os: macos-latest
             artifact-name: luau-lsp-macos
             code-target: [darwin-x64, darwin-arm64]
-            crash-reporting: true
+            crash-reporting: false
 
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -195,10 +165,15 @@ jobs:
       - run: npm ci
         working-directory: editors/code
 
-      - name: Publish Extension
-        working-directory: editors/code
-        run: npx @vscode/vsce publish --pat ${{ secrets.MARKETPLACE_TOKEN }} --target ${{ join(matrix.code-target, ' ') }}
-
       - name: Publish OpenVSX Extension
         working-directory: editors/code
         run: npx ovsx publish --pat ${{ secrets.OVSX_TOKEN }} --target ${{ join(matrix.code-target, ' ') }}
+
+      # continue-on-error: MARKETPLACE_TOKEN isn't set up yet (blocked on Azure DevOps
+      # organization creation requiring a linked subscription) - don't let that block the
+      # OpenVSX publish above or fail the whole job once it is. Remove this flag once the
+      # token's registered and this step is verified working.
+      - name: Publish Extension
+        working-directory: editors/code
+        continue-on-error: true
+        run: npx @vscode/vsce publish --pat ${{ secrets.MARKETPLACE_TOKEN }} --target ${{ join(matrix.code-target, ' ') }}
