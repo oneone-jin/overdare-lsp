@@ -17,17 +17,19 @@ and historically defaults to OpenVSX). Same vsix, two registries.
 ## Checklist
 
 ### 1. Pre-flight checks on `editors/code/package.json`
-- [ ] `publisher` field (`overdare`) matches an account you actually control - not yet
-      verified as of this writing. Confirm before proceeding to step 2.
-- [ ] `repository`/`homepage`/`bugs` URLs (`oneone-jin/overdare-lsp`) are public and
-      reachable
-- [ ] `icon` path (`assets/icon.png`) resolves to a real file - confirmed present
-- [ ] `license` field / `LICENSE.md` present at repo root - confirmed present (MIT)
+- [ ] `publisher` field (`overdare`) matches an account you actually control - **still not
+      verified as of this writing, this is the actual blocker for step 2**
+- [x] `repository`/`homepage`/`bugs` URLs (`oneone-jin/overdare-lsp`) point at a public repo
+- [x] `icon` path (`assets/icon.png`) resolves to a real file
+- [x] `license` field / `LICENSE.md` present at repo root, and also copied into
+      `editors/code/LICENSE.md` so vsce bundles it into the vsix (vsce looks for a license
+      file next to the extension's own `package.json`, not the repo root)
 - [ ] `README.md` reads correctly as a Marketplace listing page (it's currently written
       around "build locally + vsix install", not "install from Marketplace" - reword the
       install section once this is live)
-- [ ] `CHANGELOG.md` is current - per CLAUDE.md, every user-facing change should already
-      have an entry; double check nothing's missing before the first publish
+- [x] `CHANGELOG.md` backfilled with every unreleased user-facing change since v1.69.0
+      (ovdrjm pipeline, platform rename, whitelist/completion fixes, datatype fixes,
+      rebranding) - commit `308ad1b`
 
 ### 2. Register accounts + get tokens (one-time, per registry)
 
