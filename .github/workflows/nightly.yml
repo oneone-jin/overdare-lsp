@@ -2,8 +2,9 @@ name: Nightly Release
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *" # Runs at 00:00 UTC every day
+  # Schedule intentionally removed: this built Windows+macOS+Linux every day, and the
+  # macOS runner is billed at 10x - almost certainly what triggered the "recent account
+  # payments have failed" block. Manual dispatch only until that's worth re-enabling.
 
 env:
   MACOSX_DEPLOYMENT_TARGET: "10.15"

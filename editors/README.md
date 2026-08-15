@@ -144,47 +144,6 @@ You may wish to make the `default.project.json` file configurable, as well as wh
 
 The Language Server will operate without a sourcemap available, but will not resolve DataModel instances for intellisense.
 
-## Optional: Roblox Studio plugin
-
-A [Roblox Studio Companion Plugin](https://www.roblox.com/library/10913122509/Luau-Language-Server-Companion) is available
-for users who would like intellisense for non-Rojo and non-filesystem based DataModel instances.
-
-The companion plugin sends HTTP requests to the following endpoints on localhost at the user-defined port:
-
-- `GET /get-file-paths`
-- `POST /full`
-- `POST /clear`
-
-The Language Server listens to the following notifications from a language client:
-
-- `$/plugin/full`
-- `$/plugin/clear`
-
-It is optional to implement support for the companion plugin. This involves creating a HTTP listener on your language
-client, which then sends the corresponding LSP notification to the server.
-
-The `POST /full` request receives a full DataModel tree with the following body:
-
-```json
-{
-    "tree": {
-        "Name": "string",
-        "ClassName": "string",
-        "Children": {
-            ...
-        }
-    }
-}
-```
-
-The `$/plugin/full` LSP notification expects the `tree` property directly sent (i.e., you should send `request.body.tree`).
-
-Further Reference:
-
-- https://github.com/JohnnyMorganz/luau-lsp/blob/main/plugin/src/init.server.lua
-- https://github.com/JohnnyMorganz/luau-lsp/blob/main/src/StudioPlugin.cpp
-- https://github.com/JohnnyMorganz/luau-lsp/blob/main/editors/code/src/extension.ts
-
 ## Optional: Bytecode generation
 
 The Language server implements support for computing file-level textual bytecode, source code remarks, and codegen instructions for lower level debugging features.
