@@ -480,6 +480,41 @@ agreed conversion plan and what's already done.
       scratch (reproducible: 626 → 71 both times). Rebuilt CLI + Test targets (touched C++
       this time, unlike steps 14/15) - 840/840 still pass.
 
+17. **[DONE] Found and fixed a third, more fundamental leak of the same bug: `Enum.` as a
+    TYPE (`local x: Enum.Foo`), not just as a value** - user pointed at
+    `OverdareLuauExt.cpp:771-826` directly and asked if it registers everything
+    unconditionally. It did. Step 16 only pruned (a) the `ENUM_LIST` *value* table
+    (`Enum.Material` as an expression) and (b) `handleCompletion`'s suggestion list for
+    standalone `EnumFoo` annotations - but `mutateRegisteredDefinitions`'s "move Enums over
+    as imported type bindings" loop is a *third*, completely separate mechanism: it walks
+    every extern type whose name starts with `"Enum"` in `exportedTypeBindings` (all ~626,
+    whitelisted or not - the underlying declarations were deliberately left in place per
+    step 13/16's precedent), strips the prefix, and unconditionally moves it into
+    `globals.globalScope->importedTypeBindings["Enum"]`. That's what makes `Enum.Foo` valid
+    as a *type* (not just a value) and also feeds the `"Enums"` string-completion tag in
+    `OverdareCompletion.cpp` - neither of which the ENUM_LIST/handleCompletion fixes touch.
+    Confirmed via `analyze` CLI before the fix: `local x: Enum.Genre` (a Roblox-only enum,
+    doesn't exist on OVERDARE) type-checked with zero errors.
+    - Fix: gate the "move into `enumTypes`/rename/erase" branch behind the same `ENUMS`
+      metadata whitelist added in step 16 (bare name, `_INTERNAL` suffix stripped before the
+      whitelist check). Non-whitelisted `EnumX` types now fall through completely
+      untouched - no rename, stays in `exportedTypeBindings` under its original `EnumX`
+      name, never reaches `importedTypeBindings["Enum"]`. The metatable-erasure at the outer
+      level still applies unconditionally to all `Enum`-prefixed types (harmless, unrelated
+      to visibility).
+    - Verified via `analyze` CLI: `local x: Enum.Material = Enum.Material.Plastic` type-checks
+      clean; `local x: Enum.Genre = Enum.Genre.All` now correctly errors `Unknown type
+      'Enum.Genre'`. Rebuilt CLI + Test - 840/840 still pass.
+    - **Worth remembering for next time a "still shows Roblox X" report comes in**: this
+      codebase has repeatedly had the *same* underlying class of bug (a whitelist added in
+      one place - METADATA field or `ENUM_LIST`/`CLASSES` text - doesn't automatically cover
+      every code path that reads from the full unfiltered declaration set) resurface through
+      a new, previously-unaudited mechanism each time. When investigating a fresh report,
+      don't stop at the first plausible-looking fix; grep for *all* places that iterate
+      `exportedTypeBindings`/`importedTypeBindings`/`globalScope->exportedTypeBindings` in
+      `OverdareLuauExt.cpp` and `OverdareCompletion.cpp`, since each is a separate unfiltered
+      surface.
+
 ## How to resume
 
 When picking this back up, re-read this file first, then check `git log`/`git diff` to

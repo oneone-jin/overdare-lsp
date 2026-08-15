@@ -785,32 +785,47 @@ void OverdarePlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, s
                 }
                 else if (ctv->name != "Enum" && ctv->name != "Enums")
                 {
-                    // Erase the "Enum" at the start
-                    ctv->name = ctv->name.substr(4);
+                    // Determine the bare enum name (works for both "EnumFoo" and
+                    // "EnumFoo_INTERNAL") to check against the real-OVERDARE-enum whitelist
+                    // before doing anything else - the file still has ~550 leftover
+                    // Roblox-only EnumX declarations (deliberately not deleted, same as
+                    // CLASSES/leftover Instance classes elsewhere), and this loop used to move
+                    // *every* one of them into importedTypeBindings unconditionally, which is
+                    // what fed the unfiltered `Enum.` completion the ENUM_LIST prune alone
+                    // didn't cover.
+                    std::string bareName = ctv->name.substr(4);
+                    bool wasInternal = endsWith(bareName, "_INTERNAL");
+                    if (wasInternal)
+                        bareName.erase(bareName.rfind("_INTERNAL"), 9);
 
-                    // Move the enum over to the imported types if it is not internal, otherwise rename the type
-                    if (endsWith(ctv->name, "_INTERNAL"))
+                    bool isRealEnum = !overdareMetadata.has_value() || overdareMetadata->ENUMS.empty() ||
+                        contains(overdareMetadata->ENUMS, bareName);
+
+                    if (isRealEnum)
                     {
-                        ctv->name.erase(ctv->name.rfind("_INTERNAL"), 9);
-                    }
-                    else
-                    {
-                        enumTypes.emplace(ctv->name, it->second);
-                        // Erase the metatable for the type, so it can be used in comparison
-                    }
+                        // Erase the "Enum" at the start
+                        ctv->name = bareName;
 
-                    // Update the documentation symbol
-                    Luau::asMutable(ty)->documentationSymbol = "@roblox/enum/" + ctv->name;
-                    for (auto& [name, prop] : ctv->props)
-                    {
-                        prop.documentationSymbol = "@roblox/enum/" + ctv->name + "." + name;
-                        Luau::attachTag(prop, "EnumItem");
+                        // Move the enum over to the imported types if it is not internal, otherwise rename the type
+                        if (!wasInternal)
+                        {
+                            enumTypes.emplace(ctv->name, it->second);
+                            // Erase the metatable for the type, so it can be used in comparison
+                        }
+
+                        // Update the documentation symbol
+                        Luau::asMutable(ty)->documentationSymbol = "@roblox/enum/" + ctv->name;
+                        for (auto& [name, prop] : ctv->props)
+                        {
+                            prop.documentationSymbol = "@roblox/enum/" + ctv->name + "." + name;
+                            Luau::attachTag(prop, "EnumItem");
+                        }
+
+                        // Prefix the name (after it has been placed into enumTypes) with "Enum."
+                        ctv->name = "Enum." + ctv->name;
+
+                        erase = true;
                     }
-
-                    // Prefix the name (after it has been placed into enumTypes) with "Enum."
-                    ctv->name = "Enum." + ctv->name;
-
-                    erase = true;
                 }
 
                 // Erase the metatable from the type to allow comparison
