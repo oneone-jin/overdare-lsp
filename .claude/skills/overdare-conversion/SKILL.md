@@ -311,8 +311,27 @@ agreed conversion plan and what's already done.
    - Both fixes together mean **no remaining known blocker for step 8** on the path-
      resolution front specifically (worth re-checking for others when actually packaging).
 
-8. **[TODO] vsix test build** — once the above is functionally stable, package the
-   extension (`vsce package` or equivalent) for local install/testing.
+8. **[DONE] vsix test build** — `npx @vscode/vsce package --out /tmp/overdare-lsp-test.vsix`
+   from `editors/code/` packages cleanly (`vscode:prepublish` runs `tsc --noEmit` +
+   production esbuild automatically). Confirmed `dist/extension.js` in the vsix contains
+   the inlined OVERDARE types (`declare extern type Player`, `declare function isnil`,
+   `ActionSequenceService`) and `package.json`'s `luau-lsp.platform.type` defaults to
+   `"overdare"`. No `bin/server` binary is bundled by this local packaging step (that only
+   happens in `.github/workflows/release.yml`'s CI copy step) - for local testing, install
+   the vsix then set `luau-lsp.server.path` to the locally built `build/luau-lsp` manually.
+   - **Manual install-and-test round-trip caught a real bug**: `game:GetService("...")`
+     autocomplete was suggesting ~300 Roblox-only services OVERDARE doesn't have. Root
+     cause and fix: see the `Prune GetService SERVICES whitelist` work - the
+     `--#METADATA#` `SERVICES` list was inherited verbatim from Roblox's dump (331 entries)
+     and never pruned; cut to the 28 that intersect with our scraped OVERDARE class list,
+     with `prune_services_metadata` added to `dumpOverdareTypes.py`'s merge step so this
+     survives future re-scrapes. Verified in a second install-and-reload round-trip.
+   - This is the intended manual verification loop for future changes touching the
+     extension: `npm run compile` (or let `vsce package` do it) → `vsce package` → install
+     the vsix in VS Code ("Install from VSIX...") → Reload Window → test in a real
+     `.luau` file. Automated tests (`tsc`/`eslint`/the C++ test suite) don't exercise the
+     actual packaged extension end-to-end, so this manual pass is what catches
+     packaging-shape and runtime-config bugs like the SERVICES one.
 
 9. **[LATER] Branding/metadata** — extension display name, `luau-lsp.*` command/config
    prefix, marketplace description/icon. Explicitly deferred — not urgent for internal
