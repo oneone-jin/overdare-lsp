@@ -1,6 +1,6 @@
 {
   "name": "overdare-lsp",
-  "displayName": "OVERDARE Luau Language Server (Unofficial)",
+  "displayName": "OVERDARE Luau Language Server",
   "description": "Unofficial, community-maintained Language Server for Luau on OVERDARE. Not affiliated with or endorsed by OVERDARE.",
   "author": "JohnnyMorganz",
   "publisher": "wonjin",
@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/oneone-jin/overdare-lsp/issues"
   },
-  "version": "1.69.5",
+  "version": "1.69.6",
   "engines": {
     "vscode": "^1.82.0"
   },

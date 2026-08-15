@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.6] - 2026-08-16
+
+### Changed
+
+- Dropped "(Unofficial)" from the Marketplace/OpenVSX listing `displayName` (the `description`'s "not affiliated with or endorsed by OVERDARE" disclaimer stays)
+
 ## [1.69.5] - 2026-08-16
 
 ### Fixed
