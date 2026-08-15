@@ -353,10 +353,69 @@ agreed conversion plan and what's already done.
      breaking change with no functional upside for internal testing (keeping a fork's
      upstream config namespace after a rebrand is a common, unremarkable pattern). Revisit
      only if/when this is heading toward a real separate marketplace listing.
-   - **Also not touched**: root `README.md`/`CHANGELOG.md` still describe the upstream
-     `JohnnyMorganz/luau-lsp` project verbatim (marketplace links, OpenVSX links, Rojo-user
-     section, etc.) - this is a content-authoring task distinct from the metadata-field
-     rename above, not attempted here.
+   - **Also not touched at the time**: root `README.md`/`CHANGELOG.md`. `README.md` was
+     since rewritten for the fork (see below) - `CHANGELOG.md` is still untouched upstream
+     content.
+
+10. **[DONE] Merged to `main` and pushed** — `feature-transition` (containing all of the
+    above) was PR'd and merged into `main` (`origin/HEAD` was already `main` by default, so
+    a plain `git clone` with no `-b` flag lands there - this bit a fresh Windows clone
+    during manual testing, which needed `git checkout feature-transition` before the fixes
+    were visible). Work now happens directly on `main`.
+
+11. **[DONE] `README.md` rewritten** for the fork: no marketplace/OpenVSX listing (documents
+    local build+`vsce package` install instead), `.ovdrjm`-based sourcemap as the primary
+    flow with Rojo kept as the documented fallback for non-OVERDARE projects, the deleted
+    Studio companion-plugin mention removed, `oneone-jin/overdare-lsp` clone URLs, and a new
+    section on re-running `dumpOverdareTypes.py`. Upstream attribution and genuine technical
+    references left as-is. `CHANGELOG.md` still untouched.
+
+12. **[DONE] Local platform-specific vsix packaging verified** - bundled `bin/server`
+    (macOS universal binary, both x64+arm64) into a vsix via the `fix-and-build` skill's new
+    packaging step; confirmed it installs and runs with zero manual server-path config.
+    Windows needs the equivalent build+bundle on a Windows machine (native binary, can't
+    cross-compile) - `fix-and-build` has the PowerShell commands.
+
+13. **[DONE] Pruned `Instance.new`/`IsA` class-name whitelists** - same root cause as step
+    5's `GetService` fix, found via manual testing in the installed vsix (not caught by any
+    automated test): `Instance.new("...")` and `IsA`/`FindFirstChildOfClass`/
+    `FindFirstAncestorOfClass`/etc. completion were both suggesting hundreds of Roblox-only
+    classes.
+    - `CREATABLE_INSTANCES` (metadata whitelist behind `Instance.new`): 357 → 60, same
+      intersection-with-scraped-classes technique as `SERVICES`.
+      `prune_services_metadata` in `dumpOverdareTypes.py` generalized to handle both fields.
+    - New `CLASSES` metadata field (all 134 real OVERDARE classes) added to
+      `OverdareDefinitionsFileMetadata` (`src/include/Platform/OverdarePlatform.hpp`) and to
+      the merge script. `OverdareCompletion.cpp`'s `"ClassNames"` tag handler - used by
+      `IsA`/`FindFirstChildOfClass`/etc. - previously enumerated *every* Instance-derived
+      type still declared in the file (there are ~2000 untouched Roblox ones with no
+      whitelist to check against, unlike `GetService`/`Instance.new` which already had
+      metadata lists). Now filters against `CLASSES` when present; falls back to unfiltered
+      when absent (e.g. the small test fixture) so existing tests don't regress.
+    - Verified via `analyze`: `Instance.new("Part")` passes, `Instance.new("BadgeService")`
+      correctly errors. Full suite still 840/840.
+    - **A proper automated completion regression test was attempted and abandoned** - not
+      because the fix is unverified, but because two dead ends surfaced along the way,
+      both worth remembering:
+      - An ad-hoc `CliClient`+`WorkspaceFolder` completion test (mirroring the pattern used
+        for `checkSimple` elsewhere in `OverdareTypes.test.cpp`) returned an empty
+        `workspace.completion(...)` result unconditionally, for reasons not root-caused
+        (tried: disabling fragment autocomplete, disabling sourcemap, forcing strict mode -
+        none of it changed the empty result). `checkSimple`-based tests in the same file
+        work fine, so something about the completion code path specifically doesn't like
+        this harness. Worth another look with more time, but not this fix's fault.
+      - Investigating further by driving the *real* `luau-lsp lsp` stdio process by hand
+        (piping raw `Content-Length`-framed JSON-RPC) surfaced a genuine, **pre-existing**
+        crash: `Thread::~Thread()` calls `std::terminate()` (an unjoined/undetached
+        `std::thread` being destroyed) during `LanguageServer`'s shutdown, when the process
+        sees the stdin pipe close. Reproduced identically on `main` from *before* this
+        fix's changes, so it's unrelated to this work - confirmed via `git stash` + rebuild.
+        Only triggered by an abrupt stdin close in this manual test, not by a client's
+        normal `shutdown`/`exit` handshake, so it likely doesn't affect real VS Code
+        sessions under normal operation - but could plausibly hit if VS Code ever kills the
+        server process uncleanly (force-quit, host restart, crash). **Not yet fixed or filed
+        as its own tracked item - worth a dedicated look** (find the un-joined `Thread`
+        member and either `join()` or `detach()` it before/in `~LanguageServer()`).
 
 ## How to resume
 
