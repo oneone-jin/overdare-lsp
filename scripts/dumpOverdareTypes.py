@@ -583,24 +583,33 @@ METADATA_PREFIX = "--#METADATA#"
 
 
 def prune_services_metadata(lines, dump, log=print):
-    """The `SERVICES` list in the `--#METADATA#` header line (used by GetService's magic
-    function for both validation and autocomplete) is inherited verbatim from Roblox's
-    Full-API-Dump and contains ~300 Roblox-only service names OVERDARE doesn't have -
-    OVERDARE's docs have no equivalent dump, so prune it down to the intersection with our
-    scraped class list (a service name with no matching OVERDARE class can't be real)."""
+    """The `SERVICES` and `CREATABLE_INSTANCES` lists in the `--#METADATA#` header line
+    (used by GetService's and Instance.new's magic functions for both validation and
+    autocomplete) are inherited verbatim from Roblox's Full-API-Dump and contain hundreds
+    of Roblox-only class/service names OVERDARE doesn't have - OVERDARE's docs have no
+    equivalent dump, so prune both down to the intersection with our scraped class list
+    (a name with no matching OVERDARE class can't be real)."""
     if not lines or not lines[0].startswith(METADATA_PREFIX):
-        log("[warn] no --#METADATA# header line found - SERVICES not pruned")
+        log("[warn] no --#METADATA# header line found - not pruned")
         return lines
 
     meta = json.loads(lines[0][len(METADATA_PREFIX):])
-    if "SERVICES" not in meta:
-        return lines
-
     od_class_names = {c["name"] for c in dump["classes"] if c["name"]}
-    before = len(meta["SERVICES"])
-    meta["SERVICES"] = sorted(set(meta["SERVICES"]) & od_class_names)
-    log(f"Services (metadata whitelist): pruned {before} -> {len(meta['SERVICES'])} "
-        f"(kept only names that match a scraped OVERDARE class)")
+
+    for key, label in (("SERVICES", "Services"), ("CREATABLE_INSTANCES", "Creatable instances")):
+        if key not in meta:
+            continue
+        before = len(meta[key])
+        meta[key] = sorted(set(meta[key]) & od_class_names)
+        log(f"{label} (metadata whitelist): pruned {before} -> {len(meta[key])} "
+            f"(kept only names that match a scraped OVERDARE class)")
+
+    # CLASSES: every real OVERDARE class, used by OverdareCompletion.cpp to filter
+    # IsA/FindFirstChildOfClass/etc. autocomplete down from "every Instance-derived type
+    # still declared in the file" (including thousands of untouched Roblox classes) to just
+    # the ones that actually exist in OVERDARE.
+    meta["CLASSES"] = sorted(od_class_names)
+    log(f"Classes (metadata whitelist for IsA/FindFirstChildOfClass completion): {len(meta['CLASSES'])} entries")
 
     lines[0] = METADATA_PREFIX + json.dumps(meta)
     return lines

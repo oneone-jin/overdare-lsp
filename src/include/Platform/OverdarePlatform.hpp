@@ -12,8 +12,13 @@ struct OverdareDefinitionsFileMetadata
 {
     std::vector<std::string> CREATABLE_INSTANCES{};
     std::vector<std::string> SERVICES{};
+    // All classes that genuinely exist in OVERDARE (scraped from docs.overdare.com), used to
+    // filter IsA/FindFirstChildOfClass/etc. autocomplete - without this, that completion
+    // enumerates every Instance-derived type still declared in the file, including the
+    // ~2000 untouched Roblox classes that aren't real OVERDARE classes.
+    std::vector<std::string> CLASSES{};
 };
-NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES)
+NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES, CLASSES)
 
 enum class ScriptContext
 {

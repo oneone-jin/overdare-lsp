@@ -1,5 +1,7 @@
 #include "Platform/OverdarePlatform.hpp"
 
+#include <unordered_set>
+
 #include "Luau/TimeTrace.h"
 #include "LuauFileUtils.hpp"
 
@@ -80,17 +82,28 @@ std::optional<Luau::AutocompleteEntryMap> OverdarePlatform::completionCallback(
         {
             if (auto* ctv = Luau::get<Luau::ExternType>(instanceType->type))
             {
+                std::optional<std::unordered_set<std::string>> validClasses;
+                if (metadata.has_value() && !metadata->CLASSES.empty())
+                    validClasses = std::unordered_set<std::string>(metadata->CLASSES.begin(), metadata->CLASSES.end());
+
                 Luau::AutocompleteEntryMap result;
                 for (auto& [_, ty] : workspaceFolder->frontend.globals.globalScope->exportedTypeBindings)
                 {
                     if (auto* c = Luau::get<Luau::ExternType>(ty.type))
                     {
                         // Check if the ctv is a subclass of instance
-                        if (Luau::isSubclass(c, ctv))
+                        if (!Luau::isSubclass(c, ctv))
+                            continue;
 
-                            result.insert_or_assign(
-                                c->name, Luau::AutocompleteEntry{Luau::AutocompleteEntryKind::String,
-                                             workspaceFolder->frontend.builtinTypes->stringType, false, false, Luau::TypeCorrectKind::Correct});
+                        // If the definitions file declares which classes are real OVERDARE
+                        // classes, don't suggest the rest (leftover/untouched Roblox classes
+                        // still declared in the file for other classes to extend/reference).
+                        if (validClasses.has_value() && validClasses->find(c->name) == validClasses->end())
+                            continue;
+
+                        result.insert_or_assign(
+                            c->name, Luau::AutocompleteEntry{Luau::AutocompleteEntryKind::String,
+                                         workspaceFolder->frontend.builtinTypes->stringType, false, false, Luau::TypeCorrectKind::Correct});
                     }
                 }
 
