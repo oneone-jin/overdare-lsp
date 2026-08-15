@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.8] - 2026-08-16
+
+### Fixed
+
+- Fixed `local x: |` type-annotation completion leaking Roblox-only classes that extend `Object` instead of `Instance` (e.g. `TerrainIterateOperation`, `EditableMesh`, `VoxelBuffer`) - the whitelist filter only checked the `Instance` subclass branch, so the ~19 OVERDARE classes that extend `Object` skipped it entirely and let every untouched Roblox-only `Object`-derived class through
+
 ## [1.69.7] - 2026-08-16
 
 ### Fixed
