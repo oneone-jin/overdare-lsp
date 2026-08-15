@@ -211,20 +211,31 @@ void OverdarePlatform::handleCompletion(
     // Type-annotation completion (`local x: |`, etc.) is Luau core's own autocomplete
     // behaviour, not something routed through completionCallback's tag system - so unlike
     // GetService/Instance.new/IsA, there's no metadata whitelist hook for it upstream. Post-
-    // filter here instead: drop any suggested Instance-derived class name that isn't a real
-    // OVERDARE class (leaving non-Instance types - Vector3, CFrame, generic aliases, etc. -
-    // alone since CLASSES only enumerates Instance subclasses), and separately drop any
-    // suggested EnumX type name that isn't a real OVERDARE enum.
+    // filter here instead: drop any suggested Instance-derived OR Object-derived class name
+    // that isn't a real OVERDARE class (leaving unrelated types - Vector3, CFrame, generic
+    // aliases, etc. - alone), and separately drop any suggested EnumX type name that isn't a
+    // real OVERDARE enum.
+    //
+    // CLASSES isn't Instance-only: dumpOverdareTypes.py's prune_services_metadata populates
+    // it from every scraped OVERDARE class regardless of base type, so it also covers the
+    // handful of OVERDARE classes (TerrainIterateOperation, EditableMesh, VoxelBuffer, ...)
+    // that extend `Object` instead of `Instance` - those need the same isSubclass check
+    // against Object's ExternType or they silently skip the Instance-only branch below and
+    // leak every untouched Roblox-only Object-derived class straight through.
     std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
     if (!metadata.has_value())
         return;
 
     auto instanceType = workspaceFolder->frontend.globals.globalScope->lookupType("Instance");
     auto* instanceCtv = instanceType ? Luau::get<Luau::ExternType>(instanceType->type) : nullptr;
+    auto objectType = workspaceFolder->frontend.globals.globalScope->lookupType("Object");
+    auto* objectCtv = objectType ? Luau::get<Luau::ExternType>(objectType->type) : nullptr;
     auto enumItemType = workspaceFolder->frontend.globals.globalScope->lookupType("EnumItem");
     auto* enumItemCtv = enumItemType ? Luau::get<Luau::ExternType>(enumItemType->type) : nullptr;
 
-    if ((!instanceCtv || metadata->CLASSES.empty()) && (!enumItemCtv || metadata->ENUMS.empty()))
+    bool canFilterClasses = (instanceCtv || objectCtv) && !metadata->CLASSES.empty();
+    bool canFilterEnums = enumItemCtv && !metadata->ENUMS.empty();
+    if (!canFilterClasses && !canFilterEnums)
         return;
 
     std::unordered_set<std::string> validClasses(metadata->CLASSES.begin(), metadata->CLASSES.end());
@@ -243,7 +254,11 @@ void OverdarePlatform::handleCompletion(
                         if (!ctv)
                             return false;
 
-                        if (instanceCtv && !metadata->CLASSES.empty() && Luau::isSubclass(ctv, instanceCtv))
+                        // "Object" itself is foundational plumbing (like "Enum"/"EnumItem"
+                        // below), not a class OVERDARE's docs would list, so it's absent from
+                        // CLASSES - exempt it rather than filtering it out of its own subtree.
+                        if (!metadata->CLASSES.empty() && item.label != "Object" &&
+                            ((instanceCtv && Luau::isSubclass(ctv, instanceCtv)) || (objectCtv && Luau::isSubclass(ctv, objectCtv))))
                             return validClasses.find(item.label) == validClasses.end();
 
                         // "Enum"/"EnumItem" themselves are foundational plumbing types, not
