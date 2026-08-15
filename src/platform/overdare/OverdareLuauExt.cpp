@@ -823,9 +823,16 @@ void OverdarePlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, s
 
                         // Prefix the name (after it has been placed into enumTypes) with "Enum."
                         ctv->name = "Enum." + ctv->name;
-
-                        erase = true;
                     }
+
+                    // Erase unconditionally, real or not: real enums have already been moved
+                    // into enumTypes/importedTypeBindings above, and non-real (leftover
+                    // Roblox-only) ones must still be dropped from the global scope here -
+                    // otherwise they're left sitting in exportedTypeBindings under their raw
+                    // "EnumFoo"/"EnumFoo_INTERNAL" name, which leaks into bare type-position
+                    // completion (`local x: |`, no "Enum." prefix) even though the "Enum."
+                    // prefixed completion path is correctly filtered.
+                    erase = true;
                 }
 
                 // Erase the metatable from the type to allow comparison
