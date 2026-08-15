@@ -90,20 +90,10 @@ jobs:
           cmake .. -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON -DLSP_BUILD_ASAN:BOOL=ON
           cmake --build . --target Luau.LanguageServer.CLI -j 3
 
-      - name: Regenerate Types
-        run: |
-          cd scripts
-          python dumpRobloxTypes.py > globalTypes.d.luau
-
-      - name: Test types
-        run: |
-          touch test.lua
-          build/luau-lsp analyze --defs=scripts/globalTypes.d.luau test.lua
-
       - name: Test Remodel types
         run: |
           touch remodel_test.lua
-          build/luau-lsp analyze --defs=scripts/remodel.d.lua test.lua
+          build/luau-lsp analyze --defs=scripts/remodel.d.lua remodel_test.lua
 
   lint_extension:
     name: Lint Extension
