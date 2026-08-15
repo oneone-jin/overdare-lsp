@@ -1,7 +1,7 @@
 #include "doctest.h"
 #include "LSP/Utils.hpp"
 #include "LuauFileUtils.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "TempDir.h"
 
 TEST_SUITE_BEGIN("UtilsTest");

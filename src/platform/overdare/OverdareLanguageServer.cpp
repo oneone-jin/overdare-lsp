@@ -1,4 +1,4 @@
-#include <Platform/RobloxPlatform.hpp>
+#include <Platform/OverdarePlatform.hpp>
 
 #include "Luau/TimeTrace.h"
 
@@ -6,7 +6,7 @@
 
 static const char* kSourcemapWatchingRegistrationId = "sourcemapWatching";
 
-void RobloxPlatform::onDidChangeWatchedFiles(const lsp::FileEvent& change)
+void OverdarePlatform::onDidChangeWatchedFiles(const lsp::FileEvent& change)
 {
     auto config = workspaceFolder->client->getConfiguration(workspaceFolder->rootUri);
     std::string sourcemapFileName = config.sourcemap.sourcemapFile;
@@ -19,9 +19,9 @@ void RobloxPlatform::onDidChangeWatchedFiles(const lsp::FileEvent& change)
     }
 }
 
-void RobloxPlatform::setupWithConfiguration(const ClientConfiguration& config)
+void OverdarePlatform::setupWithConfiguration(const ClientConfiguration& config)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::setupWithConfiguration", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::setupWithConfiguration", "LSP");
     auto client = workspaceFolder->client;
 
     if (config.sourcemap.enabled)

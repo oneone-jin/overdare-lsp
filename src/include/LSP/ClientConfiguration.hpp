@@ -13,7 +13,7 @@ struct ClientDiagnosticsConfiguration
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientDiagnosticsConfiguration, includeDependents, workspace, strictDatamodelTypes)
 
-struct ClientRobloxSourcemapConfiguration
+struct ClientOverdareSourcemapConfiguration
 {
     /// Whether Rojo sourcemap-related features are enabled
     bool enabled = true;
@@ -27,7 +27,7 @@ struct ClientRobloxSourcemapConfiguration
     std::string sourcemapFile = "sourcemap.json";
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(
-    ClientRobloxSourcemapConfiguration, enabled, autogenerate, rojoProjectFile, includeNonScripts, sourcemapFile);
+    ClientOverdareSourcemapConfiguration, enabled, autogenerate, rojoProjectFile, includeNonScripts, sourcemapFile);
 
 struct ClientTypesConfiguration
 {
@@ -61,7 +61,7 @@ inline void from_json(const nlohmann::json& json, ClientTypesConfiguration& obje
             size_t backwardsCompatibilityNameSuffix = 1;
             for (const auto& definition : json["definitionFiles"].get<std::vector<std::string>>())
             {
-                std::string packageName = "@roblox" + std::to_string(backwardsCompatibilityNameSuffix);
+                std::string packageName = "@overdare" + std::to_string(backwardsCompatibilityNameSuffix);
                 object.definitionFiles.emplace(packageName, definition);
                 backwardsCompatibilityNameSuffix += 1;
             }
@@ -133,7 +133,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(ImportRequireStyle, {
 
 struct ClientCompletionImportsStringRequiresConfiguration
 {
-    // Whether to use string requires when auto-importing requires (roblox platform only)
+    // Whether to use string requires when auto-importing requires (overdare platform only)
     bool enabled = false;
 };
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientCompletionImportsStringRequiresConfiguration, enabled);
@@ -291,16 +291,16 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientPluginConfiguration, enabl
 enum struct LSPPlatformConfig
 {
     Standard,
-    Roblox
+    Overdare
 };
 NLOHMANN_JSON_SERIALIZE_ENUM(LSPPlatformConfig, {
                                                     {LSPPlatformConfig::Standard, "standard"},
-                                                    {LSPPlatformConfig::Roblox, "roblox"},
+                                                    {LSPPlatformConfig::Overdare, "overdare"},
                                                 })
 
 struct ClientPlatformConfiguration
 {
-    LSPPlatformConfig type = LSPPlatformConfig::Roblox;
+    LSPPlatformConfig type = LSPPlatformConfig::Overdare;
 };
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientPlatformConfiguration, type);
@@ -314,7 +314,7 @@ struct ClientConfiguration
     bool autocompleteEnd = false;
     std::vector<std::string> ignoreGlobs{"**/_Index/**"};
     ClientPlatformConfiguration platform{};
-    ClientRobloxSourcemapConfiguration sourcemap{};
+    ClientOverdareSourcemapConfiguration sourcemap{};
     ClientDiagnosticsConfiguration diagnostics{};
     ClientTypesConfiguration types{};
     ClientInlayHintsConfiguration inlayHints{};

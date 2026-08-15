@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as os from "os";
-import { fetch } from "undici";
+
 import {
   CloseAction,
   CloseHandlerResult,
@@ -27,7 +27,7 @@ import { registerRequireGraph } from "./requireGraph";
 
 import { registerViewInternalSource } from "./internalSource";
 
-import * as roblox from "./roblox";
+import * as overdare from "./overdare";
 import * as utils from "./utils";
 import {
   anyFileIsMissing,
@@ -209,11 +209,18 @@ const handleExternalFiles = async (
     builtinDefinitionFiles,
   )) {
     if (!finalDefinitionFiles.has(packageName)) {
-      externalFiles.push(downloadDefinition);
-      finalDefinitionFiles.set(
-        packageName,
-        downloadDefinition.outputUri.fsPath,
-      );
+      // A builtin definition can point at a local file (e.g. OVERDARE's bundled
+      // globalTypes.d.luau) instead of a URL - only queue it for download if it's
+      // actually external, otherwise use it directly with no network fetch.
+      if (isExternalFile(downloadDefinition.url)) {
+        externalFiles.push(downloadDefinition);
+        finalDefinitionFiles.set(
+          packageName,
+          downloadDefinition.outputUri.fsPath,
+        );
+      } else {
+        finalDefinitionFiles.set(packageName, downloadDefinition.url);
+      }
     }
   }
 
@@ -272,7 +279,7 @@ const startLanguageServer = async (context: vscode.ExtensionContext) => {
   const {
     definitions: builtinDefinitionFiles,
     documentation: builtinDocumentationFiles,
-  } = await roblox.preLanguageServerStart(context);
+  } = await overdare.preLanguageServerStart(context);
 
   const typesConfig = vscode.workspace.getConfiguration("luau-lsp.types");
 
@@ -285,7 +292,7 @@ const startLanguageServer = async (context: vscode.ExtensionContext) => {
 
   if (Array.isArray(definitionFilesConfig)) {
     definitionFilesConfig = Object.fromEntries(
-      definitionFilesConfig.map((path, index) => ["roblox" + index, path]),
+      definitionFilesConfig.map((path, index) => ["overdare" + index, path]),
     );
   }
 
@@ -596,7 +603,7 @@ const startLanguageServer = async (context: vscode.ExtensionContext) => {
 export async function activate(context: vscode.ExtensionContext) {
   console.log("Luau LSP activated");
 
-  await roblox.onActivate(platformContext, context);
+  await overdare.onActivate(platformContext, context);
 
   context.subscriptions.push(
     vscode.commands.registerCommand("luau-lsp.reloadServer", async () => {
@@ -657,12 +664,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
   await startLanguageServer(context);
 
-  await roblox.postLanguageServerStart(platformContext, context);
+  await overdare.postLanguageServerStart(platformContext, context);
 }
 
 export async function deactivate() {
   return Promise.allSettled([
-    ...roblox.onDeactivate(),
+    ...overdare.onDeactivate(),
     client?.stop(),
     clientDisposables.map((disposable) => disposable.dispose()),
   ]);

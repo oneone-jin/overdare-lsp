@@ -1,7 +1,7 @@
 #include "doctest.h"
 #include "Fixture.h"
-#include "RobloxTestConstants.h"
-#include "Platform/RobloxPlatform.hpp"
+#include "OverdareTestConstants.h"
+#include "Platform/OverdarePlatform.hpp"
 #include "LSP/IostreamHelpers.hpp"
 #include "LSP/Completion.hpp"
 #include "Platform/InstanceRequireAutoImporter.hpp"
@@ -1000,7 +1000,7 @@ TEST_CASE_FIXTURE(Fixture, "auto_imports_handles_multi_line_existing_requires_wh
     auto textDocument = workspace.fileResolver.getTextDocument(uri);
     REQUIRE(textDocument);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor importsVisitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor importsVisitor;
     importsVisitor.visit(astRoot);
 
     auto minimumLineNumber = computeMinimumLineNumberForRequire(importsVisitor, 0);
@@ -1020,7 +1020,7 @@ TEST_CASE_FIXTURE(Fixture, "auto_imports_handles_multi_line_existing_requires_wh
     auto textDocument = workspace.fileResolver.getTextDocument(uri);
     REQUIRE(textDocument);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor importsVisitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor importsVisitor;
     importsVisitor.visit(astRoot);
 
     auto minimumLineNumber = computeMinimumLineNumberForRequire(importsVisitor, 0);

@@ -2,7 +2,7 @@
 #include "Fixture.h"
 #include "TempDir.h"
 #include "LSP/WorkspaceFileResolver.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 TEST_SUITE_BEGIN("WorkspaceTest");
 
@@ -112,7 +112,7 @@ TEST_CASE_FIXTURE(Fixture, "isIgnoredFile")
 
 TEST_CASE_FIXTURE(Fixture, "isDefinitionsFile")
 {
-    client->globalConfig.types.definitionFiles = {{"@roblox", "globalTypes.d.luau"}};
+    client->globalConfig.types.definitionFiles = {{"@overdare", "globalTypes.d.luau"}};
 
     CHECK_EQ(workspace.isDefinitionFile(workspace.rootUri.resolvePath("source.luau")), false);
     CHECK_EQ(workspace.isDefinitionFile(workspace.rootUri.resolvePath("globalTypes.d.luau")), true);

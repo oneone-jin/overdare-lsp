@@ -3,7 +3,7 @@
 #include "Analyze/AnalyzeCli.hpp"
 #include "LSP/Workspace.hpp"
 #include "Luau/Set.h"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "argparse/argparse.hpp"
 
 #include <queue>
@@ -273,8 +273,8 @@ int startRequireGraph(const argparse::ArgumentParser& program)
     {
         if (platformArg == "standard")
             client.globalConfig.platform.type = LSPPlatformConfig::Standard;
-        else if (platformArg == "roblox")
-            client.globalConfig.platform.type = LSPPlatformConfig::Roblox;
+        else if (platformArg == "overdare")
+            client.globalConfig.platform.type = LSPPlatformConfig::Overdare;
     }
 
     std::unique_ptr<LSPPlatform> platform = LSPPlatform::getPlatform(client.globalConfig, &fileResolver);
@@ -287,13 +287,13 @@ int startRequireGraph(const argparse::ArgumentParser& program)
 
     if (sourcemapPath)
     {
-        if (client.globalConfig.platform.type == LSPPlatformConfig::Roblox)
+        if (client.globalConfig.platform.type == LSPPlatformConfig::Overdare)
         {
-            auto robloxPlatform = dynamic_cast<RobloxPlatform*>(platform.get());
+            auto overdarePlatform = dynamic_cast<OverdarePlatform*>(platform.get());
 
             if (auto sourceMapContents = Luau::FileUtils::readFile(*sourcemapPath))
             {
-                robloxPlatform->updateSourceNodeMap(sourceMapContents.value());
+                overdarePlatform->updateSourceNodeMap(sourceMapContents.value());
                 // We don't need to call 'handleSourcemapUpdate' as we are not type checking
             }
             else
@@ -304,7 +304,7 @@ int startRequireGraph(const argparse::ArgumentParser& program)
         }
         else
         {
-            std::cerr << "warning: a sourcemap was provided, but the current platform is not `roblox`. Use `--platform roblox` to ensure the "
+            std::cerr << "warning: a sourcemap was provided, but the current platform is not `overdare`. Use `--platform overdare` to ensure the "
                          "sourcemap option is respected.\n";
         }
     }

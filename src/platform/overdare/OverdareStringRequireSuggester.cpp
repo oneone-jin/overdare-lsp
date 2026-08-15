@@ -1,6 +1,6 @@
 #include "Luau/Common.h"
-#include "Platform/RobloxStringRequireSuggester.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdareStringRequireSuggester.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "Platform/StringRequireSuggester.hpp"
 #include "LSP/Utils.hpp"
 #include "LSP/Workspace.hpp"
@@ -102,7 +102,7 @@ std::vector<Luau::RequireAlias> SourceNodeRequireNode::getAvailableAliases() con
     return results;
 }
 
-std::unique_ptr<Luau::RequireNode> RobloxStringRequireSuggester::getNode(const Luau::ModuleName& name) const
+std::unique_ptr<Luau::RequireNode> OverdareStringRequireSuggester::getNode(const Luau::ModuleName& name) const
 {
     auto config = std::make_shared<const Luau::Config>(configResolver->getConfig(name, workspaceFolder->limits));
 

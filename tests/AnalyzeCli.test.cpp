@@ -5,7 +5,7 @@
 #include "LSP/Workspace.hpp"
 #include "LSP/WorkspaceFileResolver.hpp"
 #include "Analyze/CliConfigurationParser.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "Luau/TypeAttach.h"
 #include "Luau/PrettyPrinter.h"
 
@@ -36,7 +36,7 @@ ostream& operator<<(ostream& os, const vector<T>& value)
 static void initCliClient(CliClient& client)
 {
     client.globalConfig = Luau::LanguageServer::defaultTestClientConfiguration();
-    client.definitionsFiles.emplace("@roblox", "./tests/testdata/standard_definitions.d.luau");
+    client.definitionsFiles.emplace("@overdare", "./tests/testdata/standard_definitions.d.luau");
 }
 
 static void setupCliWorkspace(CliClient& client, WorkspaceFolder& workspace)
@@ -45,10 +45,10 @@ static void setupCliWorkspace(CliClient& client, WorkspaceFolder& workspace)
     workspace.isReady = true;
 }
 
-static void initRobloxCliClient(CliClient& client)
+static void initOverdareCliClient(CliClient& client)
 {
     initCliClient(client);
-    client.globalConfig.platform.type = LSPPlatformConfig::Roblox;
+    client.globalConfig.platform.type = LSPPlatformConfig::Overdare;
     client.globalConfig.sourcemap.enabled = true;
     client.globalConfig.sourcemap.sourcemapFile = "sourcemap.json";
 }
@@ -126,8 +126,8 @@ TEST_CASE("definition_files_from_settings_file_applied")
     applySettings(configFile, client);
 
     REQUIRE_EQ(client.definitionsFiles.size(), 1);
-    REQUIRE(client.definitionsFiles.find("@roblox1") != client.definitionsFiles.end());
-    CHECK_EQ(client.definitionsFiles["@roblox1"], "global_types/types.d.luau");
+    REQUIRE(client.definitionsFiles.find("@overdare1") != client.definitionsFiles.end());
+    CHECK_EQ(client.definitionsFiles["@overdare1"], "global_types/types.d.luau");
 }
 
 TEST_CASE("enable_new_solver_fflag_from_settings_file_applied")
@@ -160,13 +160,13 @@ TEST_CASE("parse_definitions_files_handles_new_syntax")
         .metavar("PATH");
 
     std::vector<std::string> arguments{
-        "", "--definitions:@roblox=example_path.d.luau", "--definitions:@lune=lune.d.luau", "--definitions:no_at_sign=path.d.luau"};
+        "", "--definitions:@overdare=example_path.d.luau", "--definitions:@lune=lune.d.luau", "--definitions:no_at_sign=path.d.luau"};
     program.parse_args(arguments);
 
     auto definitionsFiles = processDefinitionsFilePaths(program);
 
     CHECK_EQ(definitionsFiles, std::unordered_map<std::string, std::string>{
-                                   {"@roblox", "example_path.d.luau"},
+                                   {"@overdare", "example_path.d.luau"},
                                    {"@lune", "lune.d.luau"},
                                    {"@no_at_sign", "path.d.luau"},
                                });
@@ -188,8 +188,8 @@ TEST_CASE("parse_definitions_files_handles_legacy_syntax")
     auto definitionsFiles = processDefinitionsFilePaths(program);
 
     CHECK_EQ(definitionsFiles, std::unordered_map<std::string, std::string>{
-                                   {"@roblox", "example_path.d.luau"},
-                                   {"@roblox1", "lune.d.luau"},
+                                   {"@overdare", "example_path.d.luau"},
+                                   {"@overdare1", "lune.d.luau"},
                                });
 }
 
@@ -270,13 +270,13 @@ TEST_CASE("sourcemap_loaded_through_workspace_configuration")
     t.write_child("src/Module.luau", "return {}");
 
     CliClient client;
-    initRobloxCliClient(client);
+    initOverdareCliClient(client);
     WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
     setupCliWorkspace(client, workspace);
 
-    auto* robloxPlatform = dynamic_cast<RobloxPlatform*>(workspace.platform.get());
-    REQUIRE(robloxPlatform);
-    CHECK(robloxPlatform->rootSourceNode != nullptr);
+    auto* overdarePlatform = dynamic_cast<OverdarePlatform*>(workspace.platform.get());
+    REQUIRE(overdarePlatform);
+    CHECK(overdarePlatform->rootSourceNode != nullptr);
 }
 
 TEST_CASE("annotate_retains_type_graphs")
@@ -347,7 +347,7 @@ TEST_CASE("analyze_resolves_game_requires_with_sourcemap")
     t.write_child("src/server/ServerModule.luau", "local _ = require('@game/ReplicatedStorage/Util')");
 
     CliClient client;
-    initRobloxCliClient(client);
+    initOverdareCliClient(client);
     WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
     setupCliWorkspace(client, workspace);
 
@@ -387,7 +387,7 @@ TEST_CASE("analyze_resolves_non_mirrored_relative_requires_with_sourcemap")
     t.write_child("packages/combat/ModuleB.luau", "return {}");
 
     CliClient client;
-    initRobloxCliClient(client);
+    initOverdareCliClient(client);
     WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
     setupCliWorkspace(client, workspace);
 

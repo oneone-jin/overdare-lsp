@@ -1,5 +1,5 @@
 #include "Luau/TypeFwd.h"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 #include "LSP/Workspace.hpp"
 #include "Luau/BuiltinDefinitions.h"
@@ -374,9 +374,9 @@ static void clearSourcemapGeneratedTypes(Luau::GlobalTypes& globals)
     }
 }
 
-void RobloxPlatform::clearSourcemapTypes()
+void OverdarePlatform::clearSourcemapTypes()
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::clearSourcemapTypes", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::clearSourcemapTypes", "LSP");
     for (const auto& [name, sourceNode] : workspaceFolder->frontend.sourceNodes)
     {
         workspaceFolder->frontend.markDirty(name);
@@ -397,9 +397,9 @@ void RobloxPlatform::clearSourcemapTypes()
         rootSourceNode->clearCachedTypes();
 }
 
-bool RobloxPlatform::updateSourceMapFromContents(const std::string& sourceMapContents)
+bool OverdarePlatform::updateSourceMapFromContents(const std::string& sourceMapContents)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::updateSourceMapFromContents", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::updateSourceMapFromContents", "LSP");
     workspaceFolder->client->sendTrace("Sourcemap file read successfully");
 
     updateSourceNodeMap(sourceMapContents);
@@ -413,7 +413,7 @@ bool RobloxPlatform::updateSourceMapFromContents(const std::string& sourceMapCon
     return true;
 }
 
-void RobloxPlatform::updateSourcemapTypes()
+void OverdarePlatform::updateSourcemapTypes()
 {
     clearSourcemapTypes();
 
@@ -438,9 +438,9 @@ void RobloxPlatform::updateSourcemapTypes()
     }
 }
 
-bool RobloxPlatform::updateSourceMap()
+bool OverdarePlatform::updateSourceMap()
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::updateSourceMap", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::updateSourceMap", "LSP");
     auto config = workspaceFolder->client->getConfiguration(workspaceFolder->rootUri);
     std::string sourcemapFileName = config.sourcemap.sourcemapFile;
 
@@ -460,24 +460,16 @@ bool RobloxPlatform::updateSourceMap()
             return false;
         }
     }
-    else if (pluginInfo)
-    {
-        workspaceFolder->client->sendTrace("Creating sourcemap from plugin provided information");
-        workspaceFolder->client->sendWindowMessage(
-            lsp::MessageType::Info, "Couldn't find " + sourcemapFileName + " for workspace '" + workspaceFolder->name +
-                                        "'. Using available datamodel info from companion plugin (require paths may be missing)");
-        return updateSourceMapFromContents("{\"name\":\"Default\",\"className\":\"DataModel\",\"children\":[]}");
-    }
     else
     {
-        workspaceFolder->client->sendTrace("No sourcemap file or plugin information found, cannot update sourcemap");
+        workspaceFolder->client->sendTrace("No sourcemap file found, cannot update sourcemap");
         return false;
     }
 }
 
-void RobloxPlatform::writePathsToMap(SourceNode* node, const std::string& base, ScriptContext parentNameContext)
+void OverdarePlatform::writePathsToMap(SourceNode* node, const std::string& base, ScriptContext parentNameContext)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::writePathsToMap", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::writePathsToMap", "LSP");
     node->virtualPath = base;
     virtualPathsToSourceNodes[base] = node;
 
@@ -508,7 +500,7 @@ void RobloxPlatform::writePathsToMap(SourceNode* node, const std::string& base, 
     }
 }
 
-void RobloxPlatform::rebuildPathMaps()
+void OverdarePlatform::rebuildPathMaps()
 {
     realPathsToSourceNodes.clear();
     virtualPathsToSourceNodes.clear();
@@ -516,9 +508,9 @@ void RobloxPlatform::rebuildPathMaps()
         writePathsToMap(rootSourceNode, rootSourceNode->className == "DataModel" ? "game" : "ProjectRoot");
 }
 
-void RobloxPlatform::updateSourceNodeMap(const std::string& sourceMapContents)
+void OverdarePlatform::updateSourceNodeMap(const std::string& sourceMapContents)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::updateSourceNodeMap", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::updateSourceNodeMap", "LSP");
     rootSourceNode = nullptr;
     sourceNodeAllocator.clear();
     realPathsToSourceNodes.clear();
@@ -538,9 +530,6 @@ void RobloxPlatform::updateSourceNodeMap(const std::string& sourceMapContents)
         return;
     }
 
-    // Mutate with plugin info
-    hydrateSourcemapWithPluginInfo();
-
     // Write paths
     rebuildPathMaps();
 }
@@ -548,9 +537,9 @@ void RobloxPlatform::updateSourceNodeMap(const std::string& sourceMapContents)
 // TODO: expressiveTypes is used because of a Luau issue where we can't cast a most specific Instance type (which we create here)
 // to another type. For the time being, we therefore make all our DataModel instance types marked as "any".
 // Remove this once Luau has improved
-void RobloxPlatform::handleSourcemapUpdate(Luau::Frontend& frontend, const Luau::GlobalTypes& globals, bool expressiveTypes)
+void OverdarePlatform::handleSourcemapUpdate(Luau::Frontend& frontend, const Luau::GlobalTypes& globals, bool expressiveTypes)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::handleSourcemapUpdate", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::handleSourcemapUpdate", "LSP");
     if (!rootSourceNode)
         return;
 
@@ -637,26 +626,26 @@ void RobloxPlatform::handleSourcemapUpdate(Luau::Frontend& frontend, const Luau:
     };
 }
 
-std::optional<const SourceNode*> RobloxPlatform::getSourceNodeFromVirtualPath(const Luau::ModuleName& name) const
+std::optional<const SourceNode*> OverdarePlatform::getSourceNodeFromVirtualPath(const Luau::ModuleName& name) const
 {
     if (auto it = virtualPathsToSourceNodes.find(name); it != virtualPathsToSourceNodes.end())
         return it->second;
     return std::nullopt;
 }
 
-std::optional<const SourceNode*> RobloxPlatform::getSourceNodeFromRealPath(const Uri& name) const
+std::optional<const SourceNode*> OverdarePlatform::getSourceNodeFromRealPath(const Uri& name) const
 {
     if (auto it = realPathsToSourceNodes.find(name); it != realPathsToSourceNodes.end())
         return it->second;
     return std::nullopt;
 }
 
-Luau::ModuleName RobloxPlatform::getVirtualPathFromSourceNode(const SourceNode* sourceNode)
+Luau::ModuleName OverdarePlatform::getVirtualPathFromSourceNode(const SourceNode* sourceNode)
 {
     return sourceNode->virtualPath;
 }
 
-std::optional<Uri> RobloxPlatform::getRealPathFromSourceNode(const SourceNode* sourceNode) const
+std::optional<Uri> OverdarePlatform::getRealPathFromSourceNode(const SourceNode* sourceNode) const
 {
     // NOTE: this filepath is generated by the sourcemap, which is relative to the cwd where the sourcemap
     // command was run from. Hence, we concatenate it to the end of the workspace path, and normalise the result

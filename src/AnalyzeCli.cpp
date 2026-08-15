@@ -189,7 +189,7 @@ std::unordered_map<std::string, std::string> processDefinitionsFilePaths(const a
         if (eqIndex == std::string::npos)
         {
             // TODO: Remove Me - backwards compatibility
-            packageName = "@roblox";
+            packageName = "@overdare";
             if (backwardsCompatibilityNameSuffix > 0)
                 packageName += std::to_string(backwardsCompatibilityNameSuffix);
             backwardsCompatibilityNameSuffix += 1;
@@ -273,27 +273,27 @@ int startAnalyze(const argparse::ArgumentParser& program)
     {
         if (platformArg == "standard")
             client.globalConfig.platform.type = LSPPlatformConfig::Standard;
-        else if (platformArg == "roblox")
-            client.globalConfig.platform.type = LSPPlatformConfig::Roblox;
+        else if (platformArg == "overdare")
+            client.globalConfig.platform.type = LSPPlatformConfig::Overdare;
     }
 
-    if (client.globalConfig.platform.type == LSPPlatformConfig::Roblox && client.definitionsFiles.empty())
+    if (client.globalConfig.platform.type == LSPPlatformConfig::Overdare && client.definitionsFiles.empty())
     {
-        fprintf(stderr, "WARNING: --platform is set to 'roblox' but no definitions files are provided. 'luau-lsp analyze' does not download "
+        fprintf(stderr, "WARNING: --platform is set to 'overdare' but no definitions files are provided. 'luau-lsp analyze' does not download "
                         "definitions files; use `--platform=standard` to silence\n");
     }
 
-    // Configure sourcemap via configuration (handled by RobloxPlatform::setupWithConfiguration)
+    // Configure sourcemap via configuration (handled by OverdarePlatform::setupWithConfiguration)
     if (sourcemapPath)
     {
-        if (client.globalConfig.platform.type == LSPPlatformConfig::Roblox)
+        if (client.globalConfig.platform.type == LSPPlatformConfig::Overdare)
         {
             client.globalConfig.sourcemap.sourcemapFile = *sourcemapPath;
             client.globalConfig.sourcemap.enabled = true;
         }
         else
         {
-            std::cerr << "warning: a sourcemap was provided, but the current platform is not `roblox`. Use `--platform roblox` to ensure the "
+            std::cerr << "warning: a sourcemap was provided, but the current platform is not `overdare`. Use `--platform overdare` to ensure the "
                          "sourcemap option is respected.\n";
         }
     }

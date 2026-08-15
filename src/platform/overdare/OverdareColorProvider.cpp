@@ -1,4 +1,4 @@
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 #include "LSP/ColorProvider.hpp"
 
@@ -19,12 +19,12 @@ static std::string formatDouble(double d)
     return s;
 }
 
-struct RobloxColorVisitor : public Luau::AstVisitor
+struct OverdareColorVisitor : public Luau::AstVisitor
 {
     const TextDocument* textDocument;
     std::vector<lsp::ColorInformation> colors{};
 
-    explicit RobloxColorVisitor(const TextDocument* textDocument)
+    explicit OverdareColorVisitor(const TextDocument* textDocument)
         : textDocument(textDocument)
     {
     }
@@ -132,14 +132,14 @@ struct RobloxColorVisitor : public Luau::AstVisitor
     }
 };
 
-lsp::DocumentColorResult RobloxPlatform::documentColor(const TextDocument& textDocument, const Luau::SourceModule& module)
+lsp::DocumentColorResult OverdarePlatform::documentColor(const TextDocument& textDocument, const Luau::SourceModule& module)
 {
-    RobloxColorVisitor visitor{&textDocument};
+    OverdareColorVisitor visitor{&textDocument};
     module.root->visit(&visitor);
     return visitor.colors;
 }
 
-lsp::ColorPresentationResult RobloxPlatform::colorPresentation(const lsp::ColorPresentationParams& params)
+lsp::ColorPresentationResult OverdarePlatform::colorPresentation(const lsp::ColorPresentationParams& params)
 {
     // Create color presentations
     lsp::ColorPresentationResult presentations;

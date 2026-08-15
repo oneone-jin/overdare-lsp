@@ -1,8 +1,8 @@
 #include "doctest.h"
 #include "Fixture.h"
-#include "RobloxTestConstants.h"
+#include "OverdareTestConstants.h"
 #include "LSP/WorkspaceFileResolver.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "Luau/Ast.h"
 #include "Luau/FileResolver.h"
 #include "LuauFileUtils.hpp"
@@ -13,7 +13,7 @@ TEST_CASE("resolveModule handles LocalPlayer PlayerScripts")
 {
     Luau::TypeCheckLimits limits;
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     Luau::ModuleInfo baseContext{"game/Players/LocalPlayer/PlayerScripts"};
@@ -28,7 +28,7 @@ TEST_CASE("resolveModule handles LocalPlayer PlayerGui")
 {
     Luau::TypeCheckLimits limits;
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     Luau::ModuleInfo baseContext{"game/Players/LocalPlayer/PlayerGui"};
@@ -43,7 +43,7 @@ TEST_CASE("resolveModule handles LocalPlayer StarterGear")
 {
     Luau::TypeCheckLimits limits;
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     Luau::ModuleInfo baseContext{"game/Players/LocalPlayer/StarterGear"};
@@ -57,7 +57,7 @@ TEST_CASE("resolveModule handles LocalPlayer StarterGear")
 TEST_CASE_FIXTURE(Fixture, "resolveModule handles FindFirstChild")
 {
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     Luau::ModuleInfo baseContext{"game/ReplicatedStorage"};
@@ -81,7 +81,7 @@ TEST_CASE_FIXTURE(Fixture, "resolveModule handles FindFirstChild")
 TEST_CASE_FIXTURE(Fixture, "resolveModule fails on FindFirstChild with recursive enabled")
 {
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     Luau::ModuleInfo baseContext{"game/ReplicatedStorage"};
@@ -106,7 +106,7 @@ TEST_CASE_FIXTURE(Fixture, "resolveModule handles FindFirstAncestor")
     SourceNode sourceNode("Foo", "ClassName", {}, {});
 
     WorkspaceFileResolver fileResolver;
-    RobloxPlatform platform{&fileResolver};
+    OverdarePlatform platform{&fileResolver};
     fileResolver.platform = &platform;
 
     platform.rootSourceNode = &sourceNode;
@@ -399,7 +399,7 @@ TEST_CASE("string_require_resolves_relative_to_file_integration_test")
     // rooted in the actual project directory rather than using Fixture's temp directory
     TestClient client;
     client.globalConfig = Luau::LanguageServer::defaultTestClientConfiguration();
-    client.definitionsFiles.emplace("@roblox", "./tests/testdata/standard_definitions.d.luau");
+    client.definitionsFiles.emplace("@overdare", "./tests/testdata/standard_definitions.d.luau");
 
     auto cwd = Luau::FileUtils::getCurrentWorkingDirectory();
     REQUIRE(cwd);

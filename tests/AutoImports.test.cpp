@@ -1,7 +1,7 @@
 #include "doctest.h"
 #include "Fixture.h"
-#include "RobloxTestConstants.h"
-#include "Platform/RobloxPlatform.hpp"
+#include "OverdareTestConstants.h"
+#include "Platform/OverdarePlatform.hpp"
 #include "LSP/IostreamHelpers.hpp"
 #include "Platform/StringRequireAutoImporter.hpp"
 
@@ -1394,7 +1394,7 @@ TEST_CASE_FIXTURE(Fixture, "aliased_requires_are_inserted_before_relative_requir
     CHECK_EQ(insertedLineNumber, 0);
 }
 
-TEST_CASE_FIXTURE(Fixture, "string_require_imports_work_on_roblox_platform")
+TEST_CASE_FIXTURE(Fixture, "string_require_imports_work_on_overdare_platform")
 {
     client->globalConfig.completion.imports.enabled = true;
     client->globalConfig.completion.imports.stringRequires.enabled = true;

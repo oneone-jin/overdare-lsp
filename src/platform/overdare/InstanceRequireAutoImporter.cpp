@@ -1,7 +1,7 @@
 #include "Platform/InstanceRequireAutoImporter.hpp"
 
 #include "LSP/Completion.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 namespace Luau::LanguageServer::AutoImports
 {

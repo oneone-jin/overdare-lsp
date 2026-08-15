@@ -6,12 +6,12 @@
 
 #include <string>
 
-class RobloxPlatform;
+class OverdarePlatform;
 
 namespace Luau::LanguageServer::AutoImports
 {
 
-struct RobloxFindImportsVisitor : FindImportsVisitor
+struct OverdareFindImportsVisitor : FindImportsVisitor
 {
     std::optional<size_t> firstServiceDefinitionLine = std::nullopt;
     std::optional<size_t> lastServiceDefinitionLine = std::nullopt;
@@ -72,9 +72,9 @@ struct InstanceRequireAutoImporterContext
     Luau::NotNull<const ClientCompletionImportsConfiguration> config;
 
     size_t hotCommentsLineNumber = 0;
-    Luau::NotNull<const RobloxFindImportsVisitor> importsVisitor;
+    Luau::NotNull<const OverdareFindImportsVisitor> importsVisitor;
 
-    Luau::NotNull<const RobloxPlatform> platform;
+    Luau::NotNull<const OverdarePlatform> platform;
 
     std::optional<std::function<bool(const std::string&)>> moduleFilter;
 };
@@ -90,7 +90,7 @@ struct InstanceRequireResult
     const char* sortText;                                             // For completion sorting
 };
 
-/// Create a text edit for inserting a Roblox service import (e.g., `local Players = game:GetService("Players")`)
+/// Create a text edit for inserting an OVERDARE service import (e.g., `local Players = game:GetService("Players")`)
 lsp::TextEdit createServiceTextEdit(const std::string& name, size_t lineNumber, bool appendNewline = false, bool useConst = false);
 /// Optimise an absolute require path by removing the "game/" prefix (e.g., "game/ReplicatedStorage/Foo" -> "ReplicatedStorage/Foo")
 std::string optimiseAbsoluteRequire(const std::string& path);

@@ -16,7 +16,7 @@
       "outFiles": ["${workspaceFolder}/editors/code/dist/**/*.js"],
       "preLaunchTask": "npm: compile",
       "env": {
-        "LUAU_LSP_SERVER_PATH": "${workspaceFolder}/${input:binaryPath}/luau-lsp"
+        "LUAU_LSP_SERVER_PATH": "${workspaceFolder}/build/luau-lsp"
       },
       "windows": {
         "env": {
@@ -33,7 +33,8 @@
         "--extensionDevelopmentPath=${workspaceFolder}/editors/code"
       ],
       "env": {
-        "CMAKE_BUILD_TYPE": "${command:cmake.buildType}"
+        "CMAKE_BUILD_TYPE": "${command:cmake.buildType}",
+        "LUAU_LSP_SERVER_PATH": "${workspaceFolder}/build/luau-lsp"
       },
       "outFiles": ["${workspaceFolder}/editors/code/dist/**/*.js"],
       "preLaunchTask": "Build Server and Extension"
