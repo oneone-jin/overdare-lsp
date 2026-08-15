@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.3] - 2026-08-16
+
+### Added
+
+- Added Explorer file decorations for `.lua`/`.luau` files - a badge and color derived from `sourcemap.json`, showing whether a file is a `ModuleScript` (purple `M`), `Script` (gray `S`), or `LocalScript` (blue `L`). Refreshes automatically whenever the sourcemap changes
+
+### Removed
+
+- Removed the `.server.lua`/`.client.lua` filename-suffix fallback for classifying a file as a Script when it isn't found in the sourcemap. Real OVERDARE projects are flat under `Lua/` with no such naming convention - a file's type is only knowable via the sourcemap, so this fallback was misleading rather than useful; such files now default to `Module`, same as before the fallback was added
+
 ## [1.69.2] - 2026-08-16
 
 ### Changed

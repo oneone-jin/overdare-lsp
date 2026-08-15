@@ -43,14 +43,10 @@ Luau::SourceCode::Type OverdarePlatform::sourceCodeTypeFromPath(const Uri& path)
     if (auto sourceNode = getSourceNodeFromRealPath(path))
         return (*sourceNode)->sourceCodeType();
 
-    auto filename = path.filename();
-
-    if (endsWith(filename, ".server.lua") || endsWith(filename, ".server.luau") || endsWith(filename, ".client.lua") ||
-        endsWith(filename, ".client.luau"))
-    {
-        return Luau::SourceCode::Type::Script;
-    }
-
+    // OVERDARE scripts are flat under Lua/ with no filename convention distinguishing
+    // Script/LocalScript/ModuleScript (unlike Rojo's .server./.client. suffixes) - their
+    // type is only known via the sourcemap, so a file the sourcemap doesn't know about
+    // (e.g. not yet indexed, or outside the tracked tree) has no way to be classified.
     return Luau::SourceCode::Type::Module;
 }
 

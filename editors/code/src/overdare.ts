@@ -6,6 +6,7 @@ import { AddArgCallback, PlatformContext } from "./extension";
 
 import * as utils from "./utils";
 import { watchOvdrjm } from "./ovdrjmSourcemap";
+import { registerScriptTypeDecorations } from "./scriptTypeDecorations";
 import overdareGlobalTypesSource from "../../../scripts/globalTypes.d.luau";
 
 const API_DOCS = "https://luau-lsp.pages.dev/api-docs/en-us.json";
@@ -433,6 +434,8 @@ export const onActivate = async (
   );
 
   startSourcemapGenerationForAllFolders();
+
+  registerScriptTypeDecorations(context);
 };
 
 export const preLanguageServerStart = async (
