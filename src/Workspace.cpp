@@ -4,7 +4,7 @@
 
 #include "LSP/Diagnostics.hpp"
 #include "Platform/LSPPlatform.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "Plugin/PluginManager.hpp"
 #include "Plugin/PluginDefinitions.hpp"
 #include "glob/match.h"
@@ -561,14 +561,14 @@ void WorkspaceFolder::registerTypes(const std::vector<std::string>& disabledGlob
     if (client->definitionsFiles.empty())
         client->sendLogMessage(lsp::MessageType::Warning, "No definitions file provided by client");
 
-    // For backwards compatibility, we need to keep an ordering where a definitions file for '@roblox' is always processed first
+    // For backwards compatibility, we need to keep an ordering where a definitions file for '@overdare' is always processed first
     std::vector<std::pair<std::string, std::string>> definitionsFilesToProcess{};
     definitionsFilesToProcess.reserve(client->definitionsFiles.size());
-    if (auto it = client->definitionsFiles.find("@roblox"); it != client->definitionsFiles.end())
+    if (auto it = client->definitionsFiles.find("@overdare"); it != client->definitionsFiles.end())
         definitionsFilesToProcess.emplace_back(*it);
     for (const auto& pair : client->definitionsFiles)
     {
-        if (pair.first != "@roblox")
+        if (pair.first != "@overdare")
             definitionsFilesToProcess.emplace_back(pair);
     }
 

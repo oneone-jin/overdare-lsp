@@ -1,4 +1,4 @@
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 #include "LSP/Workspace.hpp"
 #include "LSP/Utils.hpp"
@@ -8,7 +8,7 @@
 
 #include <unordered_set>
 
-lsp::WorkspaceEdit RobloxPlatform::computeOrganiseServicesEdit(const lsp::DocumentUri& uri)
+lsp::WorkspaceEdit OverdarePlatform::computeOrganiseServicesEdit(const lsp::DocumentUri& uri)
 {
     auto moduleName = fileResolver->getModuleName(uri);
     auto textDocument = fileResolver->getTextDocument(uri);
@@ -23,7 +23,7 @@ lsp::WorkspaceEdit RobloxPlatform::computeOrganiseServicesEdit(const lsp::Docume
         return {};
 
     // Find all `local X = game:GetService("Service")`
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor visitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor visitor;
     visitor.visit(sourceModule->root);
 
     if (visitor.serviceLineMap.empty())
@@ -65,7 +65,7 @@ lsp::WorkspaceEdit RobloxPlatform::computeOrganiseServicesEdit(const lsp::Docume
     return workspaceEdit;
 }
 
-void RobloxPlatform::handleCodeAction(const lsp::CodeActionParams& params, std::vector<lsp::CodeAction>& items)
+void OverdarePlatform::handleCodeAction(const lsp::CodeActionParams& params, std::vector<lsp::CodeAction>& items)
 {
     if (params.context.wants(lsp::CodeActionKind::Source) || params.context.wants(lsp::CodeActionKind::SourceOrganizeImports))
     {
@@ -77,7 +77,7 @@ void RobloxPlatform::handleCodeAction(const lsp::CodeActionParams& params, std::
     }
 }
 
-void RobloxPlatform::handleUnknownSymbolFix(const UnknownSymbolFixContext& ctx, const Luau::UnknownSymbol& unknownSymbol,
+void OverdarePlatform::handleUnknownSymbolFix(const UnknownSymbolFixContext& ctx, const Luau::UnknownSymbol& unknownSymbol,
     const std::optional<lsp::Diagnostic>& diagnostic, std::vector<lsp::CodeAction>& result)
 {
     if (unknownSymbol.context != Luau::UnknownSymbol::Binding)
@@ -85,13 +85,13 @@ void RobloxPlatform::handleUnknownSymbolFix(const UnknownSymbolFixContext& ctx, 
 
     ClientConfiguration config = workspaceFolder->fileResolver.client->getConfiguration(workspaceFolder->rootUri);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor importsVisitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor importsVisitor;
     importsVisitor.visit(ctx.sourceModule->root);
 
     auto hotCommentsLineNumber = Luau::LanguageServer::AutoImports::computeHotCommentsLineNumber(*ctx.sourceModule);
 
-    // 1. Check if the unknown symbol matches a Roblox service name
-    std::optional<RobloxDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
+    // 1. Check if the unknown symbol matches an OVERDARE service name
+    std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
     auto services = metadata.has_value() ? metadata->SERVICES : std::vector<std::string>{};
     bool foundServiceMatch = contains(services, unknownSymbol.name) && !contains(importsVisitor.serviceLineMap, unknownSymbol.name);
     if (foundServiceMatch)
@@ -166,7 +166,7 @@ void RobloxPlatform::handleUnknownSymbolFix(const UnknownSymbolFixContext& ctx, 
     }
 }
 
-std::vector<lsp::TextEdit> RobloxPlatform::computeAddAllMissingImportsEdits(
+std::vector<lsp::TextEdit> OverdarePlatform::computeAddAllMissingImportsEdits(
     const UnknownSymbolFixContext& ctx, const std::vector<Luau::TypeError>& errors)
 {
     std::vector<lsp::TextEdit> serviceEdits;
@@ -175,7 +175,7 @@ std::vector<lsp::TextEdit> RobloxPlatform::computeAddAllMissingImportsEdits(
 
     auto config = workspaceFolder->fileResolver.client->getConfiguration(workspaceFolder->rootUri);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor importsVisitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor importsVisitor;
     importsVisitor.visit(ctx.sourceModule->root);
 
     auto hotCommentsLineNumber = Luau::LanguageServer::AutoImports::computeHotCommentsLineNumber(*ctx.sourceModule);
@@ -191,7 +191,7 @@ std::vector<lsp::TextEdit> RobloxPlatform::computeAddAllMissingImportsEdits(
     }
 
     // Handle symbols as services
-    std::optional<RobloxDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
+    std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
     auto services = metadata.has_value() ? metadata->SERVICES : std::vector<std::string>{};
     for (const auto& symbolName : unknownSymbols)
     {

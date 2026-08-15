@@ -8,12 +8,12 @@ using json = nlohmann::json;
 
 const std::string kSourcemapGeneratedTag = "@sourcemap-generated";
 
-struct RobloxDefinitionsFileMetadata
+struct OverdareDefinitionsFileMetadata
 {
     std::vector<std::string> CREATABLE_INSTANCES{};
     std::vector<std::string> SERVICES{};
 };
-NLOHMANN_DEFINE_OPTIONAL(RobloxDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES)
+NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES)
 
 enum class ScriptContext
 {
@@ -60,7 +60,7 @@ struct SourceNode
     const SourceNode* walkPath(const std::string& path) const;
     /// Recursively clear the cached sourcemap-generated types (`tys`) for this node and its descendants.
     /// Must be called whenever the types the cache points into are about to be destroyed, including on
-    /// nodes detached from the tree (which `RobloxPlatform::clearSourcemapTypes` cannot reach)
+    /// nodes detached from the tree (which `OverdarePlatform::clearSourcemapTypes` cannot reach)
     void clearCachedTypes() const;
 
     bool containsFilePaths() const;
@@ -69,27 +69,14 @@ struct SourceNode
     static SourceNode* fromJson(const json& j, Luau::TypedAllocator<SourceNode>& allocator);
 };
 
-struct PluginNode
-{
-    std::string name = "";
-    std::string className = "";
-    std::vector<std::string> filePaths{};
-    std::vector<PluginNode*> children{};
-
-    static PluginNode* fromJson(const json& j, Luau::TypedAllocator<PluginNode>& allocator);
-};
-
 /// Parses class names from QueryDescendants CSS-like selector strings.
 /// Returns the class name from the last compound selector of each comma-separated group.
 /// E.g., "Model >> BasePart" → {"BasePart"}, "Part, TextLabel" → {"Part", "TextLabel"}
 std::vector<std::string> parseClassNamesFromSelector(const std::string& selector);
 
-class RobloxPlatform : public LSPPlatform
+class OverdarePlatform : public LSPPlatform
 {
 private:
-    // Plugin-provided DataModel information
-    PluginNode* pluginInfo = nullptr;
-
     mutable std::unordered_map<Uri, const SourceNode*, UriHash> realPathsToSourceNodes{};
 
     std::optional<const SourceNode*> getSourceNodeFromVirtualPath(const Luau::ModuleName& name) const;
@@ -109,27 +96,17 @@ public:
     // The root source node from a parsed Rojo source map
     SourceNode* rootSourceNode = nullptr;
     Luau::TypedAllocator<SourceNode> sourceNodeAllocator;
-    Luau::TypedAllocator<PluginNode> pluginNodeAllocator;
 
     mutable std::unordered_map<Luau::ModuleName, const SourceNode*> virtualPathsToSourceNodes{};
 
     Luau::TypeArena instanceTypes;
 
-    /// These are "private" but exposed for unit testing only
-    void setPluginInfo(PluginNode* info)
-    {
-        pluginInfo = info;
-    }
     bool updateSourceMap();
     bool updateSourceMapFromContents(const std::string& sourceMapContents);
     void writePathsToMap(SourceNode* node, const std::string& base, ScriptContext parentNameContext = ScriptContext::Shared);
     void updateSourcemapTypes();
 
     std::optional<Uri> getRealPathFromSourceNode(const SourceNode* sourceNode) const;
-
-    void clearPluginManagedNodesFromSourcemap(SourceNode* sourceNode);
-
-    bool hydrateSourcemapWithPluginInfo();
 
     void mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std::optional<nlohmann::json> metadata) override;
 
@@ -184,11 +161,6 @@ public:
     lsp::DocumentColorResult documentColor(const TextDocument& textDocument, const Luau::SourceModule& module) override;
 
     lsp::ColorPresentationResult colorPresentation(const lsp::ColorPresentationParams& params) override;
-
-    void onStudioPluginFullChange(const json& dataModel);
-    void onStudioPluginClear();
-    bool handleNotification(const std::string& method, std::optional<json> params) override;
-
 
     using LSPPlatform::LSPPlatform;
 };

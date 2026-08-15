@@ -8,7 +8,7 @@
 
 class WorkspaceFolder;
 struct SourceNode;
-class RobloxPlatform;
+class OverdarePlatform;
 
 class SourceNodeRequireNode : public Luau::RequireNode
 {
@@ -36,11 +36,11 @@ private:
     WorkspaceFolder* workspaceFolder;
 };
 
-class RobloxStringRequireSuggester : public Luau::RequireSuggester
+class OverdareStringRequireSuggester : public Luau::RequireSuggester
 {
 public:
-    RobloxStringRequireSuggester(
-        WorkspaceFolder* workspaceFolder, Luau::ConfigResolver* configResolver, const RobloxPlatform* platform)
+    OverdareStringRequireSuggester(
+        WorkspaceFolder* workspaceFolder, Luau::ConfigResolver* configResolver, const OverdarePlatform* platform)
         : workspaceFolder(workspaceFolder)
         , configResolver(configResolver)
         , platform(platform)
@@ -53,5 +53,5 @@ protected:
 private:
     WorkspaceFolder* workspaceFolder;
     Luau::ConfigResolver* configResolver;
-    const RobloxPlatform* platform;
+    const OverdarePlatform* platform;
 };

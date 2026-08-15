@@ -1,4 +1,4 @@
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 #include "Luau/BuiltinDefinitions.h"
 #include "Luau/ConstraintSolver.h"
@@ -658,7 +658,7 @@ static void attachTagSafe(Luau::TableType::Props& props, const char* property, c
     }
 }
 
-void RobloxPlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std::optional<nlohmann::json> metadata)
+void OverdarePlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std::optional<nlohmann::json> metadata)
 {
     // HACK: Mark "debug" using `@luau` symbol instead
     if (auto it = globals.globalScope->bindings.find(Luau::AstName("debug")); it != globals.globalScope->bindings.end())
@@ -733,10 +733,10 @@ void RobloxPlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std
         }
     }
 
-    std::optional<RobloxDefinitionsFileMetadata> robloxMetadata = metadata;
+    std::optional<OverdareDefinitionsFileMetadata> overdareMetadata = metadata;
 
     // Attach onto Instance.new() and Instance.fromExisting()
-    if (robloxMetadata.has_value() && !robloxMetadata->CREATABLE_INSTANCES.empty())
+    if (overdareMetadata.has_value() && !overdareMetadata->CREATABLE_INSTANCES.empty())
         if (auto instanceGlobal = globals.globalScope->lookup(Luau::AstName("Instance")))
             if (auto ttv = Luau::get<Luau::TableType>(instanceGlobal.value()))
             {
@@ -746,7 +746,7 @@ void RobloxPlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std
 
                     Luau::attachTag(*newFunction->second.readTy, "CreatableInstances");
                     Luau::attachMagicFunction(
-                        *newFunction->second.readTy, std::make_shared<MagicTypeLookup>(robloxMetadata->CREATABLE_INSTANCES, "Invalid class name"));
+                        *newFunction->second.readTy, std::make_shared<MagicTypeLookup>(overdareMetadata->CREATABLE_INSTANCES, "Invalid class name"));
                 }
 
                 if (auto newFunction = ttv->props.find("fromExisting");
@@ -757,7 +757,7 @@ void RobloxPlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std
             }
 
     // Attach onto `game:GetService()`
-    if (robloxMetadata.has_value() && !robloxMetadata->SERVICES.empty())
+    if (overdareMetadata.has_value() && !overdareMetadata->SERVICES.empty())
         if (auto serviceProviderType = globals.globalScope->lookupType("ServiceProvider"))
             if (auto* ctv = Luau::getMutable<Luau::ExternType>(serviceProviderType->type);
                 ctv && ctv->props.find("GetService") != ctv->props.end() && ctv->props["GetService"].readTy &&
@@ -765,7 +765,7 @@ void RobloxPlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, std
             {
                 Luau::attachTag(*ctv->props["GetService"].readTy, "Services");
                 Luau::attachMagicFunction(
-                    *ctv->props["GetService"].readTy, std::make_shared<MagicTypeLookup>(robloxMetadata->SERVICES, "Invalid service name"));
+                    *ctv->props["GetService"].readTy, std::make_shared<MagicTypeLookup>(overdareMetadata->SERVICES, "Invalid service name"));
             }
 
     // Move Enums over as imported type bindings

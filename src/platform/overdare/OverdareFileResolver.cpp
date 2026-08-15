@@ -1,5 +1,5 @@
-#include "Platform/RobloxPlatform.hpp"
-#include "Platform/RobloxStringRequireSuggester.hpp"
+#include "Platform/OverdarePlatform.hpp"
+#include "Platform/OverdareStringRequireSuggester.hpp"
 #include "Platform/StringRequireAutoImporter.hpp"
 #include "LSP/JsonTomlSyntaxParser.hpp"
 #include "LSP/Completion.hpp"
@@ -11,17 +11,17 @@
 #include <unordered_set>
 #include "LuauFileUtils.hpp"
 
-std::optional<Luau::ModuleName> RobloxPlatform::resolveToVirtualPath(const Uri& uri) const
+std::optional<Luau::ModuleName> OverdarePlatform::resolveToVirtualPath(const Uri& uri) const
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::resolveToVirtualPath", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::resolveToVirtualPath", "LSP");
     if (const auto sourceNode = getSourceNodeFromRealPath(uri))
         return getVirtualPathFromSourceNode(*sourceNode);
     return std::nullopt;
 }
 
-std::optional<Uri> RobloxPlatform::resolveToRealPath(const Luau::ModuleName& name) const
+std::optional<Uri> OverdarePlatform::resolveToRealPath(const Luau::ModuleName& name) const
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::resolveToRealPath", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::resolveToRealPath", "LSP");
     if (isVirtualPath(name))
     {
         if (auto sourceNode = getSourceNodeFromVirtualPath(name))
@@ -37,9 +37,9 @@ std::optional<Uri> RobloxPlatform::resolveToRealPath(const Luau::ModuleName& nam
     return std::nullopt;
 }
 
-Luau::SourceCode::Type RobloxPlatform::sourceCodeTypeFromPath(const Uri& path) const
+Luau::SourceCode::Type OverdarePlatform::sourceCodeTypeFromPath(const Uri& path) const
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::sourceCodeTypeFromPath", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::sourceCodeTypeFromPath", "LSP");
     if (auto sourceNode = getSourceNodeFromRealPath(path))
         return (*sourceNode)->sourceCodeType();
 
@@ -54,9 +54,9 @@ Luau::SourceCode::Type RobloxPlatform::sourceCodeTypeFromPath(const Uri& path) c
     return Luau::SourceCode::Type::Module;
 }
 
-std::optional<std::string> RobloxPlatform::readSourceCode(const Luau::ModuleName& name, const Uri& path) const
+std::optional<std::string> OverdarePlatform::readSourceCode(const Luau::ModuleName& name, const Uri& path) const
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::readSourceCode", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::readSourceCode", "LSP");
     if (auto parentResult = LSPPlatform::readSourceCode(name, path))
         return parentResult;
 
@@ -110,7 +110,7 @@ std::optional<std::string> RobloxPlatform::readSourceCode(const Luau::ModuleName
     return source;
 }
 
-std::optional<Luau::ModuleInfo> RobloxPlatform::resolveStringRequire(
+std::optional<Luau::ModuleInfo> OverdarePlatform::resolveStringRequire(
     const Luau::ModuleInfo* context, const std::string& requiredString, const Luau::TypeCheckLimits& limits)
 {
     if (!context)
@@ -201,9 +201,9 @@ static std::string mapContext(const std::string& context)
     return context;
 }
 
-std::unique_ptr<Luau::RequireSuggester> RobloxPlatform::getRequireSuggester()
+std::unique_ptr<Luau::RequireSuggester> OverdarePlatform::getRequireSuggester()
 {
-    return std::make_unique<RobloxStringRequireSuggester>(workspaceFolder, fileResolver, this);
+    return std::make_unique<OverdareStringRequireSuggester>(workspaceFolder, fileResolver, this);
 }
 
 static const SourceNode* getServiceNode(const SourceNode* n)
@@ -218,7 +218,7 @@ static const SourceNode* getServiceNode(const SourceNode* n)
 }
 
 static std::optional<std::pair<std::string, const char*>> computeSourcemapRequirePath(
-    const RobloxPlatform* platform,
+    const OverdarePlatform* platform,
     const SourceNode* fromNode,
     const std::unordered_set<const SourceNode*>& fromAncestors,
     const SourceNode* fromService,
@@ -322,7 +322,7 @@ static std::optional<std::pair<std::string, const char*>> computeSourcemapRequir
     return computeAbsolute();
 }
 
-Luau::LanguageServer::AutoImports::ModuleVisitor RobloxPlatform::getAutoImportsModuleVisitor(const Luau::ModuleName& from)
+Luau::LanguageServer::AutoImports::ModuleVisitor OverdarePlatform::getAutoImportsModuleVisitor(const Luau::ModuleName& from)
 {
     if (!rootSourceNode || virtualPathsToSourceNodes.find(from) == virtualPathsToSourceNodes.end())
         return LSPPlatform::getAutoImportsModuleVisitor(from);
@@ -334,7 +334,7 @@ Luau::LanguageServer::AutoImports::ModuleVisitor RobloxPlatform::getAutoImportsM
     };
 }
 
-std::optional<Luau::LanguageServer::AutoImports::RequirePathComputer> RobloxPlatform::getAutoImportsRequirePathComputer(
+std::optional<Luau::LanguageServer::AutoImports::RequirePathComputer> OverdarePlatform::getAutoImportsRequirePathComputer(
     const Luau::ModuleName& from, ImportRequireStyle style)
 {
     if (!rootSourceNode)
@@ -363,7 +363,7 @@ std::optional<Luau::LanguageServer::AutoImports::RequirePathComputer> RobloxPlat
     };
 }
 
-std::optional<Luau::ModuleInfo> RobloxPlatform::resolveModule(const Luau::ModuleInfo* context, Luau::AstExpr* node, const Luau::TypeCheckLimits& limits)
+std::optional<Luau::ModuleInfo> OverdarePlatform::resolveModule(const Luau::ModuleInfo* context, Luau::AstExpr* node, const Luau::TypeCheckLimits& limits)
 {
 
     if (auto parentResult = LSPPlatform::resolveModule(context, node, limits))

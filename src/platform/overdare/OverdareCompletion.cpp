@@ -1,4 +1,4 @@
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 #include "Luau/TimeTrace.h"
 #include "LuauFileUtils.hpp"
@@ -66,13 +66,13 @@ static lsp::CompletionItem createSuggestService(const std::string& service, size
     return item;
 }
 
-std::optional<Luau::AutocompleteEntryMap> RobloxPlatform::completionCallback(
+std::optional<Luau::AutocompleteEntryMap> OverdarePlatform::completionCallback(
     const std::string& tag, std::optional<const Luau::ExternType*> ctx, std::optional<std::string> contents, const Luau::ModuleName& moduleName)
 {
     if (auto parentResult = LSPPlatform::completionCallback(tag, ctx, contents, moduleName))
         return parentResult;
 
-    std::optional<RobloxDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
+    std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
 
     if (tag == "ClassNames")
     {
@@ -191,7 +191,7 @@ std::optional<Luau::AutocompleteEntryMap> RobloxPlatform::completionCallback(
     return std::nullopt;
 }
 
-const char* RobloxPlatform::handleSortText(
+const char* OverdarePlatform::handleSortText(
     const Luau::Frontend& frontend, const std::string& name, const Luau::AutocompleteEntry& entry, const std::unordered_set<std::string>& tags)
 {
     // If it's a `game:GetSerivce("$1")` call, then prioritise common services
@@ -223,7 +223,7 @@ const char* RobloxPlatform::handleSortText(
     return nullptr;
 }
 
-std::optional<lsp::CompletionItemKind> RobloxPlatform::handleEntryKind(const Luau::AutocompleteEntry& entry)
+std::optional<lsp::CompletionItemKind> OverdarePlatform::handleEntryKind(const Luau::AutocompleteEntry& entry)
 {
     if (entry.type.has_value())
     {
@@ -240,18 +240,18 @@ std::optional<lsp::CompletionItemKind> RobloxPlatform::handleEntryKind(const Lua
     return std::nullopt;
 }
 
-void RobloxPlatform::handleSuggestImports(const TextDocument& textDocument, const Luau::SourceModule& module, const ClientConfiguration& config,
+void OverdarePlatform::handleSuggestImports(const TextDocument& textDocument, const Luau::SourceModule& module, const ClientConfiguration& config,
     size_t hotCommentsLineNumber, bool completingTypeReferencePrefix, std::vector<lsp::CompletionItem>& items)
 {
-    LUAU_TIMETRACE_SCOPE("RobloxPlatform::handleSuggestImports", "LSP");
+    LUAU_TIMETRACE_SCOPE("OverdarePlatform::handleSuggestImports", "LSP");
 
     // Find all import calls
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor importsVisitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor importsVisitor;
     importsVisitor.visit(module.root);
 
     if (config.completion.imports.suggestServices && !completingTypeReferencePrefix)
     {
-        std::optional<RobloxDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
+        std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
 
         auto services = metadata.has_value() ? metadata->SERVICES : std::vector<std::string>{};
         for (auto& service : services)

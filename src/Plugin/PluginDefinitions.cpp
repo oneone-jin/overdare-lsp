@@ -46,7 +46,7 @@ export type TextEdit = {
 
 export type PluginContext = {
     filePath: string,       -- absolute filesystem path of the source file
-    moduleName: string,     -- Luau module name (virtual path for Roblox, filesystem path otherwise)
+    moduleName: string,     -- Luau module name (virtual path for OVERDARE, filesystem path otherwise)
 }
 
 export type PluginApi = {
