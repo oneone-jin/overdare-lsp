@@ -617,6 +617,7 @@ def prune_services_metadata(lines, dump, log=print):
 
     meta = json.loads(lines[0][len(METADATA_PREFIX):])
     od_class_names = {c["name"] for c in dump["classes"] if c["name"]}
+    od_enum_names = {e["name"] for e in dump.get("enums", []) if e["name"]}
 
     for key, label in (("SERVICES", "Services"), ("CREATABLE_INSTANCES", "Creatable instances")):
         if key not in meta:
@@ -633,8 +634,33 @@ def prune_services_metadata(lines, dump, log=print):
     meta["CLASSES"] = sorted(od_class_names)
     log(f"Classes (metadata whitelist for IsA/FindFirstChildOfClass completion): {len(meta['CLASSES'])} entries")
 
+    # ENUMS: every real OVERDARE enum, same purpose as CLASSES but for EnumX type-name
+    # completion (e.g. `local x: EnumFoo`), which isn't covered by the ENUM_LIST prune below
+    # since that only fixes `Enum.Foo` member access, not standalone type annotations.
+    meta["ENUMS"] = sorted(od_enum_names)
+    log(f"Enums (metadata whitelist for EnumX type-annotation completion): {len(meta['ENUMS'])} entries")
+
     lines[0] = METADATA_PREFIX + json.dumps(meta)
     return lines
+
+
+def prune_enum_list(text, dump, log=print):
+    """`declare Enum: ENUM_LIST` (the `Enum.Foo` global table) is inherited verbatim from
+    Roblox's dump and, unlike SERVICES/CREATABLE_INSTANCES/CLASSES, was never pruned by the
+    per-enum block replacement above (that only replaces/appends matching entries, it never
+    removes stale ones) - so `Enum.` autocomplete was suggesting hundreds of Roblox-only enum
+    names. Rewrite the whole entry list to just the real OVERDARE enums."""
+    od_enum_names = sorted({e["name"] for e in dump.get("enums", []) if e["name"]})
+
+    m = re.search(r"type ENUM_LIST = \{\n(.*?)\n\} & \{ GetEnums:", text, re.DOTALL)
+    if not m:
+        log("[warn] could not find 'type ENUM_LIST = { ... }' block - not pruned")
+        return text
+
+    before = m.group(1).count("\n") + 1
+    new_entries = "".join(f"\t{name}: Enum{name}_INTERNAL,\n" for name in od_enum_names)
+    log(f"Enum global (ENUM_LIST table): pruned {before} -> {len(od_enum_names)} entries")
+    return text[: m.start(1)] + new_entries.rstrip("\n") + text[m.end(1) :]
 
 
 def merge_into_base(base_text, dump, log=print):
@@ -729,19 +755,13 @@ def merge_into_base(base_text, dump, log=print):
 
     merged_text = "\n".join(lines)
 
-    # Patch ENUM_LIST to add entries for brand-new enums.
+    # Add extern type declarations for brand-new enums; ENUM_LIST itself is fully rebuilt
+    # below by prune_enum_list rather than patched incrementally here.
     if od_enums_new:
-        enum_list_entries = "".join(f"\t{e['name']}: Enum{e['name']}_INTERNAL,\n" for e in od_enums_new)
-        merged_text, count = re.subn(
-            r"(type ENUM_LIST = \{\n)",
-            r"\1" + enum_list_entries.replace("\\", "\\\\"),
-            merged_text,
-            count=1,
-        )
-        if count == 0:
-            log("[warn] could not find 'type ENUM_LIST = {' in base file - new enums not registered in ENUM_LIST")
         new_enum_blocks = "\n".join(declare_enum(e).rstrip("\n") for e in od_enums_new)
         merged_text += "\n" + new_enum_blocks + "\n"
+
+    merged_text = prune_enum_list(merged_text, dump, log=log)
 
     if ordered_new_classes:
         new_class_blocks = "\n".join(declare_class(k).rstrip("\n") for k in ordered_new_classes)

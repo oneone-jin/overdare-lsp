@@ -417,6 +417,69 @@ agreed conversion plan and what's already done.
         as its own tracked item - worth a dedicated look** (find the un-joined `Thread`
         member and either `join()` or `detach()` it before/in `~LanguageServer()`).
 
+14. **[DONE] Fixed datatype constructors/static-constants scraping (`Color3.fromRGB`,
+    `CFrame.identity`, `Vector3.zero`, etc. missing from autocomplete)** - user-reported bug,
+    root-caused in `dumpOverdareTypes.py`'s `parse_datatype_page`:
+    - Constructor parsing filtered to only capture entries literally named `"new"`, silently
+      dropping every other named static constructor (`Color3.fromRGB`/`fromHSV`/`fromHex`,
+      `CFrame.fromEulerAnglesXYZ`/`fromEulerAnglesYXZ`/`fromMatrix`/`fromOrientation`/
+      `lookAt`/`Angles`). Fixed by capturing all `### <name>` entries under `## Constructors`
+      as `(name, params)` tuples and emitting each by its real name in
+      `declare_datatype_constructor`, matching the real upstream Roblox convention (verified
+      via `git show 71ab151:scripts/globalTypes.d.luau`).
+    - Separately, the docs put both real instance properties (`Magnitude`, `X`, `Unit`, ...)
+      and static namespace constants (`identity`, `zero`, `one`, `xAxis`, `yAxis`, `zAxis`,
+      ...) under the same undifferentiated `## Properties` heading. These were all being
+      emitted as instance members inside `declare extern type X with ... end`, so
+      `CFrame.identity`/`Vector3.zero` etc. (accessed on the namespace, not an instance)
+      didn't exist. Fixed with a naming heuristic - **lowercase-first-letter property names
+      are static constants** (matches the real convention: PascalCase = instance property,
+      camelCase = static constant) - splitting `properties` into `properties` (instance,
+      stays in the `extern type` block) vs `staticProperties` (moved into the
+      `declare X: { ... }` global table alongside constructors). `declare_datatype_constructor`
+      now also fires when a datatype has static properties but zero named constructors.
+    - Verified via `analyze` CLI: `Color3.fromRGB(255,0,0)`, `CFrame.identity`,
+      `Vector3.zero`/`.one`, `CFrame.lookAt(...)` all type-check with no errors. Full
+      re-scrape from scratch reproduced byte-identical results. 840/840 tests still pass
+      (no C++ rebuild needed - only the data file changed). Committed as `1e1f811`.
+
+15. **[DONE] Verified `export type` in `.lua` ModuleScripts resolves correctly across
+    `require()`** - user question, not previously tested. Built a throwaway sourcemap +
+    two-file test (`ReplicatedStorage/Types` ModuleScript exporting a type,
+    `ServerScriptService/Main` Script requiring it via `game:GetService(...)`) and ran
+    `luau-lsp analyze` with `--sourcemap`. Confirmed: `require()` resolves through the
+    OVERDARE-hierarchy sourcemap exactly like Roblox/Rojo did, the exported type's fields
+    are fully known (missing-field and wrong-field-type errors both fire correctly), and
+    under `--!strict` a wrong-type field assignment inside the required type produces a
+    proper `TypeError`. No bug found - this already works, inherited unchanged from
+    upstream's require/module-resolution machinery. No code changes made; test files were
+    scratch-only and not added to the repo.
+
+16. **[DONE] Pruned `Enum.` global table and EnumX type-annotation completion to real
+    OVERDARE enums** - user-reported ("Enum도 roblox타입들에 모두 포함되어 있는 것 같은데"),
+    same root-cause family as steps 5/13 (`SERVICES`/`CREATABLE_INSTANCES`/`CLASSES`): the
+    file has 626 `declare extern type EnumX extends EnumItem with end` blocks (Roblox's full
+    dump), but only 71 are real OVERDARE enums, and `ENUM_LIST` (the type behind
+    `declare Enum: ENUM_LIST`, i.e. `Enum.Material` etc.) was never pruned - only ever
+    *appended to* when a scraped enum was brand new, so all 626 Roblox-only entries stayed
+    visible via `Enum.` autocomplete forever.
+    - Added `prune_enum_list()` to `dumpOverdareTypes.py`: fully rebuilds the `ENUM_LIST`
+      table body from the scraped enum set on every merge (626 → 71), replacing the old
+      incremental-append-only regex patch. Underlying `EnumX`/`EnumX_INTERNAL` extern type
+      declarations for pruned-out enums are deliberately left in place (same call as
+      CLASSES/instance types - too invasive to delete, and other declarations may still
+      reference them), they're just no longer reachable through the `Enum` global.
+    - That alone doesn't cover standalone type annotations (`local x: EnumFoo`), which go
+      through the same core-engine completion path as `local x: SomeRobloxOnlyClass` did
+      before the `handleCompletion` fix in step 13 - so added a new `ENUMS` metadata field
+      (mirroring `CLASSES`) and extended `OverdarePlatform::handleCompletion`
+      (`OverdareCompletion.cpp`) to also drop any suggested `EnumItem`-subclass type whose
+      bare name (stripping the `Enum` prefix) isn't in `ENUMS`. `Enum`/`EnumItem` themselves
+      are explicitly excluded from filtering (foundational plumbing types, not real enums).
+    - Verified via `analyze` CLI (`Enum.Material` type-checks) and full re-scrape from
+      scratch (reproducible: 626 → 71 both times). Rebuilt CLI + Test targets (touched C++
+      this time, unlike steps 14/15) - 840/840 still pass.
+
 ## How to resume
 
 When picking this back up, re-read this file first, then check `git log`/`git diff` to

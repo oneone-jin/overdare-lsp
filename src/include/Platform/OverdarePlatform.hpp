@@ -17,8 +17,12 @@ struct OverdareDefinitionsFileMetadata
     // enumerates every Instance-derived type still declared in the file, including the
     // ~2000 untouched Roblox classes that aren't real OVERDARE classes.
     std::vector<std::string> CLASSES{};
+    // All enums that genuinely exist in OVERDARE, same purpose as CLASSES but for EnumX
+    // type-annotation completion (e.g. `local x: EnumFoo`) - the leftover Roblox-only enum
+    // *type* declarations are still in the file (only the Enum.Foo member table is pruned).
+    std::vector<std::string> ENUMS{};
 };
-NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES, CLASSES)
+NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES, CLASSES, ENUMS)
 
 enum class ScriptContext
 {
