@@ -552,7 +552,7 @@ TEST_CASE_FIXTURE(Fixture, "go_to_definition_works_for_a_string_require_path")
     CHECK_EQ(result[0].range.end, lsp::Position{0, 0});
 }
 
-TEST_CASE_FIXTURE(Fixture, "go_to_definition_works_for_a_roblox_require_path")
+TEST_CASE_FIXTURE(Fixture, "go_to_definition_works_for_an_overdare_require_path")
 {
     loadSourcemap(R"({
         "name": "Game",

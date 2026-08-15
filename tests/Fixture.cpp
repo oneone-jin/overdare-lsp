@@ -1,7 +1,7 @@
 // This file is part of the Luau programming language and is licensed under MIT License; see LICENSE.txt for details
 #include "Fixture.h"
 
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 #include "Luau/Parser.h"
 #include "Luau/BuiltinDefinitions.h"
 #include "LuauFileUtils.hpp"
@@ -57,7 +57,7 @@ Fixture::Fixture()
 {
     client->globalConfig = Luau::LanguageServer::defaultTestClientConfiguration();
     workspace.fileResolver.defaultConfig.mode = Luau::Mode::Strict;
-    client->definitionsFiles.emplace("@roblox", "./tests/testdata/standard_definitions.d.luau");
+    client->definitionsFiles.emplace("@overdare", "./tests/testdata/standard_definitions.d.luau");
     workspace.setupWithConfiguration(client->globalConfig);
     workspace.isReady = true;
 
@@ -84,7 +84,7 @@ Uri Fixture::newDocument(const std::string& name, const std::string& source)
 /// requires to resolve. e.g. registering "game/Testing/A" will allow `require(game.Testing.A`) to work
 void Fixture::registerDocumentForVirtualPath(const Uri& uri, const Luau::ModuleName& virtualPath)
 {
-    auto platform = dynamic_cast<RobloxPlatform*>(workspace.platform.get());
+    auto platform = dynamic_cast<OverdarePlatform*>(workspace.platform.get());
     LUAU_ASSERT(platform);
     auto sourceNode = platform->sourceNodeAllocator.allocate(SourceNode(uri.filename(), "ModuleScript", {uri.fsPath()}, {}));
     platform->writePathsToMap(sourceNode, virtualPath);
@@ -213,7 +213,7 @@ void Fixture::switchToStandardPlatform()
 
 void Fixture::loadSourcemap(const std::string& contents)
 {
-    dynamic_cast<RobloxPlatform*>(workspace.platform.get())->updateSourceMapFromContents(contents);
+    dynamic_cast<OverdarePlatform*>(workspace.platform.get())->updateSourceMapFromContents(contents);
 }
 
 void Fixture::loadLuaurc(const std::string& source)
@@ -224,7 +224,7 @@ void Fixture::loadLuaurc(const std::string& source)
 
 SourceNode* Fixture::getRootSourceNode()
 {
-    auto sourceNode = dynamic_cast<RobloxPlatform*>(workspace.platform.get())->rootSourceNode;
+    auto sourceNode = dynamic_cast<OverdarePlatform*>(workspace.platform.get())->rootSourceNode;
     REQUIRE(sourceNode);
     return sourceNode;
 }

@@ -1013,7 +1013,7 @@ TEST_CASE_FIXTURE(Fixture, "inlay_hint_union_with_custom_types_has_separate_part
 TEST_CASE_FIXTURE(Fixture, "inlay_hint_generics_and_extern_type")
 {
     client->globalConfig.inlayHints.variableTypes = true;
-    client->documentation["@roblox/globaltype/Instance"] = Luau::BasicDocumentation{"Example Class Documentation"};
+    client->documentation["@overdare/globaltype/Instance"] = Luau::BasicDocumentation{"Example Class Documentation"};
     auto source = R"(
         type Box<T> = { inner: T }
         local x: Box<Instance>

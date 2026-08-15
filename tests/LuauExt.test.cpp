@@ -2,7 +2,7 @@
 #include "Fixture.h"
 #include "LSP/LuauExt.hpp"
 #include "Platform/InstanceRequireAutoImporter.hpp"
-#include "Platform/RobloxPlatform.hpp"
+#include "Platform/OverdarePlatform.hpp"
 
 TEST_SUITE_BEGIN("Luau Extensions");
 
@@ -13,7 +13,7 @@ TEST_CASE_FIXTURE(Fixture, "FindImports service location 1")
     )");
     REQUIRE(block);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor visitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor visitor;
     visitor.visit(block);
 
     CHECK_EQ(visitor.findBestLineForService("CollectionService", 0), 1);
@@ -28,7 +28,7 @@ TEST_CASE_FIXTURE(Fixture, "FindImports service location 2")
     )");
     REQUIRE(block);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor visitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor visitor;
     visitor.visit(block);
 
     CHECK_EQ(visitor.findBestLineForService("CollectionService", 0), 1);
@@ -44,7 +44,7 @@ TEST_CASE_FIXTURE(Fixture, "FindImports service location 3")
     )");
     REQUIRE(block);
 
-    Luau::LanguageServer::AutoImports::RobloxFindImportsVisitor visitor;
+    Luau::LanguageServer::AutoImports::OverdareFindImportsVisitor visitor;
     visitor.visit(block);
 
     CHECK_EQ(visitor.findBestLineForService("Workspace", 0), 3);
