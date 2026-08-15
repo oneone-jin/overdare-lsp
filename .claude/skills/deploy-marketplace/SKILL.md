@@ -9,10 +9,11 @@ Publishing targets both registries because devs use both VS Code (Microsoft Mark
 Cursor (a VS Code fork that can't legally use the Microsoft Marketplace, and historically
 defaults to OpenVSX). Same vsix, two registries.
 
-**Status as of v1.69.6**: published to both registries as `wonjin.overdare-lsp`, Windows
-(`win32-x64`) only - this machine can only build for the OS it's running on, no
-cross-compilation. macOS/Linux need their own native build + publish pass, on a machine of
-that OS.
+**Status as of v1.69.7**: published to both registries as `wonjin.overdare-lsp`, Windows
+(`win32-x64`) only - verified live via the Marketplace Gallery API and
+`open-vsx.org/api/wonjin/overdare-lsp` on 2026-08-16 (212 downloads so far). This machine can
+only build for the OS it's running on, no cross-compilation. macOS/Linux need their own
+native build + publish pass, on a machine of that OS.
 
 ## One-time setup (already done, for reference)
 
