@@ -5,21 +5,45 @@ import { LanguageClient } from "vscode-languageclient/node";
 import { AddArgCallback, PlatformContext } from "./extension";
 
 import * as utils from "./utils";
+import { watchOvdrjm } from "./ovdrjmSourcemap";
+import overdareGlobalTypesSource from "../../../scripts/globalTypes.d.luau";
 
 const API_DOCS = "https://luau-lsp.pages.dev/api-docs/en-us.json";
 const LUAU_API_DOCS = "https://luau-lsp.pages.dev/api-docs/luau-en-us.json";
 
-// TODO: this only resolves correctly when running from the monorepo source tree (dev/test
-// mode). A packaged vsix doesn't have scripts/ alongside it, so this will break for real
-// distribution - the file needs to be bundled into the extension package before then. See
-// the .ovdrjm watcher path resolution (startSourcemapGeneration) for the same open issue.
-const overdareGlobalTypesUri = (context: vscode.ExtensionContext) => {
-  return vscode.Uri.joinPath(
-    context.extensionUri,
-    "..",
-    "..",
-    "scripts/globalTypes.d.luau",
+const textEncoder = new TextEncoder();
+
+// OVERDARE's globalTypes.d.luau is inlined into the extension bundle at build time (see
+// esbuild.mjs), so it's always available regardless of whether we're running from the
+// monorepo source tree or a packaged vsix. We still need an on-disk copy for the language
+// server to load via --definitions, so write it out (skipping the write if the content
+// hasn't changed, to avoid needlessly triggering a file-watch reload).
+const ensureOverdareGlobalTypesWritten = async (
+  context: vscode.ExtensionContext,
+) => {
+  const outputUri = vscode.Uri.joinPath(
+    context.globalStorageUri,
+    "globalTypes.d.luau",
   );
+
+  let existingContent: string | undefined;
+  try {
+    existingContent = new TextDecoder().decode(
+      await vscode.workspace.fs.readFile(outputUri),
+    );
+  } catch {
+    existingContent = undefined;
+  }
+
+  if (existingContent !== overdareGlobalTypesSource) {
+    await vscode.workspace.fs.createDirectory(context.globalStorageUri);
+    await vscode.workspace.fs.writeFile(
+      outputUri,
+      textEncoder.encode(overdareGlobalTypesSource),
+    );
+  }
+
+  return outputUri;
 };
 
 const apiDocsUri = (context: vscode.ExtensionContext) => {
@@ -176,6 +200,32 @@ const startSourcemapGeneration = async (
 
   const cwd = workspaceFolder.uri.fsPath;
 
+  // An OVERDARE project is identified by a *.ovdrjm file - if present, generate the
+  // sourcemap in-process (ovdrjmSourcemap.ts) rather than falling through to the
+  // Rojo-oriented child-process flow below, which doesn't apply here.
+  if (!customGeneratorCommand) {
+    const ovdrjmFile = await findOvdrjmFile(workspaceFolder);
+    if (ovdrjmFile) {
+      const luaDir = path.join(path.dirname(ovdrjmFile.fsPath), "Lua");
+      const sourcemapFileName =
+        config.get<string>("sourcemapFile") ?? "sourcemap.json";
+      const outputPath = utils.resolveUri(
+        workspaceFolder.uri,
+        sourcemapFileName,
+      ).fsPath;
+
+      loggingFunc(
+        `Detected OVERDARE project (${utils.basenameUri(ovdrjmFile)}), using .ovdrjm-based sourcemap generation`,
+      );
+
+      addSourcemapDisposable(
+        workspaceFolder,
+        watchOvdrjm(ovdrjmFile.fsPath, luaDir, outputPath, loggingFunc),
+      );
+      return;
+    }
+  }
+
   const spawnChildProcess = async () => {
     loggingFunc(
       `Spawning sourcemap generator for ${
@@ -185,10 +235,6 @@ const startSourcemapGeneration = async (
 
     let childProcess;
 
-    const ovdrjmFile = customGeneratorCommand
-      ? undefined
-      : await findOvdrjmFile(workspaceFolder);
-
     if (customGeneratorCommand && customGeneratorCommand.trim() !== "") {
       // TODO: should we support shell execution here?
       // It allows us to delegate to the shell for argument parsing
@@ -197,27 +243,6 @@ const startSourcemapGeneration = async (
         cwd,
         shell: true,
       });
-    } else if (ovdrjmFile) {
-      const luaDir = path.join(path.dirname(ovdrjmFile.fsPath), "Lua");
-      const sourcemapFileName =
-        config.get<string>("sourcemapFile") ?? "sourcemap.json";
-      const watcherScript = vscode.Uri.joinPath(
-        context.extensionUri,
-        "..",
-        "..",
-        "scripts",
-        "ovdrjmWatch.py",
-      ).fsPath;
-
-      loggingFunc(
-        `Detected OVERDARE project (${utils.basenameUri(ovdrjmFile)}), using .ovdrjm-based sourcemap generation`,
-      );
-
-      childProcess = spawn(
-        "python3",
-        [watcherScript, ovdrjmFile.fsPath, luaDir, "-o", sourcemapFileName],
-        { cwd },
-      );
     } else {
       // Check if the project file exists
       const projectFile = await getRojoProjectFile(
@@ -428,7 +453,7 @@ export const preLanguageServerStart = async (
     // luau-lsp.pages.dev, which only ever serves pure Roblox types and would silently
     // replace our merged OVERDARE definitions. There's only one unified file - the
     // Roblox-era per-security-level variants (robloxSecurityLevel) don't apply here.
-    const globalTypesLocation = overdareGlobalTypesUri(context);
+    const globalTypesLocation = await ensureOverdareGlobalTypesWritten(context);
     return {
       definitions: {
         ["@overdare"]: {

@@ -14,6 +14,9 @@ const ctx = await esbuild.context({
   outfile: "dist/extension.js",
   external: ["vscode"],
   logLevel: "warning",
+  // OVERDARE's globalTypes.d.luau is inlined as a string so the extension never needs to
+  // resolve a path to scripts/ at runtime - works identically in dev and in a packaged vsix.
+  loader: { ".luau": "text" },
   plugins: [
     {
       name: "esbuild-problem-matcher",

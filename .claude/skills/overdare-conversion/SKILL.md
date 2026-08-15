@@ -263,25 +263,56 @@ agreed conversion plan and what's already done.
    - Fixed: `handleExternalFiles`'s builtin-merge loop now checks `isExternalFile(url)` -
      a non-URL entry is used directly with no download, mirroring the existing
      settings-file behavior.
-   - `overdare.ts` now points `@overdare` straight at the local
-     `scripts/globalTypes.d.luau` (via `overdareGlobalTypesUri`, both `url` and
-     `outputUri`) instead of a `luau-lsp.pages.dev` URL. Dropped the removed
-     `robloxSecurityLevel`-variant file selection (`globalTypes.PluginSecurity.d.luau`
-     etc.) since we only maintain the one unified merged file - those per-security-level
-     variants are Roblox-dump artifacts we never merged OVERDARE types into, so selecting
-     one would silently regress to stale pure-Roblox data.
-   - **Still open**: same as step 3's/step 3's gap - `overdareGlobalTypesUri`'s
-     `context.extensionUri/../../scripts/...` resolution only works in the monorepo source
-     tree, not a packaged vsix. Needs bundling before step 8.
+   - `overdare.ts` originally pointed `@overdare` at a local
+     `scripts/globalTypes.d.luau` path instead of the `luau-lsp.pages.dev` URL - see 7.2
+     for how this was superseded by inlining the file entirely.
    - Verified: `tsc --noEmit` + `eslint` clean, `npm run compile` succeeds.
 
+7.2. **[DONE] Fix packaged-vsix path resolution for `globalTypes.d.luau` and the `.ovdrjm`
+   watcher** — both 7.1's definitions path and step 3's watcher script resolved paths via
+   `context.extensionUri/../../scripts/...`, which only exists in the monorepo source tree;
+   a packaged vsix doesn't ship `scripts/` alongside it. Presented three options (bundle via
+   a CI copy step matching the existing `editors/code/bin/server` precedent in
+   `.github/workflows/release.yml`; inline `globalTypes.d.luau` into the JS bundle;
+   port the Python watcher to TypeScript) - went with the latter two since they eliminate
+   the packaging problem entirely rather than requiring an extra copy/sync step to remember.
+   - **`globalTypes.d.luau` inlined into the extension bundle**: `esbuild.mjs` now has
+     `loader: { ".luau": "text" }`; `overdare.ts` imports the file directly
+     (`import overdareGlobalTypesSource from "../../../scripts/globalTypes.d.luau"`, 3
+     levels up from `src/` - not 2, that was an easy off-by-one since other code in this
+     file resolves relative to `context.extensionUri` which is one level higher than the
+     source file itself). Added `src/assets.d.ts` for the ambient `*.d.luau` module type.
+     Since the LSP server still needs an actual file path (not inline content) to load via
+     `--definitions`, `ensureOverdareGlobalTypesWritten` writes the bundled string to
+     `context.globalStorageUri/globalTypes.d.luau` once at startup, skipping the write if
+     the content hasn't changed (avoids spurious file-watch reloads). Verified: content
+     round-trips into `dist/extension.js` (`grep -c "declare extern type Player"` found it
+     inlined).
+   - **`.ovdrjm` watcher ported to `editors/code/src/ovdrjmSourcemap.ts`**
+     (`convertOvdrjmToSourcemap` + `watchOvdrjm`, using `vscode.workspace.fs` and
+     `setTimeout` polling instead of `child_process.spawn("python3", ...)`). Also removes
+     the "user needs python3 on PATH" fragility flagged back in step 2/3. `scripts/
+     ovdrjmWatch.py` deleted (dead code, nothing references it anymore); `scripts/
+     ovdrjmToSourcemap.py` kept as a standalone CLI conversion tool since it's still useful
+     outside the extension (manual runs, CI, etc.) - `dumpOverdareTypes.py` doesn't depend
+     on it either way, they're unrelated scripts.
+   - `startSourcemapGeneration` in `overdare.ts` restructured: the `.ovdrjm` detection now
+     happens *before* `spawnChildProcess` is even defined (early-return with its own
+     `addSourcemapDisposable(workspaceFolder, watchOvdrjm(...))` call) rather than being a
+     branch inside the generic child-process flow - `watchOvdrjm` returns a plain
+     `vscode.Disposable`, not something with `ChildProcess`-shaped `.stderr`/`.on(...)` the
+     rest of that flow expects, so it genuinely doesn't fit the same abstraction as the
+     Rojo/custom-command cases.
+   - Verified: `convertOvdrjmToSourcemap`'s tree-building logic produces byte-identical
+     output to the Python version against the real `overdare/tt.ovdrjm` fixture (diffed,
+     only difference was a trailing newline). `tsc --noEmit` + `eslint` clean (a few
+     pre-existing-style `naming-convention` warnings for PascalCase fields that must match
+     the real `.ovdrjm` JSON schema - not errors, not new).
+   - Both fixes together mean **no remaining known blocker for step 8** on the path-
+     resolution front specifically (worth re-checking for others when actually packaging).
+
 8. **[TODO] vsix test build** — once the above is functionally stable, package the
-   extension (`vsce package` or equivalent) for local install/testing. **Known blocker,
-   applies to both step 3's `.ovdrjm` watcher AND step 7.1's `globalTypes.d.luau` path**:
-   both resolve paths relative to `context.extensionUri/../../scripts/...`, which only
-   exists in the monorepo source tree. A packaged vsix doesn't ship `scripts/` alongside
-   it, so both need to either bundle those files into the extension package or switch to
-   a different resolution strategy before packaging.
+   extension (`vsce package` or equivalent) for local install/testing.
 
 9. **[LATER] Branding/metadata** — extension display name, `luau-lsp.*` command/config
    prefix, marketplace description/icon. Explicitly deferred — not urgent for internal
