@@ -7806,16 +7806,12 @@ declare extern type Axes with
 end
 
 declare extern type BrickColor with
-	b: number
 	Color: Color3
-	g: number
 	Name: string
 	Number: number
-	r: number
 end
 
 declare extern type CFrame with
-	identity: CFrame
 	LookVector: Vector3
 	Orientation: Vector3
 	Position: Vector3
@@ -8087,13 +8083,9 @@ end
 
 declare extern type Vector2 with
 	Magnitude: number
-	one: Vector2
 	Unit: Vector2
 	X: number
-	xAxis: Vector2
 	Y: number
-	yAxis: Vector2
-	zero: Vector2
 	function Lerp(self, GoalValue: Vector2, Alpha: number): Vector2
 	function Slerp(self, GoalValue: Vector2, Alpha: number): Vector2
 end
@@ -8110,15 +8102,10 @@ end
 
 declare extern type Vector3 with
 	Magnitude: number
-	one: Vector3
 	Unit: Vector3
 	X: number
-	xAxis: Vector3
 	Y: number
-	yAxis: Vector3
 	Z: number
-	zAxis: Vector3
-	zero: Vector3
 	function Abs(self): Vector3
 	function Angle(self, InOtherValue: any, AxisValue: any): number
 	function Ceil(self): Vector3
@@ -17701,10 +17688,17 @@ declare PathWaypoint: {
 }
 
 declare BrickColor: {
+	b: number,
+	g: number,
+	r: number,
 	new: ((val: string) -> BrickColor),
 }
 
 declare Vector2: {
+	one: Vector2,
+	xAxis: Vector2,
+	yAxis: Vector2,
+	zero: Vector2,
 	new: ((x: number, y: number) -> Vector2),
 }
 
@@ -17713,6 +17707,7 @@ declare Vector2int16: {
 }
 
 declare Color3: {
+	fromRGB: ((red: number, green: number, blue: number) -> Color3),
 	new: ((red: number, green: number, blue: number) -> Color3),
 }
 
@@ -17745,6 +17740,13 @@ declare UDim2: {
 }
 
 declare CFrame: {
+	identity: CFrame,
+	Angles: ((rx: number, ry: number, rz: number) -> CFrame),
+	fromEulerAnglesXYZ: ((rx: number, ry: number, rz: number) -> CFrame),
+	fromEulerAnglesYXZ: ((rx: number, ry: number, rz: number) -> CFrame),
+	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
+	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
+	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3) -> CFrame),
 	new: (() -> CFrame),
 	new: ((Position: Vector3) -> CFrame),
 	new: ((Position: Vector3, Look: Vector3) -> CFrame),
@@ -17760,6 +17762,11 @@ declare Rect: {
 }
 
 declare Vector3: {
+	one: Vector3,
+	xAxis: Vector3,
+	yAxis: Vector3,
+	zAxis: Vector3,
+	zero: Vector3,
 	new: ((x: number, y: number, z: number) -> Vector3),
 }
 
@@ -18311,7 +18318,6 @@ declare extern type BallSimParams with
 end
 declare extern type BallSimTargetResult with
 	ActualSpeed: number
-	bHit: boolean
 	Direction: Vector3
 	HitTime: number
 end
@@ -18421,3 +18427,7 @@ declare Udim2: {
 }
 
 declare extern type TeleportResult with end
+
+declare BallSimTargetResult: {
+	bHit: boolean,
+}

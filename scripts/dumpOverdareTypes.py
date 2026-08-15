@@ -213,16 +213,32 @@ def parse_datatype_page(md):
 
     sections, properties, methods, events = parse_members(md)
 
+    # Constructors aren't only named "new" - e.g. Color3.fromRGB, CFrame.fromEulerAnglesXYZ/
+    # lookAt are separate named static constructors alongside "new" overloads.
     constructors = []
     if "Constructors" in sections:
         for cname, cbody in split_sections_list(sections["Constructors"], "### "):
-            if unescape_md(cname) != "new":
-                continue
             subsections = split_sections(cbody, "#### ")
             params = parse_params(subsections["Parameters"]) if "Parameters" in subsections else []
-            constructors.append(params)
+            constructors.append((unescape_md(cname), params))
 
-    return {"name": name, "properties": properties, "methods": methods, "events": events, "constructors": constructors}
+    # The docs lump both real instance properties (Magnitude, X, Unit, ...) and static
+    # namespace constants (identity, zero, one, xAxis, ...) under the same "## Properties"
+    # heading with no distinguishing tag. Matching the real Roblox/OVERDARE convention
+    # (see e.g. `declare Vector3: { zero: Vector3, one: Vector3, xAxis: Vector3, ..., new: (...) }`),
+    # lowercase-leading names are static constants that belong on the global namespace table
+    # alongside constructors, not inside `declare extern type X with ... end`.
+    instance_properties = [p for p in properties if not p["name"] or not p["name"][0].islower()]
+    static_properties = [p for p in properties if p["name"] and p["name"][0].islower()]
+
+    return {
+        "name": name,
+        "properties": instance_properties,
+        "staticProperties": static_properties,
+        "methods": methods,
+        "events": events,
+        "constructors": constructors,
+    }
 
 
 def parse_enum_page(md):
@@ -330,15 +346,19 @@ def declare_datatype(dt):
 
 
 def declare_datatype_constructor(dt):
-    """The `declare Name: { new: (...) -> Name, ... }` global constructor table, matching the
-    real scripts/globalTypes.d.luau convention (e.g. `declare RaycastParams: { new: (...) }`).
-    Skipped entirely if the docs listed no constructors."""
-    if not dt["name"] or not dt["constructors"]:
+    """The `declare Name: { new: (...) -> Name, fromRGB: (...) -> Name, zero: Name, ... }`
+    global namespace table, matching the real scripts/globalTypes.d.luau convention (e.g.
+    `declare Vector3: { zero: Vector3, one: Vector3, xAxis: Vector3, ..., new: (...) }` -
+    constructors aren't only ever named "new", and static constants like `.zero`/`.identity`
+    live here too, not as instance properties). Skipped entirely if the docs listed neither."""
+    if not dt["name"] or (not dt["constructors"] and not dt.get("staticProperties")):
         return ""
     out = f"declare {dt['name']}: {{\n"
-    for params in dt["constructors"]:
+    for prop in dt.get("staticProperties", []):
+        out += f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])},\n"
+    for ctor_name, params in dt["constructors"]:
         param_list = ", ".join(declare_param(t, n) for t, n in params)
-        out += f"\tnew: (({param_list}) -> {dt['name']}),\n"
+        out += f"\t{escape_name(ctor_name)}: (({param_list}) -> {dt['name']}),\n"
     out += "}\n"
     return out
 
@@ -385,7 +405,9 @@ def collect_referenced_types(dump):
         scan_members(klass, has_parent=True)
     for dt in dump.get("datatypes", []):
         scan_members(dt)
-        for params in dt["constructors"]:
+        for prop in dt.get("staticProperties", []):
+            note(prop["type"])
+        for _ctor_name, params in dt["constructors"]:
             for t, _n in params:
                 note(t)
 
@@ -695,7 +717,7 @@ def merge_into_base(base_text, dump, log=print):
     constructor_replacements = {}
     datatypes_with_new_constructor = []
     for dt in datatypes:
-        if not dt["constructors"]:
+        if not dt["constructors"] and not dt.get("staticProperties"):
             continue
         block = declare_datatype_constructor(dt).rstrip("\n").split("\n")
         if dt["name"] in constructor_blocks:
