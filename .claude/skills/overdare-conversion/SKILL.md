@@ -333,9 +333,30 @@ agreed conversion plan and what's already done.
      actual packaged extension end-to-end, so this manual pass is what catches
      packaging-shape and runtime-config bugs like the SERVICES one.
 
-9. **[LATER] Branding/metadata** — extension display name, `luau-lsp.*` command/config
-   prefix, marketplace description/icon. Explicitly deferred — not urgent for internal
-   testing.
+9. **[DONE, partial scope] Branding/metadata** — `editors/code/package.json`:
+   - `name`: `luau-lsp` → `overdare-lsp` (the marketplace/extension ID)
+   - `displayName`: `Luau Language Server` → `OVERDARE Luau Language Server`
+   - `description`: → `A Language Server for Luau on OVERDARE`
+   - `publisher`: `JohnnyMorganz` → `overdare` (placeholder org id - this fork isn't
+     published by the upstream author, so keeping their publisher ID would misattribute
+     marketplace ownership; swap for the real publisher id before any real listing)
+   - `homepage`/`repository`/`bugs`: → `https://github.com/oneone-jin/overdare-lsp`
+   - `author` and the one genuine upstream issue-thread link
+     (`github.com/JohnnyMorganz/luau-lsp/issues/83#...`, cited for its technical rationale)
+     left as-is - real attribution/reference, not leftover branding.
+   - Verified: `tsc --noEmit` clean (confirms `npm run` picked up the new package name),
+     `vsce package` repackages cleanly with the new metadata.
+   - **Deliberately NOT done** (scope call, not an oversight): renaming the `luau-lsp.*`
+     config/command prefix. This is a ~117-occurrence footprint in `package.json` alone
+     (every setting key, command id, `when` clause) plus every `vscode.workspace.
+     getConfiguration("luau-lsp...")` call across the TS source - a large, purely-cosmetic,
+     breaking change with no functional upside for internal testing (keeping a fork's
+     upstream config namespace after a rebrand is a common, unremarkable pattern). Revisit
+     only if/when this is heading toward a real separate marketplace listing.
+   - **Also not touched**: root `README.md`/`CHANGELOG.md` still describe the upstream
+     `JohnnyMorganz/luau-lsp` project verbatim (marketplace links, OpenVSX links, Rojo-user
+     section, etc.) - this is a content-authoring task distinct from the metadata-field
+     rename above, not attempted here.
 
 ## How to resume
 
