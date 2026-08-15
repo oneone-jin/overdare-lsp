@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.5] - 2026-08-16
+
+### Fixed
+
+- Fixed same-named sibling instances (e.g. two `LocalScript`s both directly under `StarterPlayerScripts`, which OVERDARE Studio disambiguates in the flat `Lua/` folder as `LocalScript.lua`/`LocalScript_1.lua`) resolving to the identical virtual module name internally. Frontend uses that name as the module identity/cache key, so both real files were being type-checked/diagnosed as a single module - editing or checking one could surface the other's diagnostics instead of its own. Sibling names are now disambiguated when building virtual paths, mirroring the suffix scheme already used for file names
+
 ## [1.69.4] - 2026-08-16
 
 ### Fixed

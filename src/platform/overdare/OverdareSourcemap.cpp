@@ -493,10 +493,20 @@ void OverdarePlatform::writePathsToMap(SourceNode* node, const std::string& base
     else
         childNameContext = parentNameContext;
 
+    // Same-named siblings are legal in the data model (e.g. two Parts both named "Part"),
+    // and OVERDARE Studio scripts in particular can collide this way despite each having
+    // their own distinct file in the flat Lua/ folder (disambiguated there with a "_N"
+    // suffix - see ovdrjmSourcemap.ts/ovdrjmToSourcemap.py). Without disambiguating here too,
+    // every same-named sibling would get an identical virtualPath, which Frontend uses as the
+    // module identity/cache key - collapsing them into one module and returning whichever
+    // sibling was type-checked last for every one of them.
+    std::unordered_map<std::string, int> siblingNameCounts;
     for (auto& child : node->children)
     {
         child->parent = node;
-        writePathsToMap(child, base + "/" + child->name, childNameContext);
+        int count = siblingNameCounts[child->name]++;
+        std::string childBase = count == 0 ? base + "/" + child->name : base + "/" + child->name + "_" + std::to_string(count);
+        writePathsToMap(child, childBase, childNameContext);
     }
 }
 

@@ -514,6 +514,55 @@ TEST_CASE_FIXTURE(Fixture, "get_virtual_module_name_from_real_path")
     CHECK_EQ(workspace.fileResolver.getModuleName(uri), "game/MainScript");
 }
 
+TEST_CASE_FIXTURE(Fixture, "same_named_siblings_get_distinct_virtual_module_names")
+{
+#ifdef _WIN32
+    workspace.rootUri = Uri::parse("file:///c%3A/Users/Development/project");
+    workspace.fileResolver.rootUri = Uri::parse("file:///c%3A/Users/Development/project");
+    loadSourcemap(R"(
+        {
+            "name": "Game",
+            "className": "DataModel",
+            "children": [
+                {"name": "Parent", "className": "Folder", "children": [
+                    {"name": "LocalScript", "className": "LocalScript", "filePaths": ["Lua\\LocalScript.luau"]},
+                    {"name": "LocalScript", "className": "LocalScript", "filePaths": ["Lua\\LocalScript_1.luau"]}
+                ]}
+            ]
+        }
+    )");
+#else
+    workspace.rootUri = Uri::parse("file:///home/project");
+    workspace.fileResolver.rootUri = Uri::parse("file:///home/project");
+    loadSourcemap(R"(
+        {
+            "name": "Game",
+            "className": "DataModel",
+            "children": [
+                {"name": "Parent", "className": "Folder", "children": [
+                    {"name": "LocalScript", "className": "LocalScript", "filePaths": ["Lua/LocalScript.luau"]},
+                    {"name": "LocalScript", "className": "LocalScript", "filePaths": ["Lua/LocalScript_1.luau"]}
+                ]}
+            ]
+        }
+    )");
+#endif
+
+    auto firstUri = workspace.rootUri.resolvePath("Lua/LocalScript.luau");
+    auto secondUri = workspace.rootUri.resolvePath("Lua/LocalScript_1.luau");
+
+    auto firstModuleName = workspace.fileResolver.getModuleName(firstUri);
+    auto secondModuleName = workspace.fileResolver.getModuleName(secondUri);
+
+    // Regression test: same-named siblings previously collapsed to the identical virtual
+    // module name (just "base/childName", with no disambiguation for repeated names), which
+    // Frontend uses as its module identity/cache key - so both real files were treated as one
+    // module, and diagnostics/type-checking for one silently applied to both instead.
+    CHECK_NE(firstModuleName, secondModuleName);
+    CHECK_EQ(workspace.platform->resolveToRealPath(firstModuleName), firstUri);
+    CHECK_EQ(workspace.platform->resolveToRealPath(secondModuleName), secondUri);
+}
+
 TEST_CASE_FIXTURE(Fixture, "get_real_path_from_virtual_name")
 {
 #ifdef _WIN32
