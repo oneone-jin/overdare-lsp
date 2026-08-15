@@ -127,7 +127,7 @@ std::optional<Luau::AutocompleteEntryMap> OverdarePlatform::completionCallback(
                     auto ty = Luau::follow(*prop.readTy);
                     if (Luau::get<Luau::FunctionType>(ty) || Luau::isOverloadedFunction(ty))
                         continue;
-                    else if (auto ttv = Luau::get<Luau::TableType>(ty); ttv && ttv->name && ttv->name.value() == "RBXScriptSignal")
+                    else if (auto ttv = Luau::get<Luau::TableType>(ty); ttv && ttv->name && ttv->name.value() == "ScriptSignal")
                         continue;
                     else if (Luau::hasTag(prop, kSourcemapGeneratedTag))
                         continue;
@@ -300,8 +300,8 @@ std::optional<lsp::CompletionItemKind> OverdarePlatform::handleEntryKind(const L
 
         if (auto ttv = Luau::get<Luau::TableType>(id))
         {
-            // Special case the RBXScriptSignal type as a connection
-            if (ttv->name && ttv->name.value() == "RBXScriptSignal")
+            // Special case the ScriptSignal type as a connection
+            if (ttv->name && ttv->name.value() == "ScriptSignal")
                 return lsp::CompletionItemKind::Event;
         }
     }

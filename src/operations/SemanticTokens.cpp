@@ -55,7 +55,7 @@ static lsp::SemanticTokenTypes inferTokenType(const Luau::TypeId ty, lsp::Semant
     }
     else if (auto ttv = Luau::get<Luau::TableType>(followedTy))
     {
-        if (ttv->name && ttv->name == "RBXScriptSignal")
+        if (ttv->name && ttv->name == "ScriptSignal")
         {
             return lsp::SemanticTokenTypes::Event;
         }

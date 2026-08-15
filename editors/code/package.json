@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/oneone-jin/overdare-lsp/issues"
   },
-  "version": "1.69.6",
+  "version": "1.69.7",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -28,7 +28,6 @@
     "overdare"
   ],
   "activationEvents": [
-    "onLanguage:luau",
     "workspaceContains:**/*.luau"
   ],
   "main": "./dist/extension.js",
@@ -828,8 +827,6 @@
     "check:format": "prettier --check src"
   },
   "devDependencies": {
-    "@types/bytes": "^3.1.5",
-    "@types/express": "^5.0.6",
     "@types/mocha": "^10.0.10",
     "@types/node": "^18.19.130",
     "@types/vscode": "~1.82.0",

@@ -43,7 +43,6 @@ TYPE_ALIASES = {
     "Dictionary": "{ [string]: any }",
     "Tuple": "...any",
     "bool": "boolean",
-    "ScriptSignal": "RBXScriptSignal<...any>",
     "function": "(...any) -> ...any",
     "table": "{ any }",
 }
@@ -278,7 +277,17 @@ def scrape_all(log=print):
     # Enum/EnumItem are also listed as "datatypes" in the docs, but they're foundational
     # plumbing types handled specially elsewhere (every Enum* class extends EnumItem, and
     # ENUM_LIST is built from Enum) - scraping and replacing them here is not safe.
-    datatype_links = {name: url for name, url in datatype_links.items() if name not in ("Enum", "EnumItem")}
+    #
+    # ScriptConnection/ScriptSignal are also listed as datatypes, but every event property
+    # (declare_event(), above) needs ScriptSignal to be generic over the event's argument
+    # types (e.g. `Changed: ScriptSignal<string>`), which the generic datatype scraper here
+    # can't produce (it always emits a plain non-generic `declare extern type`). A
+    # hand-written generic version is hardcoded into the merged output instead - see
+    # generate_luau()'s standalone-stub block and scripts/globalTypes.d.luau directly.
+    # Scraping and adding a second, non-generic ScriptSignal/ScriptConnection here would
+    # collide with that hardcoded pair (duplicate `declare extern type` for the same name
+    # crashes the Luau frontend on load).
+    datatype_links = {name: url for name, url in datatype_links.items() if name not in ("Enum", "EnumItem", "ScriptConnection", "ScriptSignal")}
 
     datatypes = []
     for i, (name, url) in enumerate(sorted(datatype_links.items())):
@@ -311,7 +320,7 @@ def declare_method(method):
 def declare_event(event):
     types = [resolve_doc_type(t) for t, _n in event["params"]]
     type_list = ", ".join(types)
-    return f"\t{escape_name(event['name'])}: RBXScriptSignal<{type_list}>\n"
+    return f"\t{escape_name(event['name'])}: ScriptSignal<{type_list}>\n"
 
 
 def declare_class(klass):
@@ -411,7 +420,7 @@ def collect_referenced_types(dump):
             for t, _n in params:
                 note(t)
 
-    candidates = referenced - declared - LUAU_PRIMITIVES - {"RBXScriptSignal", "...any"}
+    candidates = referenced - declared - LUAU_PRIMITIVES - {"ScriptSignal", "...any"}
     return sorted(name for name in candidates if is_identifier(name))
 
 
@@ -421,12 +430,12 @@ def generate_luau(dump):
     out.append("-- Standalone stub definitions for types referenced but not scraped from OVERDARE docs\n")
     out.append("-- (these already exist for real in scripts/globalTypes.d.luau once merged).\n")
     out.append(
-        "export type RBXScriptSignal<T... = ...any> = {\n"
-        "\tWait: (self: RBXScriptSignal<T...>) -> T...,\n"
-        "\tConnect: (self: RBXScriptSignal<T...>, callback: (T...) -> ()) -> RBXScriptConnection,\n"
+        "export type ScriptSignal<T... = ...any> = {\n"
+        "\tWait: (self: ScriptSignal<T...>) -> T...,\n"
+        "\tConnect: (self: ScriptSignal<T...>, callback: (T...) -> ()) -> ScriptConnection,\n"
         "}\n"
     )
-    out.append("declare extern type RBXScriptConnection with\n\tfunction Disconnect(self): nil\nend\n")
+    out.append("declare extern type ScriptConnection with\n\tfunction Disconnect(self): nil\nend\n")
 
     stub_names = collect_referenced_types(dump)
     for name in stub_names:

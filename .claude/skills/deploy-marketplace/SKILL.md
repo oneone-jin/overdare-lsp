@@ -1,102 +1,93 @@
 ---
 name: deploy-marketplace
-description: One-time checklist to publish overdare-lsp to the VS Code Marketplace and OpenVSX (for Cursor). Use when the user says "마켓플레이스 배포", "openvsx 배포", or wants to walk through publishing steps in order.
+description: Publish overdare-lsp updates to the VS Code Marketplace and OpenVSX (for Cursor). Use when the user says "마켓플레이스 배포", "openvsx 배포", "버전 올려서 배포", or wants to ship a new version to either/both registries.
 ---
 
 # Deploy to VS Code Marketplace + OpenVSX
 
-**This skill is temporary.** Once the first successful publish to both registries is
-confirmed, replace it with a `ci-cd` skill that covers only the ongoing
-release/version-bump/publish workflow (ideally via `.github/workflows/`), and delete this
-one - the one-time account-setup steps below won't be needed again.
+Publishing targets both registries because devs use both VS Code (Microsoft Marketplace) and
+Cursor (a VS Code fork that can't legally use the Microsoft Marketplace, and historically
+defaults to OpenVSX). Same vsix, two registries.
 
-Publishing targets both registries because the user's devs use both VS Code (Microsoft
-Marketplace) and Cursor (a VS Code fork that can't legally use the Microsoft Marketplace,
-and historically defaults to OpenVSX). Same vsix, two registries.
+**Status as of v1.69.6**: published to both registries as `wonjin.overdare-lsp`, Windows
+(`win32-x64`) only - this machine can only build for the OS it's running on, no
+cross-compilation. macOS/Linux need their own native build + publish pass, on a machine of
+that OS.
 
-## Checklist
+## One-time setup (already done, for reference)
 
-### 1. Pre-flight checks on `editors/code/package.json`
-- [x] `publisher` field - the `overdare` publisher ID wasn't actually registered, so this
-      was changed to `wonjin` (an account the user does control) instead of chasing `overdare`
-      ownership. Marketplace/OpenVSX steps below must use `wonjin`, not `overdare`.
-- [x] `repository`/`homepage`/`bugs` URLs (`oneone-jin/overdare-lsp`) point at a public repo
-- [x] `icon` path (`assets/icon.png`) resolves to a real file
-- [x] `license` field / `LICENSE.md` present at repo root, and also copied into
-      `editors/code/LICENSE.md` so vsce bundles it into the vsix (vsce looks for a license
-      file next to the extension's own `package.json`, not the repo root)
-- [ ] `README.md` reads correctly as a Marketplace listing page (it's currently written
-      around "build locally + vsix install", not "install from Marketplace" - reword the
-      install section once this is live)
-- [x] `CHANGELOG.md` backfilled with every unreleased user-facing change since v1.69.0
-      (ovdrjm pipeline, platform rename, whitelist/completion fixes, datatype fixes,
-      rebranding) - commit `308ad1b`
+- `publisher` in `editors/code/package.json` is `wonjin` (the `overdare` publisher ID wasn't
+  actually registered, so this account is used instead)
+- `repository`/`homepage`/`bugs` point at `oneone-jin/overdare-lsp`, now public
+- `LICENSE.md` is copied into `editors/code/LICENSE.md` so vsce bundles it (vsce looks for a
+  license file next to the extension's own `package.json`, not the repo root)
+- OpenVSX namespace `wonjin` is registered
+- `OVSX_TOKEN` is set as a permanent Windows user env var (`setx OVSX_TOKEN "..."`) on this
+  machine, and also registered as a GitHub Actions repo secret
+- Marketplace: publisher account exists under `wonjin`, but there's no PAT set up yet - see
+  "Publishing to the Marketplace" below for the workaround in use until one exists
 
-### 2. Register accounts + get tokens (one-time, per registry)
+## Repeatable process for a new version
 
-**Microsoft Marketplace:**
-- [x] Publisher account created under `wonjin` (user confirmed)
-- [ ] Create/sign into an Azure DevOps organization at https://dev.azure.com (if not already
-      done as part of creating the publisher above)
-- [ ] User settings → Personal access tokens → New Token → Organization: *All accessible
-      organizations* → Scopes: **Marketplace → Manage**
-- [ ] Save the PAT somewhere safe (shown once)
-- [ ] Confirm the publisher ID at https://marketplace.visualstudio.com/manage is exactly
-      `wonjin` (must match `package.json`'s `"publisher"` field exactly)
+1. **Bump the version** in three places (they must all match):
+   - `CMakeLists.txt`: `set(LSP_VERSION "X.Y.Z")`
+   - `editors/code/package.json`: `"version": "X.Y.Z"`
+   - Add a `CHANGELOG.md` entry under a new `## [X.Y.Z] - <date>` heading
+   - Neither registry allows republishing an already-used version number, so this is required
+     even for a docs-only or metadata-only change.
 
-**OpenVSX:**
-- [ ] Sign in at https://open-vsx.org (GitHub login works) and agree to the publisher
-      agreement
-- [ ] Generate an access token from your OpenVSX profile settings
-- [ ] Register a namespace matching the `publisher` field:
-      `npx ovsx create-namespace wonjin -p <openvsx-token>`
+2. **Rebuild the CLI** (see the `fix-and-build` skill for full build commands):
+   ```powershell
+   cmake --build build --target Luau.LanguageServer.CLI --config RelWithDebInfo
+   .\build\RelWithDebInfo\luau-lsp.exe --version   # sanity-check it printed the new version
+   ```
 
-### 3. Build + package a vsix per platform
+3. **Refresh what gets bundled into the vsix** - these are gitignored and regenerated from
+   the repo root each time (see `editors/code/.gitignore`):
+   ```powershell
+   Copy-Item build\RelWithDebInfo\luau-lsp.exe editors\code\bin\server.exe -Force
+   Copy-Item README.md editors\code\README.md -Force
+   Copy-Item CHANGELOG.md editors\code\CHANGELOG.md -Force
+   ```
 
-Do this once per OS/arch you need to support (macOS arm64/x64, Linux x64/arm64, Windows
-x64/arm64) - **no cross-compilation**, each needs its own native build. Use the
-`fix-and-build` skill's "package a platform-specific vsix" section for the exact commands;
-summary:
-```bash
-# after building the CLI on this machine
-mkdir -p editors/code/bin && cp build/luau-lsp editors/code/bin/server   # or server.exe + copy on Windows
-cd editors/code && npm install
-npx @vscode/vsce package --target <platform> --out /tmp/overdare-lsp-<platform>.vsix
-```
+4. **Sync `package-lock.json`** to the new version and **package**:
+   ```powershell
+   cd editors\code
+   npm install
+   npx @vscode/vsce package --target win32-x64 --out ..\..\overdare-lsp-windows.vsix
+   ```
 
-- [ ] macOS arm64 vsix built
-- [ ] macOS x64 vsix built
-- [ ] Windows x64 vsix built
-- [ ] (optional) Linux / arm64 variants, if there are users on those platforms
+5. **Publish to OpenVSX** (CLI, using the env var token so it's never typed into chat/logs):
+   ```powershell
+   $OVSX_TOKEN = [System.Environment]::GetEnvironmentVariable("OVSX_TOKEN","User")
+   npx ovsx publish --packagePath ..\..\overdare-lsp-windows.vsix -p $OVSX_TOKEN
+   ```
 
-### 4. Publish to both registries, per platform
+6. **Publish to the Marketplace** - no PAT is set up yet, so this has been done via the web
+   UI instead of `vsce publish`:
+   - Go to https://marketplace.visualstudio.com/manage, publisher `wonjin`
+   - Upload `overdare-lsp-windows.vsix` directly as a new version
+   - Once a PAT exists (Azure DevOps → Personal access tokens → Marketplace: Manage scope),
+     this step can switch to `npx @vscode/vsce publish --target win32-x64` instead, which
+     also lets `.github/workflows/release.yml`'s existing `vsce publish` step work (it's
+     already wired up, just needs the `MARKETPLACE_TOKEN` repo secret added - `OVSX_TOKEN` is
+     already there, so only the Marketplace half of that workflow is currently blocked)
 
-```bash
-cd editors/code
-npx @vscode/vsce login wonjin        # first time only, prompts for the Marketplace PAT
-npx @vscode/vsce publish --target <platform>
+7. **Commit + push** the version bump and whatever code/doc changes prompted the release, then
+   verify:
+   ```
+   curl -s -X POST "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery" \
+     -H "Content-Type: application/json" -H "Accept: application/json;api-version=3.0-preview.1" \
+     -d '{"filters":[{"criteria":[{"filterType":7,"value":"wonjin.overdare-lsp"}]}],"flags":914}'
+   ```
+   (checks the Marketplace Gallery API directly - the human-facing listing page is a
+   client-rendered SPA and can lag behind what the API already reflects)
 
-npx ovsx publish --packagePath /tmp/overdare-lsp-<platform>.vsix -p <openvsx-token>
-```
-- [ ] Published to Microsoft Marketplace for every built platform
-- [ ] Published to OpenVSX for every built platform
+## Notes
 
-### 5. Verify
-- [ ] Search "OVERDARE" in VS Code's Extensions view → installs and activates cleanly
-- [ ] Search "OVERDARE" in Cursor's Extensions view (or install via `.vsix` from OpenVSX) →
-      same
-- [ ] Open a real `.ovdrjm` project, confirm sourcemap generation + `game` global +
-      completion all work post-install (not just "it activated")
-
-### 6. Once all of the above is done
-- [ ] Tell the user the checklist is fully green
-- [ ] Create a new `ci-cd` skill covering the ongoing release workflow. Note:
-      `.github/workflows/release.yml` (inherited from upstream, still intact) already has
-      both `vsce publish` and `ovsx publish` steps wired up per-platform, gated behind
-      `MARKETPLACE_TOKEN`/`OVSX_TOKEN` repo secrets - so "ongoing CI/CD" may mostly mean
-      *adding those two secrets in GitHub repo settings* (using the tokens from step 2
-      above) and confirming the workflow's trigger (tag push? manual dispatch? check the
-      `on:` block) rather than writing new automation from scratch. Verify this before
-      assuming anything needs to be built.
-- [ ] Delete this `deploy-marketplace` skill directory - it was scaffolding for the one-time
-      account setup, not something that needs to persist
+- `editors/code/bin/`, `editors/code/README.md`, `editors/code/CHANGELOG.md` are all
+  gitignored build artifacts, regenerated fresh every package - never commit them.
+- A stale already-running language server process won't pick up a newly-installed extension
+  version until the editor window is fully reloaded (`Developer: Reload Window`) - worth
+  knowing if a just-published fix "isn't working" for someone who already had the extension
+  installed.

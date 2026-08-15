@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.7] - 2026-08-16
+
+### Fixed
+
+- Renamed `RBXScriptConnection`/`RBXScriptSignal` to OVERDARE's real names, `ScriptConnection`/`ScriptSignal` (verified against docs.overdare.com), across every event property and method in `scripts/globalTypes.d.luau`/`.d.lua`. Also removed a duplicate, non-generic `ScriptConnection`/`ScriptSignal` pair that had already been scraped in separately under the real name, which collided with the renamed declarations and crashed the type loader (`declare extern type` doesn't allow redeclaring the same name)
+- Dropped `ConnectParallel` (an event-connection method) and the deprecated lowercase `disconnect` method, neither of which OVERDARE's `ScriptSignal`/`ScriptConnection` actually have
+- Updated `OverdareCompletion.cpp`/`SemanticTokens.cpp`'s special-casing (event/signal-aware property filtering, semantic token coloring) and `scripts/dumpOverdareTypes.py`'s generator to use the new name, so a future re-scrape doesn't reintroduce the Roblox name or the duplicate-declaration crash
+
 ## [1.69.6] - 2026-08-16
 
 ### Changed

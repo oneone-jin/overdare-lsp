@@ -20,32 +20,31 @@ type ENUM_LIST = {
 } & { GetEnums: (self: ENUM_LIST) -> { Enum } }
 declare Enum: ENUM_LIST
 
-declare extern type RBXScriptConnection with
+declare extern type ScriptConnection with
     Connected: boolean
     function Disconnect(self): nil
 end
 
-export type RBXScriptSignal<T... = ...any> = {
-    Wait: (self: RBXScriptSignal<T...>) -> T...,
-    Connect: (self: RBXScriptSignal<T...>, callback: (T...) -> ()) -> RBXScriptConnection,
-    ConnectParallel: (self: RBXScriptSignal<T...>, callback: (T...) -> ()) -> RBXScriptConnection,
+export type ScriptSignal<T... = ...any> = {
+    Wait: (self: ScriptSignal<T...>) -> T...,
+    Connect: (self: ScriptSignal<T...>, callback: (T...) -> ()) -> ScriptConnection,
 }
 
 declare extern type Object with
-	Changed: RBXScriptSignal<string>
+	Changed: ScriptSignal<string>
 	ClassName: string
-	function GetPropertyChangedSignal(self, property: string): RBXScriptSignal
+	function GetPropertyChangedSignal(self, property: string): ScriptSignal
 	function IsA(self, className: string): boolean
 end
 
 declare extern type Instance extends Object with
-    AncestryChanged: RBXScriptSignal<Instance, Instance?>
-    AttributeChanged: RBXScriptSignal<string>
-    ChildAdded: RBXScriptSignal<Instance>
-    ChildRemoved: RBXScriptSignal<Instance>
-    DescendantAdded: RBXScriptSignal<Instance>
-    DescendantRemoving: RBXScriptSignal<Instance>
-    Destroying: RBXScriptSignal<>
+    AncestryChanged: ScriptSignal<Instance, Instance?>
+    AttributeChanged: ScriptSignal<string>
+    ChildAdded: ScriptSignal<Instance>
+    ChildRemoved: ScriptSignal<Instance>
+    DescendantAdded: ScriptSignal<Instance>
+    DescendantRemoving: ScriptSignal<Instance>
+    Destroying: ScriptSignal<>
     Name: string
     Parent: Instance?
     function ClearAllChildren(self): nil
@@ -59,7 +58,7 @@ declare extern type Instance extends Object with
     function FindFirstChildWhichIsA(self, className: string, recursive: boolean?): Instance?
     function FindFirstDescendant(self, name: string): Instance?
     function GetAttribute(self, attribute: string): unknown?
-    function GetAttributeChangedSignal(self, attribute: string): RBXScriptSignal<>
+    function GetAttributeChangedSignal(self, attribute: string): ScriptSignal<>
     function GetAttributes(self): { [string]: unknown }
     function GetChildren(self): { Instance }
     function GetDescendants(self): { Instance }
