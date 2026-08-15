@@ -6,9 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Added support for OVERDARE Studio's `.ovdrjm` project files as the primary sourcemap source (auto-detected, with live file watching), alongside the existing Rojo-based `sourcemap.json` flow as a fallback for non-OVERDARE projects
+- Added `scripts/dumpOverdareTypes.py`, a scraper that generates OVERDARE class/enum/datatype definitions from docs.overdare.com and merges them into `scripts/globalTypes.d.luau`
+
+### Changed
+
+- Replaced the Roblox-specific platform integration with an OVERDARE-specific one: `game`/`GetService`/`Instance.new`/`IsA`-family completion, the `Enum` global (both as a value, e.g. `Enum.Material`, and as a type, e.g. `local x: Enum.Material`), and type-annotation completion (`local x: |`) now only suggest classes, services, and enums that actually exist on OVERDARE, instead of also surfacing the ~2000 Roblox-only ones still declared in the definitions file for backwards type compatibility
+- Fixed datatype static constructors (e.g. `Color3.fromRGB`, `CFrame.fromEulerAnglesXYZ`/`fromEulerAnglesYXZ`/`fromMatrix`/`fromOrientation`/`lookAt`/`Angles`) being silently dropped during type generation, and static constants (e.g. `CFrame.identity`, `Vector3.zero`/`one`/`xAxis`/`yAxis`/`zAxis`) being misclassified as instance properties instead of members of the global namespace table
+- Rebranded the extension for OVERDARE (name, publisher, icon, marketplace metadata) and added OS/arch-aware local build + vsix packaging support (macOS/Windows, no cross-compilation)
+
+### Removed
+
+- Removed the Roblox Studio companion-plugin live DataModel sync feature, superseded by the `.ovdrjm` project file pipeline
+
 ### Fixed
 
 - Fixed `@self` string-require aliases resolving from the filesystem instead of the sourcemap tree for non-DataModel roots ([#1511](https://github.com/JohnnyMorganz/luau-lsp/issues/1511))
+- Fixed `@overdare` type definitions being silently downloaded from a remote Roblox-types URL instead of using the bundled OVERDARE-merged definitions file
+- Fixed the packaged vsix failing to resolve the bundled type definitions file path
 
 ## [1.69.0] - 2026-07-14
 
