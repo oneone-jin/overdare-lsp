@@ -25,7 +25,7 @@
   "keywords": [
     "lua",
     "luau",
-    "roblox"
+    "overdare"
   ],
   "activationEvents": [
     "onLanguage:luau",
@@ -106,10 +106,6 @@
       {
         "command": "luau-lsp.regenerateSourcemap",
         "title": "Luau: Regenerate Sourcemap"
-      },
-      {
-        "command": "luau-lsp.setupStudioPlugin",
-        "title": "Luau: Setup Studio Companion Plugin"
       },
       {
         "command": "luau-lsp.reloadServer",
@@ -236,10 +232,10 @@
           "type": "string",
           "enum": [
             "standard",
-            "roblox"
+            "overdare"
           ],
           "scope": "window",
-          "default": "roblox"
+          "default": "overdare"
         },
         "luau-lsp.sourcemap.enabled": {
           "markdownDescription": "Whether Rojo sourcemap parsing is enabled",
@@ -634,7 +630,7 @@
           "scope": "resource"
         },
         "luau-lsp.completion.imports.stringRequires.enabled": {
-          "markdownDescription": "Whether to use string requires when auto-importing requires. Only checked if `#luau-lsp.platform.type#` is `roblox`",
+          "markdownDescription": "Whether to use string requires when auto-importing requires. Only checked if `#luau-lsp.platform.type#` is `overdare`",
           "type": "boolean",
           "default": false,
           "scope": "resource"
@@ -673,48 +669,6 @@
           "type": "boolean",
           "default": true,
           "scope": "resource"
-        },
-        "luau-lsp.studioPlugin.enabled": {
-          "markdownDescription": "Use Roblox Studio Plugin to provide DataModel information",
-          "type": "boolean",
-          "default": false,
-          "scope": "window"
-        },
-        "luau-lsp.studioPlugin.port": {
-          "markdownDescription": "Port number to connect to the Studio Plugin",
-          "type": "number",
-          "default": 3667,
-          "scope": "window"
-        },
-        "luau-lsp.studioPlugin.maximumRequestBodySize": {
-          "markdownDescription": "The maximum request body size accepted from the plugin, in a string representation parse-able by the [bytes](https://www.npmjs.com/package/bytes) library",
-          "type": "string",
-          "default": "3mb",
-          "scope": "window"
-        },
-        "luau-lsp.plugin.enabled": {
-          "markdownDescription": "Use Roblox Studio Plugin to provide DataModel information",
-          "type": "boolean",
-          "default": false,
-          "scope": "window",
-          "markdownDeprecationMessage": "**Deprecated**: Use `luau-lsp.studioPlugin.enabled` instead.",
-          "deprecationMessage": "Deprecated: Use luau-lsp.studioPlugin.enabled instead."
-        },
-        "luau-lsp.plugin.port": {
-          "markdownDescription": "Port number to connect to the Studio Plugin",
-          "type": "number",
-          "default": 3667,
-          "scope": "window",
-          "markdownDeprecationMessage": "**Deprecated**: Use `luau-lsp.studioPlugin.port` instead.",
-          "deprecationMessage": "Deprecated: Use luau-lsp.studioPlugin.port instead."
-        },
-        "luau-lsp.plugin.maximumRequestBodySize": {
-          "markdownDescription": "The maximum request body size accepted from the plugin, in a string representation parse-able by the [bytes](https://www.npmjs.com/package/bytes) library",
-          "type": "string",
-          "default": "3mb",
-          "scope": "window",
-          "markdownDeprecationMessage": "**Deprecated**: Use `luau-lsp.studioPlugin.maximumRequestBodySize` instead.",
-          "deprecationMessage": "Deprecated: Use luau-lsp.studioPlugin.maximumRequestBodySize instead."
         },
         "luau-lsp.require.fileAliases": {
           "markdownDescription": "A mapping of custom require string aliases to file paths",
@@ -831,7 +785,7 @@
           {
             "id": "platform",
             "title": "Select your Platform",
-            "description": "This extension provides out-of-the-box support for Roblox projects. If you are working in a separate environment, you may want to set your platform to ``standard``\n[Configure Platform](command:workbench.action.openSettings?%22luau-lsp.platform.type%22)",
+            "description": "This extension provides out-of-the-box support for OVERDARE projects. If you are working in a separate environment, you may want to set your platform to ``standard``\n[Configure Platform](command:workbench.action.openSettings?%22luau-lsp.platform.type%22)",
             "media": {
               "markdown": "assets/walkthrough-select-your-platform.md"
             }
@@ -843,25 +797,16 @@
             "media": {
               "markdown": "assets/empty.md"
             },
-            "when": "config.luau-lsp.platform.type != 'roblox'"
+            "when": "config.luau-lsp.platform.type != 'overdare'"
           },
           {
             "id": "sourcemap",
             "title": "Configure Sourcemap Generation",
-            "description": "A sourcemap provides a mapping between your paths on the file system to locations in the Roblox DataModel. By default, we automatically generate sourcemaps based on [Rojo](https://github.com/rojo-rbx/rojo) projects.\n[Configure Sourcemap Generation](command:workbench.action.openSettings?%22luau-lsp.sourcemap%22)",
+            "description": "A sourcemap provides a mapping between your paths on the file system to locations in the OVERDARE DataModel. By default, we automatically generate sourcemaps from your `.ovdrjm` project file.\n[Configure Sourcemap Generation](command:workbench.action.openSettings?%22luau-lsp.sourcemap%22)",
             "media": {
               "markdown": "assets/walkthrough-sourcemap-generation.md"
             },
-            "when": "config.luau-lsp.platform.type == 'roblox'"
-          },
-          {
-            "id": "companion-plugin",
-            "title": "Install the Companion Plugin",
-            "description": "A companion plugin is available in Roblox Studio. This allows type-checking and autocomplete to work on Instances that are only available in Studio, and not on your file system\n[Install Companion Plugin](https://www.roblox.com/library/10913122509/Luau-Language-Server-Companion)",
-            "media": {
-              "markdown": "assets/empty.md"
-            },
-            "when": "config.luau-lsp.platform.type == 'roblox'"
+            "when": "config.luau-lsp.platform.type == 'overdare'"
           }
         ]
       }
@@ -901,10 +846,8 @@
   },
   "dependencies": {
     "@hpcc-js/wasm": "^2.33.2",
-    "bytes": "^3.1.2",
     "d3": "^7.9.0",
     "d3-graphviz": "^5.6.0",
-    "express": "^5.2.1",
     "vscode-languageclient": "^9.0.1"
   }
 }

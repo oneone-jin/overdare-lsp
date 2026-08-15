@@ -1,51 +1,13 @@
 import * as vscode from "vscode";
-import { Server } from "http";
-import express, { ErrorRequestHandler } from "express";
-import { format as bytesFormat } from "bytes";
+import * as path from "path";
 import { spawn } from "child_process";
 import { LanguageClient } from "vscode-languageclient/node";
 import { AddArgCallback, PlatformContext } from "./extension";
 
 import * as utils from "./utils";
 
-let pluginServer: Server | undefined = undefined;
-
-const getStudioPluginValue = <T>(key: string, defaultValue: T): T => {
-  const newInspect = vscode.workspace
-    .getConfiguration("luau-lsp.studioPlugin")
-    .inspect<T>(key);
-  if (
-    newInspect?.globalValue !== undefined ||
-    newInspect?.workspaceValue !== undefined ||
-    newInspect?.workspaceFolderValue !== undefined
-  ) {
-    return (
-      newInspect.workspaceFolderValue ??
-      newInspect.workspaceValue ??
-      newInspect.globalValue ??
-      defaultValue
-    );
-  }
-  return (
-    vscode.workspace.getConfiguration("luau-lsp.plugin").get<T>(key) ??
-    defaultValue
-  );
-};
-
 const API_DOCS = "https://luau-lsp.pages.dev/api-docs/en-us.json";
 const LUAU_API_DOCS = "https://luau-lsp.pages.dev/api-docs/luau-en-us.json";
-const STUDIO_PLUGIN_URL =
-  "https://www.roblox.com/library/10913122509/Luau-Language-Server-Companion";
-
-const setupStudioPlugin = async (client: LanguageClient | undefined) => {
-  // Enable the plugin server
-  await vscode.workspace
-    .getConfiguration("luau-lsp.studioPlugin")
-    .update("enabled", true);
-  startPluginServer(client);
-  // Open the studio plugin in the browser for the user to install
-  vscode.env.openExternal(vscode.Uri.parse(STUDIO_PLUGIN_URL));
-};
 
 const globalTypesEndpointForSecurityLevel = (securityLevel: string) => {
   return `https://luau-lsp.pages.dev/type-definitions/globalTypes.${securityLevel}.d.luau`;
@@ -98,21 +60,13 @@ const getRojoProjectFile = async (
   );
 
   if (foundProjectFiles.length === 0) {
-    // If the plugin is not enabled, provide a one-click setup button
-    let options: string[] = [];
-    if (!getStudioPluginValue("enabled", false)) {
-      options.push("Setup Plugin");
-    }
-    options.push("Configure Settings");
     vscode.window
       .showWarningMessage(
-        `Unable to find project file ${projectFile} for Rojo sourcemap generation. Configure a file in settings, or use the Studio Plugin for DataModel info instead`,
-        ...options,
+        `Unable to find project file ${projectFile} for Rojo sourcemap generation. Configure a file in settings.`,
+        "Configure Settings",
       )
       .then((value) => {
-        if (value === "Setup Plugin") {
-          setupStudioPlugin(client);
-        } else if (value === "Configure Settings") {
+        if (value === "Configure Settings") {
           vscode.commands.executeCommand(
             "workbench.action.openWorkspaceSettings",
             "luau-lsp.sourcemap",
@@ -157,6 +111,27 @@ const getRojoProjectFile = async (
   return undefined;
 };
 
+/// An OVERDARE Studio project root is identified by a `*.ovdrjm` file. Unlike Rojo
+/// projects, this isn't something the user configures - if it's present, this
+/// workspace is an OVERDARE project and .ovdrjm-based sourcemap generation takes
+/// priority over the Rojo flow.
+const findOvdrjmFile = async (
+  workspaceFolder: vscode.WorkspaceFolder,
+): Promise<vscode.Uri | undefined> => {
+  const found = await vscode.workspace.findFiles(
+    new vscode.RelativePattern(workspaceFolder, "*.ovdrjm"),
+  );
+  if (found.length === 0) {
+    return undefined;
+  }
+  if (found.length > 1) {
+    console.warn(
+      `Multiple .ovdrjm files found in ${workspaceFolder.name}, using ${utils.basenameUri(found[0])}`,
+    );
+  }
+  return found[0];
+};
+
 const sourcemapDisposables: Map<
   vscode.WorkspaceFolder,
   Array<vscode.Disposable>
@@ -187,6 +162,7 @@ const cleanupSourcemapDisposables = async (
 const startSourcemapGeneration = async (
   client: LanguageClient | undefined,
   workspaceFolder: vscode.WorkspaceFolder,
+  context: vscode.ExtensionContext,
 ) => {
   cleanupSourcemapDisposables(workspaceFolder);
 
@@ -220,6 +196,10 @@ const startSourcemapGeneration = async (
 
     let childProcess;
 
+    const ovdrjmFile = customGeneratorCommand
+      ? undefined
+      : await findOvdrjmFile(workspaceFolder);
+
     if (customGeneratorCommand && customGeneratorCommand.trim() !== "") {
       // TODO: should we support shell execution here?
       // It allows us to delegate to the shell for argument parsing
@@ -228,6 +208,27 @@ const startSourcemapGeneration = async (
         cwd,
         shell: true,
       });
+    } else if (ovdrjmFile) {
+      const luaDir = path.join(path.dirname(ovdrjmFile.fsPath), "Lua");
+      const sourcemapFileName =
+        config.get<string>("sourcemapFile") ?? "sourcemap.json";
+      const watcherScript = vscode.Uri.joinPath(
+        context.extensionUri,
+        "..",
+        "..",
+        "scripts",
+        "ovdrjmWatch.py",
+      ).fsPath;
+
+      loggingFunc(
+        `Detected OVERDARE project (${utils.basenameUri(ovdrjmFile)}), using .ovdrjm-based sourcemap generation`,
+      );
+
+      childProcess = spawn(
+        "python3",
+        [watcherScript, ovdrjmFile.fsPath, luaDir, "-o", sourcemapFileName],
+        { cwd },
+      );
     } else {
       // Check if the project file exists
       const projectFile = await getRojoProjectFile(
@@ -292,11 +293,7 @@ const startSourcemapGeneration = async (
             stderr.includes("is not recognized") ||
             stderr.includes("ENOENT")
           ) {
-            output +=
-              "Rojo not found. Configure your Rojo path in settings, or use the Studio Plugin for DataModel info instead";
-            if (!getStudioPluginValue("enabled", false)) {
-              options.push("Setup Plugin");
-            }
+            output += "Rojo not found. Configure your Rojo path in settings.";
             options.push("Configure Settings");
           } else {
             output += stderr;
@@ -305,9 +302,7 @@ const startSourcemapGeneration = async (
 
         vscode.window.showWarningMessage(output, ...options).then((value) => {
           if (value === "Retry") {
-            startSourcemapGeneration(client, workspaceFolder);
-          } else if (value === "Setup Plugin") {
-            setupStudioPlugin(client);
+            startSourcemapGeneration(client, workspaceFolder, context);
           } else if (value === "Configure Settings") {
             vscode.commands.executeCommand(
               "workbench.action.openWorkspaceSettings",
@@ -357,7 +352,7 @@ const startSourcemapGeneration = async (
             )
             .then((value) => {
               if (value === "Restart") {
-                startSourcemapGeneration(client, workspaceFolder);
+                startSourcemapGeneration(client, workspaceFolder, context);
               } else if (value === "Configure Settings") {
                 vscode.commands.executeCommand(
                   "workbench.action.openWorkspaceSettings",
@@ -380,116 +375,6 @@ const startSourcemapGeneration = async (
   }
 };
 
-const startPluginServer = async (client: LanguageClient | undefined) => {
-  if (pluginServer) {
-    return;
-  }
-
-  const app = express();
-  app.use(
-    express.json({
-      limit: getStudioPluginValue("maximumRequestBodySize", "3mb"),
-    }),
-  );
-
-  app.post("/full", (req, res) => {
-    if (!client) {
-      return res.sendStatus(500);
-    }
-
-    if (req.body.tree) {
-      client.sendNotification("$/plugin/full", req.body.tree);
-      res.sendStatus(200);
-    } else {
-      res.sendStatus(400);
-    }
-  });
-
-  app.post("/clear", (_req, res) => {
-    if (!client) {
-      return res.sendStatus(500);
-    }
-
-    client.sendNotification("$/plugin/clear");
-    res.sendStatus(200);
-  });
-
-  app.get("/get-file-paths", async (_req, res) => {
-    try {
-      const uris = await vscode.workspace.findFiles("**/*.{lua,luau}");
-      res.json({
-        files: uris.map((uri: vscode.Uri) => uri.fsPath),
-      });
-    } catch (error) {
-      console.error("Error getting file paths:", error);
-      res.status(500).json({ error: "Failed to get file paths" });
-    }
-  });
-
-  const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-    if (res.headersSent) {
-      return next(err);
-    }
-
-    if (err && err.type === "entity.too.large") {
-      res
-        .status(413)
-        .send(
-          `Result is too large. Limit: ${bytesFormat(err.limit)}, Received: ${bytesFormat(err.received)}.\n` +
-            `Increase your available limits by updating the 'luau-lsp.studioPlugin.maximumRequestBodySize' property in VSCode, or by reducing the include list in the Studio Plugin settings`,
-        );
-    }
-  };
-
-  app.use(errorHandler);
-
-  const port = getStudioPluginValue("port", 3667);
-  pluginServer = app
-    .listen(port, () => {
-      vscode.window.showInformationMessage(
-        `Luau Language Server Studio Plugin is now listening on port ${port}`,
-      );
-    })
-    .on("error", (err) => {
-      if ((err as any).code === "EADDRINUSE") {
-        vscode.window
-          .showErrorMessage(
-            `Failed to start Luau Language Server Studio Plugin on port ${port}: Port already in use. Check there are no other servers running on this port, or change the port in settings`,
-            "Reconnect",
-            "Change Port Configuration",
-          )
-          .then((value) => {
-            if (value === "Reconnect") {
-              stopPluginServer(true);
-              startPluginServer(client);
-            } else if (value === "Change Port Configuration") {
-              vscode.commands.executeCommand(
-                "workbench.action.openWorkspaceSettings",
-                "luau-lsp.studioPlugin.port",
-              );
-            }
-          });
-      } else {
-        vscode.window.showErrorMessage(
-          `Failed to start Luau Language Server Studio Plugin on port ${port}: ${err}`,
-        );
-      }
-    });
-};
-
-const stopPluginServer = async (isDeactivating = false) => {
-  if (pluginServer) {
-    pluginServer.close();
-    pluginServer = undefined;
-
-    if (!isDeactivating) {
-      vscode.window.showInformationMessage(
-        `Luau Language Server Studio Plugin has disconnected`,
-      );
-    }
-  }
-};
-
 export const onActivate = async (
   platformContext: PlatformContext,
   context: vscode.ExtensionContext,
@@ -497,7 +382,7 @@ export const onActivate = async (
   const startSourcemapGenerationForAllFolders = () => {
     if (vscode.workspace.workspaceFolders) {
       for (const folder of vscode.workspace.workspaceFolders) {
-        startSourcemapGeneration(platformContext.client, folder);
+        startSourcemapGeneration(platformContext.client, folder, context);
       }
     }
   };
@@ -506,12 +391,6 @@ export const onActivate = async (
     vscode.commands.registerCommand(
       "luau-lsp.regenerateSourcemap",
       startSourcemapGenerationForAllFolders,
-    ),
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("luau-lsp.setupStudioPlugin", () =>
-      setupStudioPlugin(platformContext.client),
     ),
   );
 
@@ -531,19 +410,9 @@ export const onActivate = async (
             ) {
               cleanupSourcemapDisposables(folder);
             } else {
-              startSourcemapGeneration(platformContext.client, folder);
+              startSourcemapGeneration(platformContext.client, folder, context);
             }
           }
-        }
-      } else if (
-        e.affectsConfiguration("luau-lsp.studioPlugin") ||
-        e.affectsConfiguration("luau-lsp.plugin")
-      ) {
-        if (getStudioPluginValue("enabled", false)) {
-          stopPluginServer(true);
-          startPluginServer(platformContext.client);
-        } else {
-          stopPluginServer();
         }
       }
     }),
@@ -555,14 +424,14 @@ export const onActivate = async (
 export const preLanguageServerStart = async (
   context: vscode.ExtensionContext,
 ) => {
-  // Load roblox type definitions
+  // Load OVERDARE type definitions
   const typesConfig = vscode.workspace.getConfiguration("luau-lsp.types");
   const platformConfig = vscode.workspace.getConfiguration("luau-lsp.platform");
 
   // TODO: Cleanup when deprecated luau-lsp.types.roblox is deleted
   // We need to respect the new setting as well as the old setting. We check for "&&" since they are on by default
   if (
-    platformConfig.get<string>("type") === "roblox" &&
+    platformConfig.get<string>("type") === "overdare" &&
     typesConfig.get<boolean>("roblox")
   ) {
     const securityLevel =
@@ -570,7 +439,7 @@ export const preLanguageServerStart = async (
 
     return {
       definitions: {
-        ["@roblox"]: {
+        ["@overdare"]: {
           url: globalTypesEndpointForSecurityLevel(securityLevel),
           outputUri: globalTypesUri(context, securityLevel, "Prod"),
         },
@@ -588,19 +457,14 @@ export const preLanguageServerStart = async (
 };
 
 export const postLanguageServerStart = async (
-  platformContext: PlatformContext,
+  _platformContext: PlatformContext,
   _: vscode.ExtensionContext,
-) => {
-  if (getStudioPluginValue("enabled", false)) {
-    startPluginServer(platformContext.client);
-  }
-};
+) => {};
 
 export const onDeactivate = () => {
   return [
     ...Array.from(sourcemapDisposables.keys()).map((workspace) =>
       cleanupSourcemapDisposables(workspace),
     ),
-    stopPluginServer(true),
   ];
 };
