@@ -56,3 +56,6 @@ trace.json
 
 # Python cache
 __pycache__/
+
+# Bundled server binary (copied in only for local vsix packaging / CI release builds)
+editors/code/bin/
