@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.2] - 2026-08-16
+
+### Changed
+
+- Marked the extension as unofficial/community-maintained in its Marketplace-facing `displayName`/`description` and in the README, since "OVERDARE" is a third-party trademark and this fork is not affiliated with or endorsed by OVERDARE
+- Added `editors/code/THIRD-PARTY-NOTICES.md`, reproducing the bundled `d3`/`d3-graphviz`/`@hpcc-js/wasm` license notices, and linked it from the README
+
+### Fixed
+
+- Fixed local/manual vsix packaging silently omitting the README and CHANGELOG (only the CI release workflow was copying them into `editors/code/` beforehand) - README/CHANGELOG are now gitignored there and re-copied from the repo root before every package, documented in both the root README and the `fix-and-build` skill
+
 ## [1.69.1] - 2026-08-16
 
 ### Added

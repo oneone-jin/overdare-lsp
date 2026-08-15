@@ -59,3 +59,8 @@ __pycache__/
 
 # Bundled server binary (copied in only for local vsix packaging / CI release builds)
 editors/code/bin/
+
+# Mirrored from repo root at package time (see release.yml / README's local packaging steps)
+# so they never go stale as a committed duplicate
+editors/code/README.md
+editors/code/CHANGELOG.md

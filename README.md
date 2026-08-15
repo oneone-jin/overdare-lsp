@@ -1,7 +1,10 @@
-# OVERDARE Luau Language Server
+# OVERDARE Luau Language Server (Unofficial)
 
 An implementation of a language server for the [Luau](https://github.com/Roblox/luau)
 programming language, targeting [OVERDARE](https://www.overdare.com/) projects.
+
+This is an unofficial, community-maintained project and is not affiliated with, endorsed
+by, or sponsored by OVERDARE.
 
 This is a fork of [JohnnyMorganz/luau-lsp](https://github.com/JohnnyMorganz/luau-lsp) (MIT
 licensed), which the vast majority of this codebase's language-server plumbing still comes
@@ -11,8 +14,11 @@ instead of Roblox's, and `.ovdrjm`-based sourcemap generation instead of Rojo's.
 
 ## Getting Started
 
-This fork isn't published to the VSCode Marketplace or OpenVSX Registry. Build and install
-the extension locally:
+This fork is published on [OpenVSX](https://open-vsx.org) as `wonjin.overdare-lsp` (used by
+editors like Cursor); search "OVERDARE" in your editor's extension marketplace. It's not yet
+on the VS Code Marketplace.
+
+You can also build and install the extension locally:
 
 ```sh
 git clone --recurse-submodules https://github.com/oneone-jin/overdare-lsp.git
@@ -26,6 +32,10 @@ cd ..
 mkdir -p editors/code/bin
 cp build/luau-lsp editors/code/bin/server            # macOS/Linux
 # copy build\RelWithDebInfo\luau-lsp.exe editors\code\bin\server.exe   # Windows
+
+# Mirror the README/CHANGELOG into the extension so they're bundled into the vsix
+cp README.md editors/code/README.md
+cp CHANGELOG.md editors/code/CHANGELOG.md
 
 cd editors/code
 npm install
@@ -178,3 +188,11 @@ API surface:
 python3 scripts/dumpOverdareTypes.py --merge-base scripts/globalTypes.d.luau --merged-output scripts/globalTypes.d.luau
 cp scripts/globalTypes.d.luau scripts/globalTypes.d.lua   # keep both copies identical
 ```
+
+## License
+
+MIT - see [LICENSE.md](LICENSE.md). This project is a fork of
+[JohnnyMorganz/luau-lsp](https://github.com/JohnnyMorganz/luau-lsp) (Copyright (c) 2022
+JohnnyMorganz), also MIT licensed. The bundled VS Code extension additionally ships a few
+third-party JS libraries under their own permissive licenses; see
+[editors/code/THIRD-PARTY-NOTICES.md](editors/code/THIRD-PARTY-NOTICES.md).

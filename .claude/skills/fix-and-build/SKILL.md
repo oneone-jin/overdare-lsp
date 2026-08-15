@@ -108,6 +108,8 @@ OS in a build matrix, then publishes each with its own `--target`).
 mkdir -p editors/code/bin
 cp build/luau-lsp editors/code/bin/server
 chmod 777 editors/code/bin/server
+cp README.md editors/code/README.md
+cp CHANGELOG.md editors/code/CHANGELOG.md
 cd editors/code
 npm install    # first time only
 npx @vscode/vsce package --target <darwin-arm64|darwin-x64|linux-x64|linux-arm64> \
@@ -117,14 +119,21 @@ npx @vscode/vsce package --target <darwin-arm64|darwin-x64|linux-x64|linux-arm64
 # Windows — from repo root, after step 3 (adjust <Config> to match what you built)
 New-Item -ItemType Directory -Force -Path editors\code\bin
 Copy-Item build\<Config>\luau-lsp.exe editors\code\bin\server.exe
+Copy-Item README.md editors\code\README.md
+Copy-Item CHANGELOG.md editors\code\CHANGELOG.md
 cd editors\code
 npm install    # first time only
 npx @vscode/vsce package --target win32-x64 --out ..\..\overdare-lsp-windows.vsix
 ```
 
 `editors/code/bin/` is gitignored - it's a build artifact repopulated fresh each time, never
-committed. The `--target` flag only affects marketplace/registry metadata (which platform
-variant a listing serves); for a raw shared `.vsix` file it doesn't gate anything by itself -
-what actually determines which OS a given vsix works on is simply which binary
-(`server` vs `server.exe`) got copied into `bin/` before packaging. Installing the wrong
-platform's vsix fails at server-launch time with an ENOENT-style error, not at install time.
+committed. `editors/code/README.md`/`CHANGELOG.md` are likewise gitignored and must be
+re-copied from the repo root before every package - without them vsce silently packages
+without a README (Marketplace/OpenVSX show a bare listing instead of the real README, which
+also means any disclaimer text living only in the root README - e.g. the "unofficial,
+not affiliated with OVERDARE" notice - never reaches end users). The `--target` flag only
+affects marketplace/registry metadata (which platform variant a listing serves); for a raw
+shared `.vsix` file it doesn't gate anything by itself - what actually determines which OS a
+given vsix works on is simply which binary (`server` vs `server.exe`) got copied into `bin/`
+before packaging. Installing the wrong platform's vsix fails at server-launch time with an
+ENOENT-style error, not at install time.
