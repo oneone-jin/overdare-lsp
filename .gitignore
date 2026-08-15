@@ -50,3 +50,9 @@ trace.json
 
 # Python venvs
 .venv
+
+# Overdare Reference
+/overdare
+
+# Python cache
+__pycache__/
