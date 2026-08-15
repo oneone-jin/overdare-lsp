@@ -3,7 +3,7 @@
   "displayName": "OVERDARE Luau Language Server",
   "description": "A Language Server for Luau on OVERDARE",
   "author": "JohnnyMorganz",
-  "publisher": "overdare",
+  "publisher": "wonjin",
   "license": "MIT",
   "icon": "assets/icon.png",
   "homepage": "https://github.com/oneone-jin/overdare-lsp",

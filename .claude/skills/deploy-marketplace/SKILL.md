@@ -17,8 +17,9 @@ and historically defaults to OpenVSX). Same vsix, two registries.
 ## Checklist
 
 ### 1. Pre-flight checks on `editors/code/package.json`
-- [ ] `publisher` field (`overdare`) matches an account you actually control - **still not
-      verified as of this writing, this is the actual blocker for step 2**
+- [x] `publisher` field - the `overdare` publisher ID wasn't actually registered, so this
+      was changed to `wonjin` (an account the user does control) instead of chasing `overdare`
+      ownership. Marketplace/OpenVSX steps below must use `wonjin`, not `overdare`.
 - [x] `repository`/`homepage`/`bugs` URLs (`oneone-jin/overdare-lsp`) point at a public repo
 - [x] `icon` path (`assets/icon.png`) resolves to a real file
 - [x] `license` field / `LICENSE.md` present at repo root, and also copied into
@@ -34,19 +35,21 @@ and historically defaults to OpenVSX). Same vsix, two registries.
 ### 2. Register accounts + get tokens (one-time, per registry)
 
 **Microsoft Marketplace:**
-- [ ] Create/sign into an Azure DevOps organization at https://dev.azure.com
+- [x] Publisher account created under `wonjin` (user confirmed)
+- [ ] Create/sign into an Azure DevOps organization at https://dev.azure.com (if not already
+      done as part of creating the publisher above)
 - [ ] User settings → Personal access tokens → New Token → Organization: *All accessible
       organizations* → Scopes: **Marketplace → Manage**
 - [ ] Save the PAT somewhere safe (shown once)
-- [ ] Create the publisher at https://marketplace.visualstudio.com/manage → publisher ID
-      must exactly match `package.json`'s `"publisher"` field
+- [ ] Confirm the publisher ID at https://marketplace.visualstudio.com/manage is exactly
+      `wonjin` (must match `package.json`'s `"publisher"` field exactly)
 
 **OpenVSX:**
 - [ ] Sign in at https://open-vsx.org (GitHub login works) and agree to the publisher
       agreement
 - [ ] Generate an access token from your OpenVSX profile settings
 - [ ] Register a namespace matching the `publisher` field:
-      `npx ovsx create-namespace overdare -p <openvsx-token>`
+      `npx ovsx create-namespace wonjin -p <openvsx-token>`
 
 ### 3. Build + package a vsix per platform
 
@@ -70,7 +73,7 @@ npx @vscode/vsce package --target <platform> --out /tmp/overdare-lsp-<platform>.
 
 ```bash
 cd editors/code
-npx @vscode/vsce login overdare        # first time only, prompts for the Marketplace PAT
+npx @vscode/vsce login wonjin        # first time only, prompts for the Marketplace PAT
 npx @vscode/vsce publish --target <platform>
 
 npx ovsx publish --packagePath /tmp/overdare-lsp-<platform>.vsix -p <openvsx-token>
