@@ -229,11 +229,10 @@ agreed conversion plan and what's already done.
      - The **separate** `luau-lsp.types.roblox` / `robloxSecurityLevel` toggle (C++ field
        `ClientTypesConfiguration::roblox`, JSON key `"roblox"`) - this is an independent
        opt-in "also load Roblox's public type definitions" feature, not the platform
-       selector. Its `preLanguageServerStart` Prod-mode code path downloads fresh Roblox
-       types from `luau-lsp.pages.dev` into `@overdare`'s definitions slot when enabled -
-       **this would silently overwrite our merged OVERDARE types with pure Roblox ones**.
-       Not fixed yet; flagged here since packaging (step 8) will hit it if this toggle
-       defaults on for the `overdare` platform.
+       selector. **This DID have a real bug, now fixed** (see step 7.1 below): its
+       `preLanguageServerStart` code path was downloading fresh Roblox types from
+       `luau-lsp.pages.dev` into `@overdare`'s definitions slot whenever this toggle was on
+       (true by default), silently discarding our merged OVERDARE `globalTypes.d.luau`.
      - `"@roblox/enum/..."` and the `"@roblox"`→`"@luau"` documentation-symbol rewrite in
        `OverdareLuauExt.cpp` (`fixDebugDocumentationSymbol`) - these key into an *external*
        Roblox-hosted documentation JSON (`API_DOCS` URL) by a fixed symbol format; renaming
@@ -252,13 +251,37 @@ agreed conversion plan and what's already done.
      `analyze --platform overdare` end-to-end smoke test passes with the renamed package
      key showing in logs (`Loading definitions file: @overdare - ...`).
 
+7.1. **[DONE] Fix `@overdare` definitions silently downloading pure Roblox types** —
+   `editors/code/src/extension.ts`'s `handleExternalFiles` unconditionally queued every
+   entry in `builtinDefinitionFiles` for network download (no `isExternalFile` check,
+   unlike the settings-based `definitionFilesConfig` path right above it which did check).
+   `overdare.ts`'s `preLanguageServerStart` always returned a `luau-lsp.pages.dev` URL for
+   `@overdare` whenever `luau-lsp.types.roblox` was on (default true) - so the committed,
+   merged `scripts/globalTypes.d.luau` was never actually loaded; a fresh pure-Roblox file
+   got downloaded to `globalStorageUri` and used instead, both on first run and on the
+   daily re-fetch (`shouldFetchDefinitions`).
+   - Fixed: `handleExternalFiles`'s builtin-merge loop now checks `isExternalFile(url)` -
+     a non-URL entry is used directly with no download, mirroring the existing
+     settings-file behavior.
+   - `overdare.ts` now points `@overdare` straight at the local
+     `scripts/globalTypes.d.luau` (via `overdareGlobalTypesUri`, both `url` and
+     `outputUri`) instead of a `luau-lsp.pages.dev` URL. Dropped the removed
+     `robloxSecurityLevel`-variant file selection (`globalTypes.PluginSecurity.d.luau`
+     etc.) since we only maintain the one unified merged file - those per-security-level
+     variants are Roblox-dump artifacts we never merged OVERDARE types into, so selecting
+     one would silently regress to stale pure-Roblox data.
+   - **Still open**: same as step 3's/step 3's gap - `overdareGlobalTypesUri`'s
+     `context.extensionUri/../../scripts/...` resolution only works in the monorepo source
+     tree, not a packaged vsix. Needs bundling before step 8.
+   - Verified: `tsc --noEmit` + `eslint` clean, `npm run compile` succeeds.
+
 8. **[TODO] vsix test build** — once the above is functionally stable, package the
-   extension (`vsce package` or equivalent) for local install/testing. **Known blocker
-   from step 7**: check whether `luau-lsp.types.roblox` defaults to true for the
-   `overdare` platform - if so, packaging (which uses "Prod" mode, downloading from
-   `luau-lsp.pages.dev`) would overwrite the committed OVERDARE-merged `globalTypes.d.luau`
-   with pure Roblox types at runtime. Also recall step 3's separate known gap: the
-   `ovdrjmWatch.py` path resolution only works in the source tree, not a packaged vsix.
+   extension (`vsce package` or equivalent) for local install/testing. **Known blocker,
+   applies to both step 3's `.ovdrjm` watcher AND step 7.1's `globalTypes.d.luau` path**:
+   both resolve paths relative to `context.extensionUri/../../scripts/...`, which only
+   exists in the monorepo source tree. A packaged vsix doesn't ship `scripts/` alongside
+   it, so both need to either bundle those files into the extension package or switch to
+   a different resolution strategy before packaging.
 
 9. **[LATER] Branding/metadata** — extension display name, `luau-lsp.*` command/config
    prefix, marketplace description/icon. Explicitly deferred — not urgent for internal

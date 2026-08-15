@@ -209,11 +209,18 @@ const handleExternalFiles = async (
     builtinDefinitionFiles,
   )) {
     if (!finalDefinitionFiles.has(packageName)) {
-      externalFiles.push(downloadDefinition);
-      finalDefinitionFiles.set(
-        packageName,
-        downloadDefinition.outputUri.fsPath,
-      );
+      // A builtin definition can point at a local file (e.g. OVERDARE's bundled
+      // globalTypes.d.luau) instead of a URL - only queue it for download if it's
+      // actually external, otherwise use it directly with no network fetch.
+      if (isExternalFile(downloadDefinition.url)) {
+        externalFiles.push(downloadDefinition);
+        finalDefinitionFiles.set(
+          packageName,
+          downloadDefinition.outputUri.fsPath,
+        );
+      } else {
+        finalDefinitionFiles.set(packageName, downloadDefinition.url);
+      }
     }
   }
 

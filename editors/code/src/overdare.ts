@@ -9,28 +9,17 @@ import * as utils from "./utils";
 const API_DOCS = "https://luau-lsp.pages.dev/api-docs/en-us.json";
 const LUAU_API_DOCS = "https://luau-lsp.pages.dev/api-docs/luau-en-us.json";
 
-const globalTypesEndpointForSecurityLevel = (securityLevel: string) => {
-  return `https://luau-lsp.pages.dev/type-definitions/globalTypes.${securityLevel}.d.luau`;
-};
-
-const globalTypesUri = (
-  context: vscode.ExtensionContext,
-  securityLevel: string,
-  mode: "Prod" | "Debug",
-) => {
-  if (mode === "Prod") {
-    return vscode.Uri.joinPath(
-      context.globalStorageUri,
-      `globalTypes.${securityLevel}.d.luau`,
-    );
-  } else {
-    return vscode.Uri.joinPath(
-      context.extensionUri,
-      "..",
-      "..",
-      `scripts/globalTypes.${securityLevel}.d.luau`,
-    );
-  }
+// TODO: this only resolves correctly when running from the monorepo source tree (dev/test
+// mode). A packaged vsix doesn't have scripts/ alongside it, so this will break for real
+// distribution - the file needs to be bundled into the extension package before then. See
+// the .ovdrjm watcher path resolution (startSourcemapGeneration) for the same open issue.
+const overdareGlobalTypesUri = (context: vscode.ExtensionContext) => {
+  return vscode.Uri.joinPath(
+    context.extensionUri,
+    "..",
+    "..",
+    "scripts/globalTypes.d.luau",
+  );
 };
 
 const apiDocsUri = (context: vscode.ExtensionContext) => {
@@ -434,14 +423,17 @@ export const preLanguageServerStart = async (
     platformConfig.get<string>("type") === "overdare" &&
     typesConfig.get<boolean>("roblox")
   ) {
-    const securityLevel =
-      typesConfig.get<string>("robloxSecurityLevel") ?? "PluginSecurity";
-
+    // OVERDARE's types are maintained locally in scripts/globalTypes.d.luau (merged from
+    // the OVERDARE API docs by scripts/dumpOverdareTypes.py) rather than fetched from
+    // luau-lsp.pages.dev, which only ever serves pure Roblox types and would silently
+    // replace our merged OVERDARE definitions. There's only one unified file - the
+    // Roblox-era per-security-level variants (robloxSecurityLevel) don't apply here.
+    const globalTypesLocation = overdareGlobalTypesUri(context);
     return {
       definitions: {
         ["@overdare"]: {
-          url: globalTypesEndpointForSecurityLevel(securityLevel),
-          outputUri: globalTypesUri(context, securityLevel, "Prod"),
+          url: globalTypesLocation.fsPath,
+          outputUri: globalTypesLocation,
         },
       },
       documentation: [{ url: API_DOCS, outputUri: apiDocsUri(context) }],
