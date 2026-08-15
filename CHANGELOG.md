@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed `@self` string-require aliases resolving from the filesystem instead of the sourcemap tree for non-DataModel roots ([#1511](https://github.com/JohnnyMorganz/luau-lsp/issues/1511))
 - Fixed `@overdare` type definitions being silently downloaded from a remote Roblox-types URL instead of using the bundled OVERDARE-merged definitions file
 - Fixed the packaged vsix failing to resolve the bundled type definitions file path
+- Fixed the MSVC build failing under non-English system code pages (e.g. Korean/949) with `C4819`/`C2220` on source files containing UTF-8 characters (em dashes, arrows) in comments, by compiling with `/utf-8`
 
 ## [1.69.0] - 2026-07-14
 
