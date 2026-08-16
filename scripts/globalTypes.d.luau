@@ -7280,6 +7280,10 @@ declare extern type CFrame with
 	function ToOrientation(self): ...any
 	function VectorToObjectSpace(self, v3: Vector3): Vector3
 	function VectorToWorldSpace(self, v3: Vector3): Vector3
+	function __add(self, other: Vector3): CFrame
+	function __mul(self, other: CFrame): CFrame
+	function __mul(self, other: Vector3): Vector3
+	function __sub(self, other: Vector3): CFrame
 end
 
 declare extern type CatalogSearchParams with
@@ -7531,6 +7535,12 @@ declare extern type Vector2 with
 	Y: number
 	function Lerp(self, GoalValue: Vector2, Alpha: number): Vector2
 	function Slerp(self, GoalValue: Vector2, Alpha: number): Vector2
+	function __add(self, other: Vector2): Vector2
+	function __div(self, other: Vector2 | number): Vector2
+	function __idiv(self, other: Vector2 | number): Vector2
+	function __mul(self, other: Vector2 | number): Vector2
+	function __sub(self, other: Vector2): Vector2
+	function __unm(self): Vector2
 end
 
 declare extern type Vector2int16 with
@@ -7566,6 +7576,12 @@ declare extern type Vector3 with
 	function Rotate(self, AxisValue: Vector3, Radians: number): Vector3
 	function Sign(self): Vector3
 	function Slerp(self, GoalValue: Vector3, Alpha: number): Vector3
+	function __add(self, other: Vector3): Vector3
+	function __div(self, other: Vector3 | number): Vector3
+	function __idiv(self, other: Vector3 | number): Vector3
+	function __mul(self, other: Vector3 | number): Vector3
+	function __sub(self, other: Vector3): Vector3
+	function __unm(self): Vector3
 end
 
 declare extern type Vector3int16 with
@@ -17158,9 +17174,9 @@ declare UDim: {
 }
 
 declare PhysicalProperties: {
-	new: ((InMaterial: EnumMaterial) -> PhysicalProperties),
-	new: ((InMaterial: number, arg2: number, arg3: number) -> PhysicalProperties),
-	new: ((InDensity: number, InFriction: number, InElasticity: number, InFrictionWeight: number, InElasticityWeight: number) -> PhysicalProperties),
+	new: ((InMaterial: EnumMaterial) -> PhysicalProperties)
+		& ((InMaterial: number, arg2: number, arg3: number) -> PhysicalProperties)
+		& ((InDensity: number, InFriction: number, InElasticity: number, InFrictionWeight: number, InElasticityWeight: number) -> PhysicalProperties),
 }
 
 declare Axes: {
@@ -17189,10 +17205,10 @@ declare CFrame: {
 	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
 	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
 	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3) -> CFrame),
-	new: (() -> CFrame),
-	new: ((Position: Vector3) -> CFrame),
-	new: ((Position: Vector3, Look: Vector3) -> CFrame),
-	new: ((x: number, y: number, z: number) -> CFrame),
+	new: (() -> CFrame)
+		& ((Position: Vector3) -> CFrame)
+		& ((Position: Vector3, Look: Vector3) -> CFrame)
+		& ((x: number, y: number, z: number) -> CFrame),
 }
 
 declare Faces: {
@@ -17234,20 +17250,20 @@ declare DateTime: {
 }
 
 declare NumberSequence: {
-	new: ((InValue: number) -> NumberSequence),
-	new: ((InArrayValue: { any }) -> NumberSequence),
-	new: ((n0: number, n1: number) -> NumberSequence),
+	new: ((InValue: number) -> NumberSequence)
+		& ((InArrayValue: { any }) -> NumberSequence)
+		& ((n0: number, n1: number) -> NumberSequence),
 }
 
 declare ColorSequence: {
-	new: ((color: Color3) -> ColorSequence),
-	new: ((colorSequenceKeyPoints: { any }) -> ColorSequence),
-	new: ((c0: Color3, c1: Color3) -> ColorSequence),
+	new: ((color: Color3) -> ColorSequence)
+		& ((colorSequenceKeyPoints: { any }) -> ColorSequence)
+		& ((c0: Color3, c1: Color3) -> ColorSequence),
 }
 
 declare NumberSequenceKeypoint: {
-	new: ((InTime: number, InValue: number) -> NumberSequenceKeypoint),
-	new: ((InTime: number, InValue: number, InEnvelope: number) -> NumberSequenceKeypoint),
+	new: ((InTime: number, InValue: number) -> NumberSequenceKeypoint)
+		& ((InTime: number, InValue: number, InEnvelope: number) -> NumberSequenceKeypoint),
 }
 
 declare ColorSequenceKeypoint: {

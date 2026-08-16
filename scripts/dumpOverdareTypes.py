@@ -359,15 +359,26 @@ def declare_datatype_constructor(dt):
     global namespace table, matching the real scripts/globalTypes.d.luau convention (e.g.
     `declare Vector3: { zero: Vector3, one: Vector3, xAxis: Vector3, ..., new: (...) }` -
     constructors aren't only ever named "new", and static constants like `.zero`/`.identity`
-    live here too, not as instance properties). Skipped entirely if the docs listed neither."""
+    live here too, not as instance properties). Skipped entirely if the docs listed neither.
+
+    Some constructor names (e.g. CFrame's "new") have multiple documented overloads with
+    different parameter lists - a Luau table type can't repeat a key, so multiple entries
+    with the same name must be joined into one `&`-intersected overloaded function, not
+    emitted as separate `name: (...)` lines (which silently collapses to just the last one,
+    shadowing every other overload)."""
     if not dt["name"] or (not dt["constructors"] and not dt.get("staticProperties")):
         return ""
     out = f"declare {dt['name']}: {{\n"
     for prop in dt.get("staticProperties", []):
         out += f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])},\n"
+
+    overloads_by_name = {}
     for ctor_name, params in dt["constructors"]:
         param_list = ", ".join(declare_param(t, n) for t, n in params)
-        out += f"\t{escape_name(ctor_name)}: (({param_list}) -> {dt['name']}),\n"
+        overloads_by_name.setdefault(ctor_name, []).append(f"(({param_list}) -> {dt['name']})")
+
+    for ctor_name, overloads in overloads_by_name.items():
+        out += f"\t{escape_name(ctor_name)}: {' & '.join(overloads)},\n"
     out += "}\n"
     return out
 
@@ -684,6 +695,21 @@ def prune_enum_list(text, dump, log=print):
     return text[: m.start(1)] + new_entries.rstrip("\n") + text[m.end(1) :]
 
 
+OPERATOR_METHOD_RE = re.compile(r"^\tfunction (__\w+)\(")
+
+
+def preserve_operator_overloads(new_block_lines, lines, start, end):
+    """docs.overdare.com's class/datatype pages never document metamethod operator overloads
+    (__add, __sub, __mul, __div, __unm, ...) - Vector3/Vector2/CFrame all lost their
+    Roblox-inherited arithmetic operators this way when their scraped page replaced the whole
+    block. Carry over any `function __foo(...)` lines still present in the block being
+    replaced so a re-scrape can't silently regress arithmetic support again."""
+    preserved = [line for line in lines[start : end + 1] if OPERATOR_METHOD_RE.match(line)]
+    if not preserved:
+        return new_block_lines
+    return new_block_lines[:-1] + preserved + new_block_lines[-1:]
+
+
 def merge_into_base(base_text, dump, log=print):
     lines = base_text.split("\n")
     lines = prune_services_metadata(lines, dump, log=log)
@@ -698,7 +724,8 @@ def merge_into_base(base_text, dump, log=print):
             continue
         if klass["name"] in class_blocks:
             start, end = class_blocks[klass["name"]]
-            class_replacements[(start, end)] = declare_class(klass).rstrip("\n").split("\n")
+            new_block = declare_class(klass).rstrip("\n").split("\n")
+            class_replacements[(start, end)] = preserve_operator_overloads(new_block, lines, start, end)
             replaced_classes.append(klass["name"])
         elif klass["name"] in export_type_names:
             skipped_export_type.append(klass["name"])
@@ -712,7 +739,8 @@ def merge_into_base(base_text, dump, log=print):
             continue
         if dt["name"] in class_blocks:
             start, end = class_blocks[dt["name"]]
-            class_replacements[(start, end)] = declare_datatype(dt).rstrip("\n").split("\n")
+            new_block = declare_datatype(dt).rstrip("\n").split("\n")
+            class_replacements[(start, end)] = preserve_operator_overloads(new_block, lines, start, end)
             replaced_datatypes.append(dt["name"])
         elif dt["name"] in export_type_names:
             skipped_export_type.append(dt["name"])

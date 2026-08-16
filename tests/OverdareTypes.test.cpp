@@ -98,6 +98,85 @@ TEST_CASE("overdare_only_class_names_are_recognised_by_instance_new")
     CHECK(cr.errors.empty());
 }
 
+TEST_CASE("vector3_vector2_cframe_arithmetic_operators_type_check")
+{
+    TempDir t("overdare_types_vector_operators");
+
+    CliClient client = makeClientWithProductionDefinitions();
+    WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
+    workspace.setupWithConfiguration(client.globalConfig);
+    workspace.isReady = true;
+
+    // docs.overdare.com's per-type pages never document metamethod operator overloads, so
+    // merging a scraped page wholesale-replaces the block and silently drops any operators
+    // inherited from the Roblox base (dumpOverdareTypes.py's declare_datatype simply never
+    // emits __add/__sub/__mul/__div/__idiv/__unm). This regressed Vector3/Vector2/CFrame
+    // arithmetic - see preserve_operator_overloads in dumpOverdareTypes.py for the fix.
+    auto filePath = t.write_child("test.luau", R"(
+        local v3 = Vector3.new(1, 2, 3)
+        local negatedV3 = -v3
+        local halvedV3 = v3 / 2
+        local flooredV3 = v3 // 2
+        local sumV3 = v3 + Vector3.new(1, 1, 1)
+        local diffV3 = v3 - Vector3.new(1, 1, 1)
+        local scaledV3 = v3 * 2
+
+        local v2 = Vector2.new(1, 2)
+        local negatedV2 = -v2
+        local halvedV2 = v2 / 2
+        local sumV2 = v2 + Vector2.new(1, 1)
+
+        local cf = CFrame.new(0, 0, 0)
+        local composedCf = cf * CFrame.new(0, 0, 0)
+        local transformedV3 = cf * v3
+        local movedCf = cf + v3
+        local movedBackCf = cf - v3
+    )");
+    auto cr = workspace.checkSimple(filePath, nullptr);
+    CHECK(cr.errors.empty());
+}
+
+TEST_CASE("datatype_constructors_with_multiple_overloads_type_check")
+{
+    TempDir t("overdare_types_ctor_overloads");
+
+    CliClient client = makeClientWithProductionDefinitions();
+    WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
+    workspace.setupWithConfiguration(client.globalConfig);
+    workspace.isReady = true;
+
+    // declare_datatype_constructor used to emit one `name: (...) -> T` table field per
+    // documented overload, but a Luau table type can't repeat a key - duplicate `new:`
+    // entries silently collapsed to just the last one, shadowing every other overload (e.g.
+    // CFrame.new() and CFrame.new(Vector3) both broke, leaving only CFrame.new(x,y,z)
+    // working). Affected every datatype with same-named overloads: CFrame,
+    // PhysicalProperties, NumberSequence, ColorSequence, NumberSequenceKeypoint. Fixed by
+    // joining same-named overloads with `&` instead.
+    auto filePath = t.write_child("test.luau", R"(
+        local cf1 = CFrame.new()
+        local cf2 = CFrame.new(Vector3.new(1, 2, 3))
+        local cf3 = CFrame.new(Vector3.new(1, 2, 3), Vector3.new(4, 5, 6))
+        local cf4 = CFrame.new(1, 2, 3)
+
+        local pp1 = PhysicalProperties.new(Enum.Material.Plastic)
+        local pp2 = PhysicalProperties.new(1, 2, 3)
+        local pp3 = PhysicalProperties.new(1, 2, 3, 4, 5)
+
+        local ns1 = NumberSequence.new(1)
+        local ns2 = NumberSequence.new({})
+        local ns3 = NumberSequence.new(1, 2)
+
+        local cs1 = ColorSequence.new(Color3.new(1, 0, 0))
+        local cs2 = ColorSequence.new({})
+        local cs3 = ColorSequence.new(Color3.new(1, 0, 0), Color3.new(0, 1, 0))
+
+        local nsk1 = NumberSequenceKeypoint.new(0, 1)
+        local nsk2 = NumberSequenceKeypoint.new(0, 1, 2)
+    )");
+    auto cr = workspace.checkSimple(filePath, nullptr);
+    CHECK(cr.errors.empty());
+}
+
 TEST_CASE("isnil_global_is_available_and_warn_is_not")
 {
     TempDir t("overdare_types_isnil");

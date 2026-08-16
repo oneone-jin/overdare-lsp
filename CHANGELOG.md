@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.10] - 2026-08-16
+
+### Fixed
+
+- Fixed `Vector3`/`Vector2`/`CFrame` arithmetic operators (`-v`, `v / n`, `v // n`, `v + v`, `v - v`, `v * n`, `cf * cf`, `cf * v3`, `cf + v3`, `cf - v3`) being flagged as type errors - `docs.overdare.com`'s per-type pages never document metamethod operator overloads, so merging a scraped page wholesale-replaced the block and silently dropped the operators these types inherited from the original Roblox definitions. `scripts/dumpOverdareTypes.py`'s merge step now carries over any `__operator` methods from the block being replaced so a future re-scrape can't regress this again
+- Fixed `CFrame.new()`, `CFrame.new(Vector3)`, and `CFrame.new(Vector3, Vector3)` all being rejected (only the `CFrame.new(x, y, z)` overload worked) - same root cause hit `PhysicalProperties.new`, `NumberSequence.new`, `ColorSequence.new`, and `NumberSequenceKeypoint.new`: the scraper emitted one `name: (...) -> T` table field per documented overload, but a Luau table type can't repeat a key, so duplicate `new:` entries silently collapsed to just the last one and shadowed every other overload. `declare_datatype_constructor` now joins same-named overloads with `&` instead
+
 ## [1.69.9] - 2026-08-16
 
 ### Fixed
