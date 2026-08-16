@@ -74,6 +74,30 @@ TEST_CASE("overdare_only_service_names_are_recognised_by_get_service")
     CHECK(cr.errors.empty());
 }
 
+TEST_CASE("overdare_only_class_names_are_recognised_by_instance_new")
+{
+    TempDir t("overdare_types_instance_new");
+
+    CliClient client = makeClientWithProductionDefinitions();
+    WorkspaceFolder workspace(&client, "CLI", Uri::file(t.path()), std::nullopt);
+    workspace.setupWithConfiguration(client.globalConfig);
+    workspace.isReady = true;
+
+    // Fill/Outline are OVERDARE-only classes that never existed in Roblox at all, so
+    // dumpOverdareTypes.py's intersect-with-Roblox's-whitelist pruning can't surface them on
+    // its own (see EXTRA_CREATABLE_INSTANCES) - like GetService above, Instance.new's magic
+    // function validates against the definitions file's `--#METADATA#` CREATABLE_INSTANCES
+    // list, not the class declarations, so this needs its own coverage even though both
+    // classes type-check fine.
+    auto filePath = t.write_child("test.luau", R"(
+        local fill = Instance.new("Fill")
+        local outline = Instance.new("Outline")
+        local part = Instance.new("Part")
+    )");
+    auto cr = workspace.checkSimple(filePath, nullptr);
+    CHECK(cr.errors.empty());
+}
+
 TEST_CASE("isnil_global_is_available_and_warn_is_not")
 {
     TempDir t("overdare_types_isnil");

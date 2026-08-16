@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.9] - 2026-08-16
+
+### Fixed
+
+- Fixed `Instance.new("Fill")`/`Instance.new("Outline")` being rejected by autocomplete and validation - both are real OVERDARE-only classes (documented at https://docs.overdare.com/manual/studio-manual/object/outline-fill), but the `CREATABLE_INSTANCES` metadata whitelist is built by intersecting Roblox's original creatable-instance list with OVERDARE's scraped classes, and neither class ever existed in Roblox to begin with, so the intersection could never surface them. Added an explicit `EXTRA_CREATABLE_INSTANCES` override in the scraper (`scripts/dumpOverdareTypes.py`) for OVERDARE-only classes confirmed creatable via docs, and applied it to the current `scripts/globalTypes.d.luau`
+
 ## [1.69.8] - 2026-08-16
 
 ### Fixed

@@ -613,6 +613,15 @@ def find_export_type_names(lines):
 METADATA_PREFIX = "--#METADATA#"
 
 
+# OVERDARE-only classes that never existed in Roblox at all, so intersecting the inherited
+# Roblox whitelist below can never surface them even though OVERDARE's own docs confirm
+# they're Instance.new()-creatable (see
+# https://docs.overdare.com/manual/studio-manual/object/outline-fill, which shows
+# `Instance.new("Outline")`/`Instance.new("Fill")` - unlike their own class pages, which
+# document properties only and never mention construction).
+EXTRA_CREATABLE_INSTANCES = {"Fill", "Outline"}
+
+
 def prune_services_metadata(lines, dump, log=print):
     """The `SERVICES` and `CREATABLE_INSTANCES` lists in the `--#METADATA#` header line
     (used by GetService's and Instance.new's magic functions for both validation and
@@ -632,7 +641,10 @@ def prune_services_metadata(lines, dump, log=print):
         if key not in meta:
             continue
         before = len(meta[key])
-        meta[key] = sorted(set(meta[key]) & od_class_names)
+        pruned = set(meta[key]) & od_class_names
+        if key == "CREATABLE_INSTANCES":
+            pruned |= EXTRA_CREATABLE_INSTANCES & od_class_names
+        meta[key] = sorted(pruned)
         log(f"{label} (metadata whitelist): pruned {before} -> {len(meta[key])} "
             f"(kept only names that match a scraped OVERDARE class)")
 
