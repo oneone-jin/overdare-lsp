@@ -299,14 +299,36 @@ def scrape_all(log=print):
 
 # ---- Luau declaration generation (standalone-testable output) ----
 
+# docs.overdare.com's datatype constructor tables never mark a parameter as optional - no
+# trailing '?' in the Type column, no separate Default column. When a parameter does have a
+# default, it's only ever mentioned in free-form Description prose (e.g. CFrame.lookAt's `up`:
+# "if omitted, the default (0, 1, 0) is used"), which isn't machine-parseable. That silently
+# turned genuinely-optional parameters into required ones once a scraped page replaced the
+# Roblox-derived (correctly-optional) constructor it was based on (CFrame.lookAt's `up`,
+# every TweenInfo.new parameter). Manually confirmed against Roblox's original API dump /
+# docs.overdare.com prose; keyed by
+# (datatype name, constructor name, parameter name). Extend this if another constructor regresses.
+DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS = {
+    ("CFrame", "lookAt", "up"),
+    ("TweenInfo", "new", "InTime"),
+    ("TweenInfo", "new", "InEasingStyle"),
+    ("TweenInfo", "new", "InEasingDirection"),
+    ("TweenInfo", "new", "InRepeatCount"),
+    ("TweenInfo", "new", "InReverses"),
+    ("TweenInfo", "new", "InDelayTime"),
+}
+
+
 def declare_property(prop):
     return f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])}\n"
 
 
-def declare_param(param_type, param_name):
+def declare_param(param_type, param_name, force_optional=False):
     resolved = resolve_doc_type(param_type)
     if resolved.startswith("..."):
         return "...: " + resolved[3:]  # e.g. "...any" -> "...: any" (variadic param syntax)
+    if force_optional and not resolved.endswith("?"):
+        resolved += "?"
     return f"{escape_name(param_name) if param_name else 'arg'}: {resolved}"
 
 
@@ -374,7 +396,10 @@ def declare_datatype_constructor(dt):
 
     overloads_by_name = {}
     for ctor_name, params in dt["constructors"]:
-        param_list = ", ".join(declare_param(t, n) for t, n in params)
+        param_list = ", ".join(
+            declare_param(t, n, force_optional=(dt["name"], ctor_name, n) in DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS)
+            for t, n in params
+        )
         overloads_by_name.setdefault(ctor_name, []).append(f"(({param_list}) -> {dt['name']})")
 
     for ctor_name, overloads in overloads_by_name.items():

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.12] - 2026-08-19
+
+### Changed
+
+- `luau-lsp.fflags.enableNewSolver` now defaults to `true`. Real-world testing against a large OVERDARE project showed the old solver producing pervasive false positives on the "shared registry table populated dynamically elsewhere" pattern (module-level tables like `self._foo = x` assigned outside the constructor literal, or a shared `ActionStates`-style table extended at runtime) - the new solver handles this correctly. The remaining new-solver rough edges (`--!strict` + metatable-OOP false positives, a couple of generic-inference gaps) are real but narrower, and Roblox's own new-solver GA rollout defaults strict-mode workspaces to the old solver for the same reason, so this can regress `--!strict` codebases - see the new solver's own release notes for per-workspace opt-out
+- Updated the bundled Luau submodule from 0.729 to 0.734 (5 upstream releases). Required porting `Luau::DenseHashMap`/`DenseHashSet` (renamed to `DenseHashMap2`/`DenseHashSet2`, sentinel-key constructor argument dropped) and `Module::internalTypes` (changed from `TypeArena&` to `std::shared_ptr<TypeArena>`, part of upstream's cyclic-module type inference improvements) across `StringRequireAutoImporter.hpp`, `Client.hpp`, `OverdareLuauExt.cpp`, `RequireGraph.cpp`, `DocumentationParser.cpp`, `LanguageServer.cpp`, `LuauExt.cpp`, `Workspace.cpp`, and `References.cpp`
+
+### Fixed
+
+- Fixed `CFrame.lookAt`'s `up` parameter and every `TweenInfo.new` parameter being required instead of optional - `scripts/DataTypes.json` already carried the correct `Default` markers, but a prior manual merge of OVERDARE-scraped datatype constructors into `globalTypes.d.luau` silently dropped them (docs.overdare.com's own tables never expose parameter defaults as structured data, only as free-form prose). Added a `DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS` override table to `scripts/dumpOverdareTypes.py` so a future re-scrape can't regress this again
+- Fixed `.ovdrjm`-based sourcemap generation guessing a Studio-assigned duplicate-name suffix (`Name.lua`, `Name_1.lua`, `Name_2.lua`, ...) from tree traversal order instead of what's actually on disk. This silently pointed `require()` at nonexistent files when Studio's real export order didn't match the `.ovdrjm` tree order (observed on a real project: `NetworkCodec_1.lua`, `CameraModule_1.lua`, `HitHandler_4.lua` all guessed as unsuffixed), and separately collapsed many same-named nodes onto one physical file when the guess-and-probe range was too small for large, non-contiguous suffix gaps (observed: 45 nodes named `HitData`, suffixed `_6`, `_12`, `_14`-`_26`, `_253`-`_285`, mostly collided onto a single file). Both `scripts/ovdrjmToSourcemap.py` and `editors/code/src/ovdrjmSourcemap.ts` now read the target directory once and assign real files in ascending-suffix order instead of guessing
+
 ## [1.69.11] - 2026-08-16
 
 ### Fixed

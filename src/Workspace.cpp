@@ -101,7 +101,7 @@ void WorkspaceFolder::onDidSaveTextDocument(const lsp::DocumentUri& uri, const l
     auto config = client->getConfiguration(rootUri);
     if (isWorkspaceDiagnosticsEnabled(client, config))
     {
-        Luau::DenseHashSet<Luau::ModuleName> dependents{""};
+        Luau::DenseHashSet2<Luau::ModuleName> dependents;
         frontend.traverseDependents(fileResolver.getModuleName(uri),
             [&dependents](Luau::SourceNode& sourceNode)
             {
@@ -358,7 +358,7 @@ Luau::CheckResult WorkspaceFolder::checkStrict(
     // retain the type graph if the module is not marked dirty.
     // We do a manual check and dirty marking to fix this
     auto module = getModule(moduleName, forAutocomplete);
-    if (module && module->internalTypes.types.empty()) // If we didn't retain type graphs, then the internalTypes arena is empty
+    if (module && module->internalTypes->types.empty()) // If we didn't retain type graphs, then the internalTypes arena is empty
         frontend.markDirty(moduleName);
 
     Luau::FrontendOptions options{/* retainFullTypeGraphs: */ true, forAutocomplete, /* runLintChecks: */ true};

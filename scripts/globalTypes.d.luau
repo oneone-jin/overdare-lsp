@@ -17204,7 +17204,7 @@ declare CFrame: {
 	fromEulerAnglesYXZ: ((rx: number, ry: number, rz: number) -> CFrame),
 	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
 	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
-	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3) -> CFrame),
+	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3?) -> CFrame),
 	new: (() -> CFrame)
 		& ((Position: Vector3) -> CFrame)
 		& ((Position: Vector3, Look: Vector3) -> CFrame)
@@ -17237,7 +17237,7 @@ declare Random: {
 }
 
 declare TweenInfo: {
-	new: ((InTime: number, InEasingStyle: EnumEasingStyle, InEasingDirection: EnumEasingDirection, InRepeatCount: number, InReverses: boolean, InDelayTime: number) -> TweenInfo),
+	new: ((InTime: number?, InEasingStyle: EnumEasingStyle?, InEasingDirection: EnumEasingDirection?, InRepeatCount: number?, InReverses: boolean?, InDelayTime: number?) -> TweenInfo),
 }
 
 declare DateTime: {

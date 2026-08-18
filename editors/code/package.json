@@ -14,7 +14,7 @@
   "bugs": {
     "url": "https://github.com/oneone-jin/overdare-lsp/issues"
   },
-  "version": "1.69.11",
+  "version": "1.69.12",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -269,7 +269,7 @@
         "luau-lsp.fflags.enableNewSolver": {
           "markdownDescription": "Enables the flags required for Luau's new type solver. These flags can be overriden by `#luau-lsp.fflags.override#`",
           "type": "boolean",
-          "default": false,
+          "default": true,
           "scope": "window",
           "tags": [
             "preview"

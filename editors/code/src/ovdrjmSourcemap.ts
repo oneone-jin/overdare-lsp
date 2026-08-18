@@ -27,21 +27,80 @@ interface SourceMapNode {
   objectKey?: number;
 }
 
+// Studio disambiguates scripts that share a Name within the flat Lua/ folder by appending a
+// numeric suffix (Name.lua, Name_1.lua, Name_2.lua, ...). The exact suffix each node gets
+// depends on Studio's own internal export order, not this .ovdrjm tree's traversal order, and
+// the suffixes aren't contiguous or small - one real project had 45 nodes all named "HitData"
+// backed by files suffixed _6, _12, _14..._26, _253..._285. So don't guess a suffix and probe
+// for it (a bounded probe range will miss large suffixes, and - if two different guesses both
+// land on the same real file - silently point two different nodes at one file, corrupting the
+// require graph); instead read the directory once and hand out real files in ascending-suffix
+// order, matching them to same-named nodes in traversal order.
+const NAME_SUFFIX_RE = /^(.*?)(?:_(\d+))?\.lua$/;
+
+// Groups the actual Name[_N].lua files in luaDir by base Name, each mapped to a list of real
+// filenames sorted bare-name-first then by ascending numeric suffix - Studio's own numbering
+// convention for a fresh duplicate. Returns an empty map if luaDir doesn't exist yet.
+const indexLuaFiles = async (
+  luaDir: string,
+): Promise<Map<string, string[]>> => {
+  const groups = new Map<string, Array<[number, string]>>();
+  let entries: [string, vscode.FileType][];
+  try {
+    entries = await vscode.workspace.fs.readDirectory(
+      vscode.Uri.file(luaDir),
+    );
+  } catch {
+    return new Map();
+  }
+
+  for (const [filename] of entries) {
+    const m = NAME_SUFFIX_RE.exec(filename);
+    if (!m) {
+      continue;
+    }
+    const base = m[1];
+    const suffix = m[2] !== undefined ? parseInt(m[2], 10) : -1;
+    const list = groups.get(base);
+    if (list) {
+      list.push([suffix, filename]);
+    } else {
+      groups.set(base, [[suffix, filename]]);
+    }
+  }
+
+  const result = new Map<string, string[]>();
+  for (const [base, items] of groups) {
+    items.sort((a, b) => a[0] - b[0]);
+    result.set(
+      base,
+      items.map(([, filename]) => filename),
+    );
+  }
+  return result;
+};
+
 const buildTree = (
   node: OvdrjmNode,
   luaDir: string,
-  nameCounts: Map<string, number>,
+  fileIndex: Map<string, string[]>,
+  cursors: Map<string, number>,
 ): SourceMapNode => {
   const filePaths: string[] = [];
   if (SCRIPT_CLASSES.has(node.InstanceType)) {
-    const count = nameCounts.get(node.Name) ?? 0;
-    const suffix = count === 0 ? "" : `_${count}`;
-    nameCounts.set(node.Name, count + 1);
-    filePaths.push(path.join(luaDir, `${node.Name}${suffix}.lua`));
+    const available = fileIndex.get(node.Name) ?? [];
+    const index = cursors.get(node.Name) ?? 0;
+    cursors.set(node.Name, index + 1);
+    if (index < available.length) {
+      filePaths.push(path.join(luaDir, available[index]));
+    }
+    // else: more tree nodes share this Name than there are physical .lua files for it - leave
+    // filePaths empty rather than invent/reuse a path, which would either point at a file that
+    // doesn't exist or silently collide with another node's real file.
   }
 
   const children = (node.LuaChildren ?? []).map((child) =>
-    buildTree(child, luaDir, nameCounts),
+    buildTree(child, luaDir, fileIndex, cursors),
   );
 
   return {
@@ -90,7 +149,8 @@ export const convertOvdrjmToSourcemap = async (
     vscode.Uri.file(ovdrjmPath),
   );
   const data = JSON.parse(decodeOvdrjmBytes(contents));
-  return buildTree(data.Root, luaDir, new Map());
+  const fileIndex = await indexLuaFiles(luaDir);
+  return buildTree(data.Root, luaDir, fileIndex, new Map());
 };
 
 const READ_RETRY_ATTEMPTS = 5;
