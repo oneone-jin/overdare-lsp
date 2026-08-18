@@ -15,19 +15,14 @@ NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientDiagnosticsConfiguration, 
 
 struct ClientOverdareSourcemapConfiguration
 {
-    /// Whether Rojo sourcemap-related features are enabled
+    /// Whether sourcemap parsing is enabled
     bool enabled = true;
-    /// Whether we should autogenerate the Rojo sourcemap by calling `rojo sourcemap`
+    /// Whether we should autogenerate the sourcemap from the OVERDARE Studio `.ovdrjm` project file
     bool autogenerate = true;
-    /// The project file to generate a sourcemap for
-    std::string rojoProjectFile = "default.project.json";
-    /// Whether non script instances should be included in the generated sourcemap
-    bool includeNonScripts = true;
     // The sourcemap file name
     std::string sourcemapFile = "sourcemap.json";
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(
-    ClientOverdareSourcemapConfiguration, enabled, autogenerate, rojoProjectFile, includeNonScripts, sourcemapFile);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE_WITH_DEFAULT(ClientOverdareSourcemapConfiguration, enabled, autogenerate, sourcemapFile);
 
 struct ClientTypesConfiguration
 {

@@ -54,6 +54,34 @@ const buildTree = (
   };
 };
 
+// Byte-swaps a UTF-16BE buffer into UTF-16LE order in place, so it can be decoded with the
+// same "utf-16le" TextDecoder label used for the (far more common, Windows-authored) LE case
+// below - avoids depending on whether the "utf-16be" label is supported by the runtime.
+const swapUtf16ByteOrder = (bytes: Uint8Array): Uint8Array => {
+  const swapped = new Uint8Array(bytes.length);
+  for (let i = 0; i + 1 < bytes.length; i += 2) {
+    swapped[i] = bytes[i + 1];
+    swapped[i + 1] = bytes[i];
+  }
+  return swapped;
+};
+
+// Legacy OVERDARE Studio versions wrote .ovdrjm as UTF-16LE with a BOM (Unreal's
+// FFileHelper::SaveStringToFile default when saving an FString without explicitly requesting
+// UTF-8) - current versions write plain UTF-8. Sniff the BOM rather than assuming an encoding,
+// since both can show up on disk depending on which Studio version exported the project.
+const decodeOvdrjmBytes = (bytes: Uint8Array): string => {
+  if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xfe) {
+    return new TextDecoder("utf-16le").decode(bytes.subarray(2));
+  }
+  if (bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff) {
+    return new TextDecoder("utf-16le").decode(
+      swapUtf16ByteOrder(bytes.subarray(2)),
+    );
+  }
+  return new TextDecoder("utf-8").decode(bytes); // also strips a utf-8 BOM (EF BB BF) if present
+};
+
 export const convertOvdrjmToSourcemap = async (
   ovdrjmPath: string,
   luaDir: string,
@@ -61,7 +89,7 @@ export const convertOvdrjmToSourcemap = async (
   const contents = await vscode.workspace.fs.readFile(
     vscode.Uri.file(ovdrjmPath),
   );
-  const data = JSON.parse(new TextDecoder().decode(contents));
+  const data = JSON.parse(decodeOvdrjmBytes(contents));
   return buildTree(data.Root, luaDir, new Map());
 };
 

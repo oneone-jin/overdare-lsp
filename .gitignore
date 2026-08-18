@@ -64,3 +64,7 @@ editors/code/bin/
 # so they never go stale as a committed duplicate
 editors/code/README.md
 editors/code/CHANGELOG.md
+
+# Claude Code agent config - local development tooling, not part of the shipped project
+/.claude
+/CLAUDE.md

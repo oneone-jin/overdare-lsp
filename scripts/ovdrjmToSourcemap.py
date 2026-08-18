@@ -35,9 +35,23 @@ def build_tree(node, lua_dir, name_counts):
     }
 
 
+def read_ovdrjm_text(ovdrjm_path):
+    """Legacy OVERDARE Studio versions wrote .ovdrjm as UTF-16LE with a BOM (Unreal's
+    FFileHelper::SaveStringToFile default when saving an FString without explicitly requesting
+    UTF-8) - current versions write plain UTF-8. Sniff the BOM rather than assuming an
+    encoding, since both can show up on disk depending on which Studio version exported the
+    project."""
+    with open(ovdrjm_path, "rb") as f:
+        raw = f.read()
+    if raw.startswith(b"\xff\xfe") or raw.startswith(b"\xfe\xff"):
+        return raw.decode("utf-16")
+    if raw.startswith(b"\xef\xbb\xbf"):
+        return raw.decode("utf-8-sig")
+    return raw.decode("utf-8")
+
+
 def convert(ovdrjm_path, lua_dir):
-    with open(ovdrjm_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = json.loads(read_ovdrjm_text(ovdrjm_path))
     return build_tree(data["Root"], lua_dir, name_counts={})
 
 

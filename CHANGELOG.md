@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.11] - 2026-08-16
+
+### Fixed
+
+- Fixed legacy `.ovdrjm` files (written by older OVERDARE Studio versions as UTF-16LE with a BOM - Unreal's `FFileHelper::SaveStringToFile` default when UTF-8 isn't explicitly requested) failing to parse into `sourcemap.json`. The converter now sniffs the BOM and decodes accordingly instead of assuming UTF-8 unconditionally
+
+### Removed
+
+- Removed the Rojo/`default.project.json`-based sourcemap generation fallback (auto-detecting a Rojo project file, spawning the `rojo sourcemap` CLI, and the `rojoPath`/`rojoProjectFile`/`generatorCommand`/`includeNonScripts`/`useVSCodeWatcher` settings that only served it). `.ovdrjm`-based generation is now the only supported flow, scoping the extension to OVERDARE projects
+
 ## [1.69.10] - 2026-08-16
 
 ### Fixed
