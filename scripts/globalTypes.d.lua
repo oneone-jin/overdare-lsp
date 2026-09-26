@@ -8396,11 +8396,11 @@ declare extern type Instance with
 	function AddTag(self, tag: string): nil
 	function Clone(self): Instance
 	function Destroy(self): nil
-	function FindFirstAncestor(self, InName: string): Instance
-	function FindFirstAncestorOfClass(self, InClassName: string): Instance
-	function FindFirstAncestorWhichIsA(self, InClassName: string): Instance
-	function FindFirstChild(self, InName: string, recursive: boolean): Instance
-	function FindFirstChildOfClass(self, InClassName: string, Recursive: boolean): Instance
+	function FindFirstAncestor(self, InName: string): Instance?
+	function FindFirstAncestorOfClass(self, InClassName: string): Instance?
+	function FindFirstAncestorWhichIsA(self, InClassName: string): Instance?
+	function FindFirstChild(self, InName: string, recursive: boolean?): Instance?
+	function FindFirstChildOfClass(self, InClassName: string, Recursive: boolean): Instance?
 	function GetAttribute(self, attribute: string): any
 	function GetAttributeChangedSignal(self, InAttributeName: string): ScriptSignal
 	function GetAttributes(self): { [string]: any }
@@ -8415,7 +8415,7 @@ declare extern type Instance with
 	function IsDescendantOf(self, InAncestor: Instance): boolean
 	function RemoveTag(self, tag: string): nil
 	function SetAttribute(self, attribute: string, value: any): nil
-	function WaitForChild(self, InChildName: string, InTimeOut: number): Instance
+	function WaitForChild(self, InChildName: string, InTimeOut: number?): Instance?
 	AncestryChanged: ScriptSignal<Instance, Instance>
 	AttributeChanged: ScriptSignal<string>
 	Changed: ScriptSignal<string>
@@ -10732,9 +10732,9 @@ declare extern type DataStoreOptions extends Instance with
 end
 
 declare extern type DataStoreService extends Instance with
-	function GetDataStore(self, name: string, scope: string, options: Instance): GlobalDataStore
+	function GetDataStore(self, name: string, scope: string?, options: Instance?): GlobalDataStore
 	function GetGlobalDataStore(self): GlobalDataStore
-	function GetOrderedDataStore(self, name: string, scope: string): OrderedDataStore
+	function GetOrderedDataStore(self, name: string, scope: string?): OrderedDataStore
 end
 
 declare extern type DataStoreSetOptions extends Instance with
@@ -11451,19 +11451,19 @@ declare extern type GetTextBoundsParams extends Instance with
 end
 
 declare extern type GlobalDataStore extends Instance with
-	function GetAsync(self, key: string, options: DataStoreGetOptions): ...any
-	function IncrementAsync(self, key: string, delta: number, userIds: { any }, options: DataStoreIncrementOptions): any
+	function GetAsync(self, key: string, options: DataStoreGetOptions?): ...any
+	function IncrementAsync(self, key: string, delta: number?, userIds: { any }?, options: DataStoreIncrementOptions?): any
 	function RemoveAsync(self, key: string): ...any
-	function SetAsync(self, key: string, value: any, userIds: any, options: DataStoreSetOptions): any
+	function SetAsync(self, key: string, value: any, userIds: any?, options: DataStoreSetOptions?): any
 	function UpdateAsync(self, key: string, transformFunction: any): ...any
 end
 
 declare extern type DataStore extends GlobalDataStore with
-	function ListKeysAsync(self, prefix: string, pageSize: number, cursor: string, excludeDeleted: boolean): DataStoreKeyPages
+	function ListKeysAsync(self, prefix: string?, pageSize: number?, cursor: string?, excludeDeleted: boolean?): DataStoreKeyPages
 end
 
 declare extern type OrderedDataStore extends GlobalDataStore with
-	function GetSortedAsync(self, ascending: boolean, pagesize: number, minValue: number, maxValue: number): DataStorePages
+	function GetSortedAsync(self, ascending: boolean, pagesize: number, minValue: number?, maxValue: number?): DataStorePages
 end
 
 declare extern type GongService extends Instance with
@@ -13602,8 +13602,8 @@ declare extern type Camera extends Instance with
 	SmoothRotationSpeed: number
 	ViewportSize: Vector2
 	function GetLargestCutoffDistance(self, InIgnoreList: { any }): any
-	function ScreenPointToRay(self, x: number, y: number, depth: number): Ray
-	function ViewportPointToRay(self, x: number, y: number, depth: number): Ray
+	function ScreenPointToRay(self, x: number, y: number, depth: number?): Ray
+	function ViewportPointToRay(self, x: number, y: number, depth: number?): Ray
 	function WorldToViewportPoint(self, WorldPoint: Vector3): ...any
 end
 
@@ -13664,7 +13664,7 @@ end
 
 declare extern type WorldRoot extends Instance with
 	AllowDebugDraw: boolean
-	function Blockcast(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
+	function Blockcast(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
 	function BlockcastSingleByChannel(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function BlockcastSingleByChannelName(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function BlockcastSingleByObject(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
@@ -13705,7 +13705,7 @@ declare extern type WorldRoot extends Instance with
 	function PredictProjectilePathByChannel(self, InTraceChannel: EnumCollisionChannel, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
 	function PredictProjectilePathByChannelName(self, ChannelDisplayName: string, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
 	function PredictProjectilePathByObject(self, PredictParams: PredictProjectilePathParams, InObjectParams: CollisionObjectQueryParams): PredictProjectilePathResult
-	function Raycast(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
+	function Raycast(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
 	function RaycastMulti(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): { any }
 	function RaycastMultiByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
 	function RaycastMultiByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
@@ -13715,7 +13715,7 @@ declare extern type WorldRoot extends Instance with
 	function RaycastSingleByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function RaycastSingleByObject(self, InOrigin: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function RaycastSingleByProfile(self, InOrigin: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
-	function Spherecast(self, InOrigin: Vector3, InRadius: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
+	function Spherecast(self, InOrigin: Vector3, InRadius: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
 	function SpherecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function SpherecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function SpherecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
@@ -14121,8 +14121,8 @@ declare extern type Players extends Instance with
 	LocalPlayer: Player
 	RespawnTime: number
 	UseStrafingAnimations: boolean
-	function GetPlayerByUserId(self, UserId: string): Player
-	function GetPlayerFromCharacter(self, InCharacter: Model): Player
+	function GetPlayerByUserId(self, UserId: string): Player?
+	function GetPlayerFromCharacter(self, InCharacter: Model): Player?
 	function GetPlayers(self): { any }
 	PlayerAdded: ScriptSignal<Player>
 	PlayerRemoving: ScriptSignal<Player>

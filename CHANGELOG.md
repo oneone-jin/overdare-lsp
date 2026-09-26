@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.15] - 2026-09-26
+
+### Fixed
+
+- Fixed the same "docs never marks optional/nilable" class of bug as 1.69.14's `UDim2`/`Font` fixes, but for regular class/datatype *methods* rather than datatype constructors - user-reported (`Instance.FindFirstChild`/`WaitForChild`), then audited comprehensively as requested. `docs.overdare.com`'s method parameter tables never mark a parameter optional and its Return tables never mark a type nilable, even when the prose explicitly says otherwise (e.g. `FindFirstChild`'s `recursive`: "default: false"; its own description: "...or nil if the child matching that name doesn't exist"). Systematically diffed every replaced class's methods against the true pre-OVERDARE signatures (`d2384ed`, the last commit before any OVERDARE merge ever ran - the 1.69.12 baseline used for 1.69.14's datatype audit turned out to already be downstream of the very first OVERDARE merge and wouldn't have caught this) and found 18 parameter regressions and 11 return-type regressions, concentrated in `Instance` (`FindFirstChild`/`FindFirstChildOfClass`/`FindFirstAncestor*`/`WaitForChild`), `Camera` (`ScreenPointToRay`/`ViewportPointToRay`), `Players` (`GetPlayerByUserId`/`GetPlayerFromCharacter`), `WorldRoot` (`Raycast`/`Blockcast`/`Spherecast`), and the `DataStore`/`DataStoreService`/`GlobalDataStore`/`OrderedDataStore` family
+- Added `METHOD_OPTIONAL_PARAMS`/`METHOD_NILABLE_RETURNS` to `scripts/dumpOverdareTypes.py` (same override-table pattern as `DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS`, keyed by owner name this time since methods are shared across many classes/datatypes) and threaded `owner_name` through `declare_method()` so a future re-scrape re-applies these automatically instead of silently regressing again
+- `Instance.WaitForChild`'s timeout parameter is a special case worth calling out: real pre-OVERDARE Roblox upstream expressed it as two separate overloads (`WaitForChild(name)` with no timeout arg at all vs. `WaitForChild(name, timeout)` with a required one) rather than one optional parameter, so the systematic diff above couldn't detect it as a regression by name-matching alone. Made it optional anyway since OVERDARE's docs only ever document one merged signature and its prose confirms the real behavior ("If left blank, it waits indefinitely until the object exists") - this reproduces the same real call shape the two-overload form provided
+
 ## [1.69.14] - 2026-09-26
 
 ### Fixed

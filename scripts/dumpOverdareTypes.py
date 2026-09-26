@@ -371,6 +371,61 @@ def normalize_dump(dump):
     return dump
 
 
+# Same root cause as DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS, but for regular class/datatype
+# *methods* rather than datatype constructors: docs.overdare.com's method parameter tables
+# never mark a parameter optional even when the prose explicitly says so (e.g.
+# Instance.FindFirstChild's `recursive`: "This option specifies whether to search all
+# descendants (default: false)"). Found by systematically diffing every replaced class's
+# methods against the true pre-OVERDARE (pure Roblox upstream, commit d2384ed) signatures -
+# keyed by (owner name, method name, param name). Extend this if another method regresses.
+METHOD_OPTIONAL_PARAMS = {
+    ("Instance", "FindFirstChild", "recursive"),
+    # WaitForChild is a special case the systematic diff above couldn't catch: pre-OVERDARE
+    # Roblox upstream expressed this as two separate overloads (`WaitForChild(name)` with no
+    # timeout arg at all, vs. `WaitForChild(name, timeout)` with a required one) rather than
+    # one optional param - but OVERDARE's docs only ever document a single merged signature,
+    # and its prose confirms the real behavior explicitly ("If left blank, it waits
+    # indefinitely until the object exists"). Making it optional here reproduces the same
+    # real call shape (`WaitForChild(name)` alone) as the original two-overload form did.
+    ("Instance", "WaitForChild", "InTimeOut"),
+    ("Camera", "ScreenPointToRay", "depth"),
+    ("Camera", "ViewportPointToRay", "depth"),
+    ("DataStore", "ListKeysAsync", "prefix"),
+    ("DataStore", "ListKeysAsync", "pageSize"),
+    ("DataStore", "ListKeysAsync", "cursor"),
+    ("DataStore", "ListKeysAsync", "excludeDeleted"),
+    ("DataStoreService", "GetDataStore", "scope"),
+    ("DataStoreService", "GetDataStore", "options"),
+    ("DataStoreService", "GetOrderedDataStore", "scope"),
+    ("GlobalDataStore", "GetAsync", "options"),
+    ("GlobalDataStore", "SetAsync", "userIds"),
+    ("GlobalDataStore", "SetAsync", "options"),
+    ("GlobalDataStore", "IncrementAsync", "delta"),
+    ("GlobalDataStore", "IncrementAsync", "userIds"),
+    ("GlobalDataStore", "IncrementAsync", "options"),
+    ("OrderedDataStore", "GetSortedAsync", "minValue"),
+    ("OrderedDataStore", "GetSortedAsync", "maxValue"),
+}
+
+# Same idea as METHOD_OPTIONAL_PARAMS, but for a method's *return* type - docs.overdare.com's
+# Return table never marks a type nilable either, even when the prose says "or nil if..."
+# (e.g. FindFirstChild: "Returns ... or nil if the child matching that name doesn't exist.").
+# Keyed by (owner name, method name).
+METHOD_NILABLE_RETURNS = {
+    ("Instance", "FindFirstAncestor"),
+    ("Instance", "FindFirstAncestorOfClass"),
+    ("Instance", "FindFirstAncestorWhichIsA"),
+    ("Instance", "FindFirstChild"),
+    ("Instance", "FindFirstChildOfClass"),
+    ("Instance", "WaitForChild"),
+    ("Players", "GetPlayerByUserId"),
+    ("Players", "GetPlayerFromCharacter"),
+    ("WorldRoot", "Blockcast"),
+    ("WorldRoot", "Raycast"),
+    ("WorldRoot", "Spherecast"),
+}
+
+
 def declare_property(prop):
     return f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])}\n"
 
@@ -388,10 +443,15 @@ def declare_param(param_type, param_name, force_optional=False):
     return f"{name}: {resolved}"
 
 
-def declare_method(method):
-    params = ", ".join(declare_param(t, n) for t, n in method["params"])
+def declare_method(method, owner_name=None):
+    params = ", ".join(
+        declare_param(t, n, force_optional=(owner_name, method["name"], n) in METHOD_OPTIONAL_PARAMS)
+        for t, n in method["params"]
+    )
     prefix = ", " if params else ""
     ret = resolve_doc_type(method["return"])
+    if (owner_name, method["name"]) in METHOD_NILABLE_RETURNS and not ret.endswith("?"):
+        ret += "?"
     name = sanitize_identifier(method["name"], None)
     if name is not None:
         return f"\tfunction {name}(self{prefix}{params}): {ret}\n"
@@ -419,7 +479,7 @@ def declare_class(klass):
     for prop in klass["properties"]:
         out += declare_property(prop)
     for method in klass["methods"]:
-        out += declare_method(method)
+        out += declare_method(method, owner_name=klass["name"])
     for event in klass["events"]:
         out += declare_event(event)
     out += "end\n"
@@ -433,7 +493,7 @@ def declare_datatype(dt):
     for prop in dt["properties"]:
         out += declare_property(prop)
     for method in dt["methods"]:
-        out += declare_method(method)
+        out += declare_method(method, owner_name=dt["name"])
     for event in dt["events"]:
         out += declare_event(event)
     out += "end\n"
