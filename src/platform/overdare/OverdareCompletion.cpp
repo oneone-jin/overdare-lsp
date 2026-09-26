@@ -185,6 +185,30 @@ std::optional<Luau::AutocompleteEntryMap> OverdarePlatform::completionCallback(
         }
         return result;
     }
+    else if (tag == "FontNames" || tag == "FontAssetIds")
+    {
+        Luau::AutocompleteEntryMap result;
+        if (metadata)
+        {
+            for (const auto& [fontName, assetId] : metadata->FONTS)
+                result.insert_or_assign(tag == "FontNames" ? fontName : assetId,
+                    Luau::AutocompleteEntry{
+                        Luau::AutocompleteEntryKind::String, workspaceFolder->frontend.builtinTypes->stringType, false, false, Luau::TypeCorrectKind::Correct});
+        }
+        return result;
+    }
+    else if (tag == "BrickColorNames")
+    {
+        Luau::AutocompleteEntryMap result;
+        if (metadata)
+        {
+            for (const auto& colorName : metadata->BRICK_COLORS)
+                result.insert_or_assign(
+                    colorName, Luau::AutocompleteEntry{Luau::AutocompleteEntryKind::String, workspaceFolder->frontend.builtinTypes->stringType, false,
+                                   false, Luau::TypeCorrectKind::Correct});
+        }
+        return result;
+    }
     else if (tag == "Services")
     {
         Luau::AutocompleteEntryMap result;
@@ -225,6 +249,26 @@ void OverdarePlatform::handleCompletion(
     std::optional<OverdareDefinitionsFileMetadata> metadata = workspaceFolder->definitionsFileMetadata;
     if (!metadata.has_value())
         return;
+
+    // Font.new("...") suggestions are bare asset ids ("ovdrassetid://900010666"), so show which
+    // family each one is and let typing the family name (`Font.new("Rob`) find it too.
+    if (!metadata->FONTS.empty())
+    {
+        for (auto& item : items)
+        {
+            if (item.kind != lsp::CompletionItemKind::Constant)
+                continue;
+            for (const auto& [fontName, assetId] : metadata->FONTS)
+            {
+                if (item.label == assetId)
+                {
+                    item.detail = fontName;
+                    item.filterText = fontName + " " + assetId;
+                    break;
+                }
+            }
+        }
+    }
 
     auto instanceType = workspaceFolder->frontend.globals.globalScope->lookupType("Instance");
     auto* instanceCtv = instanceType ? Luau::get<Luau::ExternType>(instanceType->type) : nullptr;

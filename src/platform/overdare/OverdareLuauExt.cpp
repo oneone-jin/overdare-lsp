@@ -756,6 +756,27 @@ void OverdarePlatform::mutateRegisteredDefinitions(Luau::GlobalTypes& globals, s
                 }
             }
 
+    // Autocomplete the string argument of Font.fromName()/Font.new()/BrickColor.new(). Tag only - no
+    // MagicTypeLookup validation, since these take plain strings (a variable holding a font name
+    // or asset id must still type-check).
+    auto attachConstructorTag = [&](const char* globalName, const char* functionName, const char* tag)
+    {
+        if (auto global = globals.globalScope->lookup(Luau::AstName(globalName)))
+            if (auto ttv = Luau::get<Luau::TableType>(Luau::follow(*global)))
+                if (auto fn = ttv->props.find(functionName);
+                    fn != ttv->props.end() && fn->second.readTy && Luau::get<Luau::FunctionType>(*fn->second.readTy))
+                    Luau::attachTag(*fn->second.readTy, tag);
+    };
+
+    if (overdareMetadata.has_value() && !overdareMetadata->FONTS.empty())
+    {
+        attachConstructorTag("Font", "fromName", "FontNames");
+        attachConstructorTag("Font", "new", "FontAssetIds");
+    }
+
+    if (overdareMetadata.has_value() && !overdareMetadata->BRICK_COLORS.empty())
+        attachConstructorTag("BrickColor", "new", "BrickColorNames");
+
     // Attach onto `game:GetService()`
     if (overdareMetadata.has_value() && !overdareMetadata->SERVICES.empty())
         if (auto serviceProviderType = globals.globalScope->lookupType("ServiceProvider"))

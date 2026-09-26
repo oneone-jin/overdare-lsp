@@ -895,9 +895,10 @@ std::vector<lsp::CompletionItem> WorkspaceFolder::completion(const lsp::Completi
             }
         }
 
-        // If autocompleting in a string and the autocompleting text contains a '/' character, then it won't replace correctly due to word boundaries
+        // If autocompleting in a string and the autocompleting text contains a word-boundary character ('/', or ' '/'.' in names such as
+        // BrickColor's "Br. yellowish green"), then it won't replace correctly due to word boundaries
         // Apply a complete text edit instead
-        if (name.find('/') != std::string::npos && result.context == Luau::AutocompleteContext::String &&
+        if (name.find_first_of("/ .") != std::string::npos && result.context == Luau::AutocompleteContext::String &&
             entry.kind != Luau::AutocompleteEntryKind::RequirePath)
         {
             auto lastAst = result.ancestry.back();

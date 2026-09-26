@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "LSP/LuauExt.hpp"
 #include "Platform/LSPPlatform.hpp"
 #include "Platform/AutoImports.hpp"
@@ -21,8 +23,14 @@ struct OverdareDefinitionsFileMetadata
     // type-annotation completion (e.g. `local x: EnumFoo`) - the leftover Roblox-only enum
     // *type* declarations are still in the file (only the Enum.Foo member table is pruned).
     std::vector<std::string> ENUMS{};
+    // Font family name as passed to Font.fromName() (no spaces, e.g. "PressStart2P") -> the
+    // family's asset id as passed to Font.new() (e.g. "ovdrassetid://900010466"), from the
+    // Font datatype page's family table. Used for string-argument completion of both.
+    std::map<std::string, std::string> FONTS{};
+    // Valid BrickColor.new() names, for string-argument completion.
+    std::vector<std::string> BRICK_COLORS{};
 };
-NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES, CLASSES, ENUMS)
+NLOHMANN_DEFINE_OPTIONAL(OverdareDefinitionsFileMetadata, CREATABLE_INSTANCES, SERVICES, CLASSES, ENUMS, FONTS, BRICK_COLORS)
 
 enum class ScriptContext
 {

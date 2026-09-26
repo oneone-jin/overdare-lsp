@@ -610,6 +610,74 @@ TEST_CASE_FIXTURE(Fixture, "get_service_contains_services")
     checkStringCompletionExists(result, "Workspace");
 }
 
+TEST_CASE_FIXTURE(Fixture, "font_from_name_contains_font_names")
+{
+    auto [source, marker] = sourceWithMarker(R"(
+        --!strict
+        Font.fromName("|")
+    )");
+
+    auto uri = newDocument("foo.luau", source);
+
+    lsp::CompletionParams params;
+    params.textDocument = lsp::TextDocumentIdentifier{uri};
+    params.position = marker;
+
+    auto result = workspace.completion(params, nullptr);
+
+    CHECK_EQ(result.size(), 2);
+    checkStringCompletionExists(result, "Roboto");
+    checkStringCompletionExists(result, "PressStart2P");
+}
+
+TEST_CASE_FIXTURE(Fixture, "font_new_contains_font_asset_ids_labelled_with_family")
+{
+    auto [source, marker] = sourceWithMarker(R"(
+        --!strict
+        Font.new("|")
+    )");
+
+    auto uri = newDocument("foo.luau", source);
+
+    lsp::CompletionParams params;
+    params.textDocument = lsp::TextDocumentIdentifier{uri};
+    params.position = marker;
+
+    auto result = workspace.completion(params, nullptr);
+
+    CHECK_EQ(result.size(), 2);
+    auto item = requireItem(result, "ovdrassetid://900010666");
+    CHECK_EQ(item.kind, lsp::CompletionItemKind::Constant);
+    CHECK_EQ(item.detail, "Roboto");
+    CHECK_EQ(item.filterText, "Roboto ovdrassetid://900010666");
+}
+
+TEST_CASE_FIXTURE(Fixture, "brick_color_new_contains_brick_color_names")
+{
+    auto [source, marker] = sourceWithMarker(R"(
+        --!strict
+        BrickColor.new("Br|")
+    )");
+
+    auto uri = newDocument("foo.luau", source);
+
+    lsp::CompletionParams params;
+    params.textDocument = lsp::TextDocumentIdentifier{uri};
+    params.position = marker;
+
+    auto result = workspace.completion(params, nullptr);
+
+    CHECK_EQ(result.size(), 2);
+    checkStringCompletionExists(result, "Bright red");
+
+    // Names containing spaces/dots replace the whole string contents, otherwise the editor only replaces the last word
+    auto item = requireItem(result, "Br. yellowish green");
+    REQUIRE(item.textEdit);
+    CHECK_EQ(item.textEdit->newText, "Br. yellowish green");
+    CHECK_EQ(item.textEdit->range.start, lsp::Position{2, 24});
+    CHECK_EQ(item.textEdit->range.end, lsp::Position{2, 26});
+}
+
 TEST_CASE_FIXTURE(Fixture, "instance_is_a_contains_classnames")
 {
     auto [source, marker] = sourceWithMarker(R"(

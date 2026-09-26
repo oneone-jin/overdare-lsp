@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.16] - 2026-09-26
+
+### Added
+
+- String-argument autocomplete for `Font.fromName("...")` (the 24 font families from OVERDARE's Font docs), `Font.new("...")` (their `ovdrassetid://` asset ids, labelled with the family name and also matched by typing it) and `BrickColor.new("...")` (the 204 BrickColor names). Arguments stay typed as plain `string`, so passing a variable still type-checks. The lists live in the definitions file's `--#METADATA#` line (`FONTS`/`BRICK_COLORS`), which `scripts/dumpOverdareTypes.py` now fills in. Picking a string completion that contains spaces or dots (e.g. `"Br. yellowish green"`) now replaces the whole string instead of only the last word.
+- `Instance.new()` now also accepts and autocompletes `ProgressBar`, `VFXPreset`, `VFXRecipe` and `SimulationBall`.
+
+### Fixed
+
+- `Instance.new()` now autocompletes (and no longer flags as an invalid class name) `BindableFunction`, `RemoteFunction` and `GetTextBoundsParams`, and `game:GetService()` now does the same for `TextService`. These are real OVERDARE classes, but an earlier re-scrape added them after the `CREATABLE_INSTANCES`/`SERVICES` whitelists had already been pruned. Because re-merges intersect against the already-pruned base, they never came back on their own. `scripts/dumpOverdareTypes.py` now pins them through `EXTRA_CREATABLE_INSTANCES`/`EXTRA_SERVICES` so a future re-merge won't drop them again.
+
 ## [1.69.15] - 2026-09-26
 
 ### Fixed

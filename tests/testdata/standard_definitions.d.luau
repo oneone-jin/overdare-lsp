@@ -1,4 +1,4 @@
---#METADATA#{"CREATABLE_INSTANCES":["TextLabel","Part"], "SERVICES": ["ReplicatedStorage","ServerScriptService","Workspace"]}
+--#METADATA#{"CREATABLE_INSTANCES":["TextLabel","Part"], "SERVICES": ["ReplicatedStorage","ServerScriptService","Workspace"], "FONTS": {"Roboto": "ovdrassetid://900010666", "PressStart2P": "ovdrassetid://900010466"}, "BRICK_COLORS": ["Bright red", "Br. yellowish green"]}
 
 declare extern type Enum with
     function GetEnumItems(self): { any }
@@ -108,6 +108,23 @@ declare Instance: {
 }
 
 declare game: DataModel
+
+declare extern type Font with
+    Family: string
+end
+
+declare Font: {
+    new: ((family: string) -> Font),
+    fromName: ((name: string) -> Font),
+}
+
+declare extern type BrickColor with
+    Name: string
+end
+
+declare BrickColor: {
+    new: ((val: string) -> BrickColor),
+}
 
 --- This is a documented table
 export type DocumentedTable = {

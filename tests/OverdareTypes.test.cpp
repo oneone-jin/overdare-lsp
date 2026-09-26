@@ -69,6 +69,8 @@ TEST_CASE("overdare_only_service_names_are_recognised_by_get_service")
         local ActionSequenceService = game:GetService("ActionSequenceService")
         local WorldRankService = game:GetService("WorldRankService")
         local Players = game:GetService("Players")
+        -- Dropped by an earlier prune against a stale base (see EXTRA_SERVICES)
+        local TextService = game:GetService("TextService")
     )");
     auto cr = workspace.checkSimple(filePath, nullptr);
     CHECK(cr.errors.empty());
@@ -93,6 +95,14 @@ TEST_CASE("overdare_only_class_names_are_recognised_by_instance_new")
         local fill = Instance.new("Fill")
         local outline = Instance.new("Outline")
         local part = Instance.new("Part")
+        -- Dropped by an earlier prune against a stale base (see EXTRA_CREATABLE_INSTANCES)
+        local bindableFunction = Instance.new("BindableFunction")
+        local remoteFunction = Instance.new("RemoteFunction")
+        local params = Instance.new("GetTextBoundsParams")
+        local progressBar = Instance.new("ProgressBar")
+        local vfxPreset = Instance.new("VFXPreset")
+        local vfxRecipe = Instance.new("VFXRecipe")
+        local simulationBall = Instance.new("SimulationBall")
     )");
     auto cr = workspace.checkSimple(filePath, nullptr);
     CHECK(cr.errors.empty());

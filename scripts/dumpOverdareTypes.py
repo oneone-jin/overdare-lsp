@@ -25,6 +25,8 @@ import time
 import urllib.request
 
 LLMS_TXT_URL = "https://docs.overdare.com/llms.txt"
+# Same source dumpRobloxTypes.py uses for BrickColor names.
+BRICK_COLORS_URL = "https://gist.githubusercontent.com/Anaminus/49ac255a68e7a7bc3cdd72b602d5071f/raw/f1534dcae312dbfda716b7677f8ac338b565afc3/BrickColor.json"
 CLASS_URL_RE = re.compile(r"\[([^\]]+)\]\((https://docs\.overdare\.com/development/api-reference/classes/[^)]+)\)")
 ENUM_URL_RE = re.compile(r"\[([^\]]+)\]\((https://docs\.overdare\.com/development/api-reference/enums/[^)]+)\)")
 DATATYPE_URL_RE = re.compile(r"\[([^\]]+)\]\((https://docs\.overdare\.com/development/api-reference/datatype/[^)]+)\)")
@@ -270,6 +272,25 @@ def parse_enum_page(md):
     return {"name": name, "items": items}
 
 
+def parse_font_families(md):
+    """The Font datatype page's family table (`| Font | Asset Id | Weight | ... |`) - the
+    only list of valid Font.fromName() names / Font.new() asset ids."""
+    families = []
+    in_table = False
+    for line in md.splitlines():
+        line = line.strip()
+        if not line.startswith("|"):
+            in_table = False
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if len(cells) >= 2 and cells[0] == "Font" and cells[1] == "Asset Id":
+            in_table = True
+            continue
+        if in_table and not is_separator_row(line) and len(cells) >= 2:
+            families.append({"name": unescape_md(cells[0]), "assetId": cells[1]})
+    return families
+
+
 def scrape_all(log=print):
     log(f"Fetching {LLMS_TXT_URL}")
     llms_text = fetch(LLMS_TXT_URL)
@@ -302,11 +323,21 @@ def scrape_all(log=print):
     datatype_links = {name: url for name, url in datatype_links.items() if name not in ("Enum", "EnumItem", "ScriptConnection", "ScriptSignal")}
 
     datatypes = []
+    fonts = []
     for i, (name, url) in enumerate(sorted(datatype_links.items())):
         log(f"[{i + 1}/{len(datatype_links)}] datatype {name}")
-        datatypes.append(parse_datatype_page(fetch(url + ".md" if not url.endswith(".md") else url)))
+        md = fetch(url + ".md" if not url.endswith(".md") else url)
+        datatypes.append(parse_datatype_page(md))
+        if name == "Font":
+            fonts = parse_font_families(md)
 
-    return {"classes": classes, "enums": enums, "datatypes": datatypes}
+    # OVERDARE's BrickColor page says "refer to the table below" but the table isn't in
+    # either the Markdown or HTML version, so fall back to the same list Roblox's
+    # dumpRobloxTypes.py uses (OVERDARE's example names all come from it).
+    log(f"Fetching {BRICK_COLORS_URL}")
+    brick_colors = [c["Name"] for c in json.loads(fetch(BRICK_COLORS_URL))["BrickColors"]]
+
+    return {"classes": classes, "enums": enums, "datatypes": datatypes, "fonts": fonts, "brickColors": brick_colors}
 
 
 # ---- Luau declaration generation (standalone-testable output) ----
@@ -779,7 +810,30 @@ METADATA_PREFIX = "--#METADATA#"
 # https://docs.overdare.com/manual/studio-manual/object/outline-fill, which shows
 # `Instance.new("Outline")`/`Instance.new("Fill")` - unlike their own class pages, which
 # document properties only and never mention construction).
-EXTRA_CREATABLE_INSTANCES = {"Fill", "Outline"}
+#
+# Also re-add names a later re-scrape brought back: the intersection below runs against the
+# *already-pruned* merge base, so a class that was missing from the scrape at the time of
+# the first prune (BindableFunction/RemoteFunction/GetTextBoundsParams, all creatable in
+# Roblox; GetTextBoundsParams is shown via `Instance.new("GetTextBoundsParams")` on
+# OVERDARE's TextService docs) was dropped for good and can never come back on its own.
+#
+# ProgressBar/VFXPreset/VFXRecipe/SimulationBall are OVERDARE-only classes whose docs never
+# show construction either way; added on the maintainer's confirmation rather than docs.
+EXTRA_CREATABLE_INSTANCES = {
+    "Fill",
+    "Outline",
+    "BindableFunction",
+    "RemoteFunction",
+    "GetTextBoundsParams",
+    "ProgressBar",
+    "VFXPreset",
+    "VFXRecipe",
+    "SimulationBall",
+}
+
+# Same stale-base problem as above for GetService: TextService was added to OVERDARE's docs
+# after SERVICES was first pruned, so the intersection can't restore it by itself.
+EXTRA_SERVICES = {"TextService"}
 
 
 def prune_services_metadata(lines, dump, log=print):
@@ -804,6 +858,8 @@ def prune_services_metadata(lines, dump, log=print):
         pruned = set(meta[key]) & od_class_names
         if key == "CREATABLE_INSTANCES":
             pruned |= EXTRA_CREATABLE_INSTANCES & od_class_names
+        elif key == "SERVICES":
+            pruned |= EXTRA_SERVICES & od_class_names
         meta[key] = sorted(pruned)
         log(f"{label} (metadata whitelist): pruned {before} -> {len(meta[key])} "
             f"(kept only names that match a scraped OVERDARE class)")
@@ -820,6 +876,16 @@ def prune_services_metadata(lines, dump, log=print):
     # since that only fixes `Enum.Foo` member access, not standalone type annotations.
     meta["ENUMS"] = sorted(od_enum_names)
     log(f"Enums (metadata whitelist for EnumX type-annotation completion): {len(meta['ENUMS'])} entries")
+
+    # FONTS / BRICK_COLORS: string-argument completion lists for Font.fromName/Font.new and
+    # BrickColor.new (see OverdareCompletion.cpp). Only overwritten when this run actually
+    # scraped them, so a --from-json dump predating these keys keeps the base file's values.
+    if dump.get("fonts"):
+        meta["FONTS"] = {f["name"].replace(" ", ""): f["assetId"] for f in dump["fonts"]}
+        log(f"Fonts (Font.fromName/Font.new completion): {len(meta['FONTS'])} entries")
+    if dump.get("brickColors"):
+        meta["BRICK_COLORS"] = sorted(set(dump["brickColors"]))
+        log(f"BrickColors (BrickColor.new completion): {len(meta['BRICK_COLORS'])} entries")
 
     lines[0] = METADATA_PREFIX + json.dumps(meta)
     return lines
