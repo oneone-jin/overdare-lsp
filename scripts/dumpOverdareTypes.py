@@ -90,6 +90,18 @@ def escape_name(name):
     return name
 
 
+def sanitize_identifier(name, fallback):
+    """The docs occasionally render a real PascalCase identifier as a human-readable
+    heading/label with spaces (e.g. "Transition Playback" for the real
+    `TransitionPlayback` method, found on ActionRunner) - collapse whitespace to recover
+    it. Falls back to `fallback` if the result still isn't a valid identifier, which is
+    the caller's job to make syntactically safe (unlike `escape_name`'s ["key"] bracket
+    form, plain identifier positions - function names, parameter names - don't have a
+    bracket-escape syntax in Luau's `declare extern type ... with` blocks)."""
+    collapsed = name.replace(" ", "")
+    return collapsed if is_identifier(collapsed) else fallback
+
+
 def resolve_doc_type(raw):
     raw = raw.strip()
     optional = raw.endswith("?")
@@ -329,14 +341,26 @@ def declare_param(param_type, param_name, force_optional=False):
         return "...: " + resolved[3:]  # e.g. "...any" -> "...: any" (variadic param syntax)
     if force_optional and not resolved.endswith("?"):
         resolved += "?"
-    return f"{escape_name(param_name) if param_name else 'arg'}: {resolved}"
+    # Parameter names are a plain-identifier position (no ["key"] bracket escape exists
+    # for function parameters, unlike properties), so a non-identifier name can't use
+    # escape_name's fallback here - sanitize or drop back to a generic "arg" name instead.
+    name = sanitize_identifier(param_name, "arg") if param_name else "arg"
+    return f"{name}: {resolved}"
 
 
 def declare_method(method):
     params = ", ".join(declare_param(t, n) for t, n in method["params"])
     prefix = ", " if params else ""
     ret = resolve_doc_type(method["return"])
-    return f"\tfunction {escape_name(method['name'])}(self{prefix}{params}): {ret}\n"
+    name = sanitize_identifier(method["name"], None)
+    if name is not None:
+        return f"\tfunction {name}(self{prefix}{params}): {ret}\n"
+    # Same problem as declare_param: a method name is also a plain-identifier position in
+    # `declare extern type ... with` blocks - escape_name's ["key"] bracket form is only
+    # valid in property position. Fall back to declaring it as a bracket-keyed property
+    # typed as a function instead, which IS legal syntax, for the rare name sanitize_identifier
+    # can't recover.
+    return f"\t{escape_name(method['name'])}: (self: any{prefix}{params}) -> {ret}\n"
 
 
 def declare_event(event):

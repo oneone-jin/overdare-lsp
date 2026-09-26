@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.13] - 2026-09-26
+
+### Changed
+
+- Re-scraped `docs.overdare.com` and re-merged `scripts/globalTypes.d.luau`/`.d.lua` to match OVERDARE's latest API reference (134 → 141 classes, enum set refreshed). Added: `BindableFunction`, `RemoteFunction`, `DataStorePages`, `GetTextBoundsParams`, `ProceduralModel`, `ProgressBar`, `TextService`, `VFXRecipe` classes and `FontStyle`, `FontWeight`, `HumanoidHealthDisplayType`, `NameOcclusion`, `ProgressBarFillDirection`, `ScaleType` enums. Removed (no longer real OVERDARE classes/enums, so pruned from the `CLASSES`/`ENUMS`/`SERVICES` metadata whitelists that gate autocomplete and type-annotation validity - see the `--#METADATA#` comment on line 1): the `Teams` service and the `ForceLimitMode`, `GuiButtonState`, `HttpCompression`, `MaterialCategory`, `MaterialPattern`, `MaterialTextureType` enums. Also picked up in-place API changes to existing classes: `CollectionService.AddTag`/`HasTag` parameter renames, `DataStoreService`/`GlobalDataStore` parameter renames plus a new `GetOrderedDataStore`/`GetSortedAsync` pair, `BindableFunction.OnInvoke` becoming an `Invoke` method, `RaycastParams`/`OverlapParams` gaining `TraceGroupName`, and a `Font`/`FontFace`/`ScaleType` overhaul on `TextLabel`/`TextButton`-family classes
+- `scripts/globalTypes.d.lua` had silently drifted out of sync with `.d.luau` since at least 1.69.9 (missing the `Fill`/`Outline` creatable-instance fix and the `CFrame`/`Vector2` operator-overload carry-over, both `.d.luau`-only) - this re-merge re-synced them to be byte-identical again, per the file's own "kept byte-identical" convention
+
+### Fixed
+
+- Fixed `scripts/dumpOverdareTypes.py` crashing the Luau parser whenever a docs page's method/event heading isn't a plain identifier (found via this re-scrape: `ActionRunner`'s "Transition Playback" heading, the real `TransitionPlayback` method rendered with a space) - `declare_method`/`declare_param` were reusing `escape_name()`'s `["key"]` bracket-property escape for function/parameter *name* positions, which Luau's `declare extern type ... with` grammar doesn't accept (bracket keys are only valid for properties, not function or parameter names). Added `sanitize_identifier()` to strip incidental whitespace and recover the real identifier first, falling back to a bracket-keyed function-typed property (still syntactically valid, unlike the old crash) for the rare name that isn't recoverable
+
 ## [1.69.12] - 2026-08-19
 
 ### Changed

@@ -1,4 +1,4 @@
---#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "Bone", "BoolValue", "Camera", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "ScreenGui", "Script", "ScrollingFrame", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UIGridLayout", "UIListLayout", "UIStroke", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "Teams", "TeleportService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "Bone", "BoolValue", "Camera", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GlobalDataStore", "GuiBase2d", "GuiButton", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "Teams", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextButton", "TextLabel", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIGridLayout", "UIGridStyleLayout", "UIListLayout", "UIStroke", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "EasingDirection", "EasingStyle", "FillDepthModeType", "FillDirection", "ForceLimitMode", "GuiButtonState", "HitboxType", "HorizontalAlignment", "HttpCompression", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidStateType", "InfoType", "KeyCode", "LineJoinMode", "Material", "MaterialCategory", "MaterialPattern", "MaterialTextureType", "MobilityMode", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "RollOffMode", "RotationType", "ScrollingDirection", "ShadowDetailLevel", "SortOrder", "SoundPlayState", "StrokeSizingMode", "TextXAlignment", "TextYAlignment", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "ZIndexMode"]}
+--#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "Bone", "BoolValue", "Camera", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "ScreenGui", "Script", "ScrollingFrame", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UIGridLayout", "UIListLayout", "UIStroke", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "TeleportService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStorePages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GetTextBoundsParams", "GlobalDataStore", "GuiBase2d", "GuiButton", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProceduralModel", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextButton", "TextLabel", "TextService", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIGridLayout", "UIGridStyleLayout", "UIListLayout", "UIStroke", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "VFXRecipe", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "EasingDirection", "EasingStyle", "FillDepthModeType", "FillDirection", "FontStyle", "FontWeight", "HitboxType", "HorizontalAlignment", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidHealthDisplayType", "HumanoidStateType", "InfoType", "KeyCode", "LineJoinMode", "Material", "MobilityMode", "NameOcclusion", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProgressBarFillDirection", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "RollOffMode", "RotationType", "ScaleType", "ScrollingDirection", "ShadowDetailLevel", "SortOrder", "SoundPlayState", "StrokeSizingMode", "TextXAlignment", "TextYAlignment", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "ZIndexMode"]}
 
 
 type ContentId = string
@@ -1134,7 +1134,7 @@ declare extern type EnumBodyPartR15_INTERNAL extends Enum with
 end
 declare extern type EnumBorderMode extends EnumItem with end
 declare extern type EnumBorderMode_INTERNAL extends Enum with
-	Insert: EnumBorderMode
+	Inset: EnumBorderMode
 	Middle: EnumBorderMode
 	Outline: EnumBorderMode
 	function GetEnumItems(self): { EnumBorderMode }
@@ -1218,8 +1218,8 @@ declare extern type EnumCageType_INTERNAL extends Enum with
 end
 declare extern type EnumCameraMode extends EnumItem with end
 declare extern type EnumCameraMode_INTERNAL extends Enum with
-	Classic: EnumCameraMode
-	LockFirstPerson: EnumCameraMode
+	FirstPerson: EnumCameraMode
+	ThirdPerson: EnumCameraMode
 	function GetEnumItems(self): { EnumCameraMode }
 	function FromName(self, Name: string): EnumCameraMode?
 	function FromValue(self, Value: number): EnumCameraMode?
@@ -2716,10 +2716,10 @@ declare extern type EnumFontStyle_INTERNAL extends Enum with
 end
 declare extern type EnumFontWeight extends EnumItem with end
 declare extern type EnumFontWeight_INTERNAL extends Enum with
+	Black: EnumFontWeight
 	Bold: EnumFontWeight
 	ExtraBold: EnumFontWeight
 	ExtraLight: EnumFontWeight
-	Heavy: EnumFontWeight
 	Light: EnumFontWeight
 	Medium: EnumFontWeight
 	Regular: EnumFontWeight
@@ -4033,7 +4033,6 @@ declare extern type EnumMuteState_INTERNAL extends Enum with
 end
 declare extern type EnumNameOcclusion extends EnumItem with end
 declare extern type EnumNameOcclusion_INTERNAL extends Enum with
-	EnemyOcclusion: EnumNameOcclusion
 	NoOcclusion: EnumNameOcclusion
 	OccludeAll: EnumNameOcclusion
 	function GetEnumItems(self): { EnumNameOcclusion }
@@ -5249,11 +5248,8 @@ declare extern type EnumSavedQualitySetting_INTERNAL extends Enum with
 end
 declare extern type EnumScaleType extends EnumItem with end
 declare extern type EnumScaleType_INTERNAL extends Enum with
-	Crop: EnumScaleType
-	Fit: EnumScaleType
 	Slice: EnumScaleType
 	Stretch: EnumScaleType
-	Tile: EnumScaleType
 	function GetEnumItems(self): { EnumScaleType }
 	function FromName(self, Name: string): EnumScaleType?
 	function FromValue(self, Value: number): EnumScaleType?
@@ -7190,22 +7186,20 @@ type ENUM_LIST = {
 	EasingStyle: EnumEasingStyle_INTERNAL,
 	FillDepthModeType: EnumFillDepthModeType_INTERNAL,
 	FillDirection: EnumFillDirection_INTERNAL,
-	ForceLimitMode: EnumForceLimitMode_INTERNAL,
-	GuiButtonState: EnumGuiButtonState_INTERNAL,
+	FontStyle: EnumFontStyle_INTERNAL,
+	FontWeight: EnumFontWeight_INTERNAL,
 	HitboxType: EnumHitboxType_INTERNAL,
 	HorizontalAlignment: EnumHorizontalAlignment_INTERNAL,
-	HttpCompression: EnumHttpCompression_INTERNAL,
 	HttpContentType: EnumHttpContentType_INTERNAL,
 	HumanoidDisplayDistanceType: EnumHumanoidDisplayDistanceType_INTERNAL,
+	HumanoidHealthDisplayType: EnumHumanoidHealthDisplayType_INTERNAL,
 	HumanoidStateType: EnumHumanoidStateType_INTERNAL,
 	InfoType: EnumInfoType_INTERNAL,
 	KeyCode: EnumKeyCode_INTERNAL,
 	LineJoinMode: EnumLineJoinMode_INTERNAL,
 	Material: EnumMaterial_INTERNAL,
-	MaterialCategory: EnumMaterialCategory_INTERNAL,
-	MaterialPattern: EnumMaterialPattern_INTERNAL,
-	MaterialTextureType: EnumMaterialTextureType_INTERNAL,
 	MobilityMode: EnumMobilityMode_INTERNAL,
+	NameOcclusion: EnumNameOcclusion_INTERNAL,
 	NormalId: EnumNormalId_INTERNAL,
 	PartType: EnumPartType_INTERNAL,
 	ParticleEmitterShape: EnumParticleEmitterShape_INTERNAL,
@@ -7216,11 +7210,13 @@ type ENUM_LIST = {
 	ParticleOrientation: EnumParticleOrientation_INTERNAL,
 	PlaybackState: EnumPlaybackState_INTERNAL,
 	ProductPurchaseDecision: EnumProductPurchaseDecision_INTERNAL,
+	ProgressBarFillDirection: EnumProgressBarFillDirection_INTERNAL,
 	ProximityPromptExclusivity: EnumProximityPromptExclusivity_INTERNAL,
 	ProximityPromptInputType: EnumProximityPromptInputType_INTERNAL,
 	RaycastFilterType: EnumRaycastFilterType_INTERNAL,
 	RollOffMode: EnumRollOffMode_INTERNAL,
 	RotationType: EnumRotationType_INTERNAL,
+	ScaleType: EnumScaleType_INTERNAL,
 	ScrollingDirection: EnumScrollingDirection_INTERNAL,
 	ShadowDetailLevel: EnumShadowDetailLevel_INTERNAL,
 	SortOrder: EnumSortOrder_INTERNAL,
@@ -7257,6 +7253,7 @@ declare extern type BrickColor with
 end
 
 declare extern type CFrame with
+	Identity: CFrame
 	LookVector: Vector3
 	Orientation: Vector3
 	Position: Vector3
@@ -7367,7 +7364,6 @@ declare extern type FloatCurveKey with
 end
 
 declare extern type Font with
-	Bold: boolean
 	Family: string
 	Style: EnumFontStyle
 	Weight: EnumFontWeight
@@ -7394,6 +7390,7 @@ declare extern type OverlapParams with
 	FilterType: EnumRaycastFilterType
 	MaxParts: number
 	RespectCanCollide: boolean
+	TraceGroupName: string
 	function AddToFilter(self, InValue: any): OverlapParams
 end
 
@@ -7449,6 +7446,7 @@ declare extern type RaycastParams with
 	IgnoreWater: boolean
 	RespectCanCollide: boolean
 	TraceComplex: boolean
+	TraceGroupName: string
 	function AddToFilter(self, InValue: any): RaycastParams
 end
 
@@ -8406,13 +8404,13 @@ declare extern type Instance with
 	function FindFirstChild(self, InName: string, recursive: boolean): Instance
 	function FindFirstChildOfClass(self, InClassName: string, Recursive: boolean): Instance
 	function GetAttribute(self, attribute: string): any
-	function GetAttributeChangedSignal(self, InAttributeName: string): ScriptSignal<...any>
+	function GetAttributeChangedSignal(self, InAttributeName: string): ScriptSignal
 	function GetAttributes(self): { [string]: any }
 	function GetChildren(self): { any }
 	function GetChildrenNum(self): number
 	function GetDescendants(self): { any }
 	function GetFullName(self): string
-	function GetPropertyChangedSignal(self, InPropertyName: string): ScriptSignal<...any>
+	function GetPropertyChangedSignal(self, InPropertyName: string): ScriptSignal
 	function GetTags(self): { any }
 	function HasTag(self, tag: string): boolean
 	function IsA(self, InClassName: string): boolean
@@ -8654,7 +8652,7 @@ declare extern type AnimationTrack extends Instance with
 	UpperBodyAnimation: boolean
 	function AdjustSpeed(self, InSpeed: number): nil
 	function AdjustWeight(self, InWeight: number, InFadeTime: number): nil
-	function GetMarkerReachedSignal(self, InName: string): ScriptSignal<...any>
+	function GetMarkerReachedSignal(self, InName: string): ScriptSignal
 	function Play(self, InFadeTime: number, InWeight: number, InSpeed: number): nil
 	function Stop(self, InFadeTime: number): nil
 	DidLoop: ScriptSignal<>
@@ -9823,7 +9821,6 @@ declare extern type BindableEvent extends Instance with
 end
 
 declare extern type BindableFunction extends Instance with
-	OnInvoke: (...any) -> ...any
 	function Invoke(self, ...: any): ...any
 end
 
@@ -10220,11 +10217,11 @@ declare extern type CollaboratorsService extends Instance with
 end
 
 declare extern type CollectionService extends Instance with
-	function AddTag(self, instance: Instance, tag: string): nil
-	function GetTagged(self, tag: string): { any }
+	function AddTag(self, Instance: Instance, TagName: string): nil
+	function GetTagged(self, TagName: string): { any }
 	function GetTags(self, Instance: Instance): { any }
-	function HasTag(self, instance: Instance, tag: string): boolean
-	function RemoveTag(self, instance: Instance, tag: string): nil
+	function HasTag(self, Instance: Instance, TagName: string): boolean
+	function RemoveTag(self, Instance: Instance, TagName: string): nil
 end
 
 declare extern type CommerceService extends Instance with
@@ -10704,7 +10701,7 @@ end
 
 declare extern type DataStoreIncrementOptions extends Instance with
 	function GetMetadata(self): { [string]: any }
-	function SetMetadata(self, InMetaDataTable: { [string]: any }): nil
+	function SetMetadata(self, attributes: { [string]: any }): nil
 end
 
 declare extern type DataStoreInfo extends Instance with
@@ -10737,13 +10734,14 @@ declare extern type DataStoreOptions extends Instance with
 end
 
 declare extern type DataStoreService extends Instance with
-	function GetDataStore(self, InName: string, InScope: string, InOption: Instance): GlobalDataStore
+	function GetDataStore(self, name: string, scope: string, options: Instance): GlobalDataStore
 	function GetGlobalDataStore(self): GlobalDataStore
+	function GetOrderedDataStore(self, name: string, scope: string): OrderedDataStore
 end
 
 declare extern type DataStoreSetOptions extends Instance with
 	function GetMetadata(self): { [string]: any }
-	function SetMetadata(self, InMetaDataTable: { [string]: any }): nil
+	function SetMetadata(self, attributes: { [string]: any }): nil
 end
 
 declare extern type Debris extends Instance with
@@ -11449,25 +11447,25 @@ end
 
 declare extern type GetTextBoundsParams extends Instance with
 	Font: Font
-	RichText: boolean
 	Size: number
 	Text: string
 	Width: number
 end
 
 declare extern type GlobalDataStore extends Instance with
-	function GetAsync(self, InKey: string, InOptions: DataStoreGetOptions): ...any
-	function IncrementAsync(self, InKey: string, InDelta: number, InUserIds: { any }, InOptions: DataStoreIncrementOptions): any
-	function RemoveAsync(self, InKey: string): ...any
-	function SetAsync(self, InKey: string, InValue: any, InUserIds: any, InOptions: DataStoreSetOptions): any
-	function UpdateAsync(self, InKey: string, InTransformFunction: any): ...any
+	function GetAsync(self, key: string, options: DataStoreGetOptions): ...any
+	function IncrementAsync(self, key: string, delta: number, userIds: { any }, options: DataStoreIncrementOptions): any
+	function RemoveAsync(self, key: string): ...any
+	function SetAsync(self, key: string, value: any, userIds: any, options: DataStoreSetOptions): any
+	function UpdateAsync(self, key: string, transformFunction: any): ...any
 end
 
 declare extern type DataStore extends GlobalDataStore with
-	function ListKeysAsync(self, InPrefix: string, InPageSize: number, InCursor: string, InExcludeDeleted: boolean): DataStoreKeyPages
+	function ListKeysAsync(self, prefix: string, pageSize: number, cursor: string, excludeDeleted: boolean): DataStoreKeyPages
 end
 
 declare extern type OrderedDataStore extends GlobalDataStore with
+	function GetSortedAsync(self, ascending: boolean, pagesize: number, minValue: number, maxValue: number): DataStorePages
 end
 
 declare extern type GongService extends Instance with
@@ -11532,10 +11530,13 @@ declare extern type ImageButton extends GuiButton with
 	ImageColor3: Color3
 	ImageTransparency: number
 	PressImage: string
+	ScaleType: EnumScaleType
+	SliceCenter: Rect
+	SliceScale: number
 end
 
 declare extern type TextButton extends GuiButton with
-	Bold: boolean
+	FontFace: Font
 	LocalizedText: string
 	Text: string
 	TextColor3: Color3
@@ -11554,10 +11555,13 @@ declare extern type ImageLabel extends GuiObject with
 	Image: string
 	ImageColor3: Color3
 	ImageTransparency: number
+	ScaleType: EnumScaleType
+	SliceCenter: Rect
+	SliceScale: number
 end
 
 declare extern type TextLabel extends GuiObject with
-	Bold: boolean
+	FontFace: Font
 	LocalizedText: string
 	Text: string
 	TextColor3: Color3
@@ -12155,12 +12159,16 @@ declare extern type Humanoid extends Instance with
 	CapsuleHeight: number
 	CapsuleRadius: number
 	CharacterMeshPos: Vector3
+	CollisionEnabled: string
 	DisplayDistanceType: EnumHumanoidDisplayDistanceType
+	DisplayName: string
 	FallingDeceleration: number
 	FallingLateralFriction: number
 	GravityScale: number
 	GroundFriction: number
 	Health: number
+	HealthDisplayDistance: number
+	HealthDisplayType: EnumHumanoidHealthDisplayType
 	HitboxType: EnumHitboxType
 	IgnoreBaseRotation: boolean
 	Jump: boolean
@@ -12171,8 +12179,11 @@ declare extern type Humanoid extends Instance with
 	MaxHealth: number
 	MaxJumpCount: number
 	MaxSlopeAngle: number
+	NameDisplayDistance: number
+	NameOcclusion: EnumNameOcclusion
 	RootPart: BasePart
 	RotationSpeed: number
+	ShowLocalHealthBar: boolean
 	StompJumpMultiplier: number
 	UseJumpPower: boolean
 	WalkingDeceleration: number
@@ -12187,6 +12198,8 @@ declare extern type Humanoid extends Instance with
 	function GetState(self): any
 	function LoadAnimation(self, InAnimation: Animation): AnimationTrack
 	function MoveTo(self, InPosition: Vector3, InWalkToPart: BasePart): nil
+	function SetCollisionProfileName(self, InCollisionProfile: string): nil
+	function SetSixBodyCollisionProfileName(self, InCollisionProfile: string): nil
 	function SetStateEnabled(self, InHumanoidStateType: EnumHumanoidStateType, InEnabled: boolean): nil
 	function TakeDamage(self, InDamage: number): nil
 	function UnequipTools(self): nil
@@ -12959,7 +12972,6 @@ declare extern type MarkerCurve extends Instance with
 end
 
 declare extern type MarketplaceService extends Instance with
-	ProcessReceipt: any
 	function GetProductInfo(self, ProductId: number, InfoType: EnumInfoType): any
 	function GetWorldProductsAsync(self): Pages
 	function PromptProductPurchase(self, Player: Player, ProductId: number): nil
@@ -13391,14 +13403,14 @@ declare extern type BasePart extends PVInstance with
 	Locked: boolean
 	Material: EnumMaterial
 	MaterialVariant: string
+	MetersPerTile: number
 	Orientation: Vector3
 	Position: Vector3
 	Size: Vector3
+	TraceGroupName: string
 	Transparency: number
 	function ApplyImpulse(self, InImpulse: Vector3): nil
-	function GetCollisionProfile(self): string
 	function GetMass(self): number
-	function SetCollisionProfile(self, InProfileName: string): nil
 	Touched: ScriptSignal<BasePart>
 	TouchEnded: ScriptSignal<BasePart>
 end
@@ -13644,43 +13656,70 @@ declare extern type Flag extends Tool with
 end
 
 declare extern type ProceduralModel extends Model with
-	GenerationError: string
-	Generator: ModuleScript
+	AutoRebuild: boolean
 	Size: Vector3
-	function ForceGeneration(self): boolean
-	function WaitForGenerationAsync(self): boolean
+	Source: string
 end
 
 declare extern type Status extends Model with
 end
 
 declare extern type WorldRoot extends Instance with
+	AllowDebugDraw: boolean
 	function Blockcast(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
 	function BlockcastSingleByChannel(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function BlockcastSingleByChannelName(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function BlockcastSingleByObject(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function BlockcastSingleByProfile(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
-	function Capsulecast(self, InCFrame: CFrame, InRadius: number, InHeight: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
-	function CapsulecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InHeight: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
-	function CapsulecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InHeight: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
-	function CapsulecastSingleByProfile(self, InCFrame: CFrame, InRadius: number, InHeight: number, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
+	function Capsulecast(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
+	function CapsulecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function CapsulecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function CapsulecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
+	function CapsulecastSingleByProfile(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
+	function ClearDebugDraw(self): nil
+	function DrawArrow(self, InOrigin: Vector3, InDirection: Vector3, InColor: Color3, InArrowSize: number, InThickness: number, InLifeTime: number): nil
+	function DrawBox(self, InCFrame: CFrame, InSize: Vector3, InColor: Color3, InThickness: number, InLifeTime: number): nil
+	function DrawCamera(self, InCFrame: CFrame, InFOVDegrees: number, InScale: number, InColor: Color3, InLifeTime: number): nil
+	function DrawCapsule(self, InCFrame: CFrame, InHalfHeight: number, InRadius: number, InColor: Color3, InThickness: number, InLifeTime: number): nil
+	function DrawCircle(self, InCFrame: CFrame, InRadius: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number, InDrawAxis: boolean): nil
+	function DrawCircleArc(self, InCenter: Vector3, InDirection: Vector3, InRadius: number, InAngleWidthRadians: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number): nil
+	function DrawCone(self, InOrigin: Vector3, InDirection: Vector3, InLength: number, InAngleWidthRadians: number, InAngleHeightRadians: number, InColor: Color3, InNumSides: number, InThickness: number, InLifeTime: number): nil
+	function DrawCoordinateSystem(self, InCFrame: CFrame, InScale: number, InThickness: number, InLifeTime: number): nil
+	function DrawCrosshairs(self, InCFrame: CFrame, InScale: number, InColor: Color3, InLifeTime: number): nil
+	function DrawCylinder(self, InStart: Vector3, InEnd: Vector3, InRadius: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number): nil
+	function DrawDonut(self, InCFrame: CFrame, InInnerRadius: number, InOuterRadius: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number): nil
+	function DrawLine(self, InStart: Vector3, InEnd: Vector3, InColor: Color3, InThickness: number, InLifeTime: number): nil
+	function DrawMesh(self, InVertices: { any }, InIndices: { any }, InColor: Color3, InLifeTime: number): nil
+	function DrawPoint(self, InPosition: Vector3, InColor: Color3, InSize: number, InLifeTime: number): nil
 	function DrawRay(self, InOrigin: Vector3, InDirection: Vector3, InColor: Color3, InThickness: number, InLifeTime: number): nil
+	function DrawSolidBox(self, InCFrame: CFrame, InSize: Vector3, InColor: Color3, InLifeTime: number): nil
+	function DrawSolidPlane(self, InCFrame: CFrame, InSize: number, InColor: Color3, InLifeTime: number): nil
+	function DrawSphere(self, InCenter: Vector3, InRadius: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number): nil
+	function DrawSpline(self, InPoints: { any }, InColor: Color3, InAlpha: number, InSamplesPerSegment: number, InThickness: number, InLifeTime: number): nil
+	function DrawString(self, InLocation: Vector3, InText: string, InColor: Color3, InDuration: number, InDrawShadow: boolean, InFontScale: number): nil
 	function GetPartBoundsInBox(self, InCenter: CFrame, InSize: Vector3, InOverlapParams: OverlapParams): { any }
 	function GetPartBoundsInBoxByChannel(self, InCenter: CFrame, InSize: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
+	function GetPartBoundsInBoxByChannelName(self, InCenter: CFrame, InSize: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
 	function GetPartBoundsInSphere(self, InCenter: CFrame, InRadius: number, InOverlapParams: OverlapParams): { any }
 	function GetPartBoundsInSphereByChannel(self, InCenter: CFrame, InRadius: number, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
+	function GetPartBoundsInSphereByChannelName(self, InCenter: CFrame, InRadius: number, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
 	function GetPartsInPart(self, InBasePart: BasePart, InOverlapParams: OverlapParams): { any }
 	function PredictProjectilePathByChannel(self, InTraceChannel: EnumCollisionChannel, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
+	function PredictProjectilePathByChannelName(self, ChannelDisplayName: string, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
 	function PredictProjectilePathByObject(self, PredictParams: PredictProjectilePathParams, InObjectParams: CollisionObjectQueryParams): PredictProjectilePathResult
 	function Raycast(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
 	function RaycastMulti(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): { any }
 	function RaycastMultiByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
+	function RaycastMultiByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
 	function RaycastMultiByObject(self, InOrigin: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): { any }
 	function RaycastMultiByProfile(self, InOrigin: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): { any }
 	function RaycastSingleByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function RaycastSingleByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function RaycastSingleByObject(self, InOrigin: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function RaycastSingleByProfile(self, InOrigin: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
 	function Spherecast(self, InOrigin: Vector3, InRadius: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
 	function SpherecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function SpherecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
 	function SpherecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function SpherecastSingleByProfile(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
 end
@@ -13908,6 +13947,10 @@ declare extern type PermissionsService extends Instance with
 end
 
 declare extern type PhysicsService extends Instance with
+	function IsChannelRegistered(self, Channel: EnumCollisionChannel): boolean
+	function IsCustomChannel(self, Channel: EnumCollisionChannel): boolean
+	function IsCustomProfile(self, ProfileString: string): boolean
+	function IsProfileRegistered(self, ProfileString: string): boolean
 end
 
 declare extern type PhysicsSettings extends Instance with
@@ -14522,14 +14565,8 @@ declare extern type RemoteDebuggerServer extends Instance with
 end
 
 declare extern type RemoteFunction extends Instance with
-	OnClientInvoke: (...any) -> ...any
-	OnServerInvoke: (player: Player, ...any) -> ...any
-	RemoteOnInvokeClient: ScriptSignal<(number, ...any)>
-	RemoteOnInvokeError: ScriptSignal<(number, string)>
-	RemoteOnInvokeServer: ScriptSignal<(number, Player, ...any)>
-	RemoteOnInvokeSuccess: ScriptSignal<(number, ...any)>
-	function InvokeClient(self, player: Player, ...: any): ...any
 	function InvokeServer(self, ...: any): ...any
+	function InvokeClient(self, Player: Player, ...: any): ...any
 end
 
 declare extern type RenderSettings extends Instance with
@@ -15904,9 +15941,9 @@ declare extern type TeleportOptions extends Instance with
 end
 
 declare extern type TeleportService extends Instance with
-	function ReserveServerAsync(self, InPlaceId: number): nil
+	function ReserveServerAsync(self, InPlaceId: number): string
 	function TeleportAsync(self, InPlaceId: number, InPlayers: { any }, InOptions: TeleportOptions): nil
-	TeleportInitFailed: ScriptSignal<Player, TeleportResult, string, number, TeleportOptions>
+	TeleportInitFailed: ScriptSignal<Player, EnumTeleportResultType, string, number, TeleportOptions>
 end
 
 declare extern type TemporaryCageMeshProvider extends Instance with
@@ -16231,14 +16268,7 @@ declare extern type TextGenerator extends Instance with
 end
 
 declare extern type TextService extends Instance with
-	function FilterAndTranslateStringAsync(self, stringToFilter: string, fromUserId: number, targetLocales: { any }, textContext: EnumTextFilterContext?): TextFilterTranslatedResult
-	function FilterStringAsync(self, stringToFilter: string, fromUserId: number, textContext: EnumTextFilterContext?): TextFilterResult
-	function GetFamilyInfoAsync(self, assetId: ContentId): { [string]: any }
-	function GetFontMemoryData(self): { [string]: any }
-	function GetTextBoundsAsync(self, params: GetTextBoundsParams): Vector2
-	function GetTextSize(self, string: string, fontSize: number, font: EnumFont, frameSize: Vector2): Vector2
-	function GetTextSizeOffsetAsync(self, fontSize: number, font: Font): number
-	function SetResolutionScale(self, scale: number): nil
+	function GetTextBoundsAsync(self, InParams: any): any
 end
 
 declare extern type TextSource extends Instance with
@@ -17174,9 +17204,7 @@ declare UDim: {
 }
 
 declare PhysicalProperties: {
-	new: ((InMaterial: EnumMaterial) -> PhysicalProperties)
-		& ((InMaterial: number, arg2: number, arg3: number) -> PhysicalProperties)
-		& ((InDensity: number, InFriction: number, InElasticity: number, InFrictionWeight: number, InElasticityWeight: number) -> PhysicalProperties),
+	new: ((InMaterial: EnumMaterial) -> PhysicalProperties) & ((InMaterial: number, arg2: number, arg3: number) -> PhysicalProperties) & ((InDensity: number, InFriction: number, InElasticity: number, InFrictionWeight: number, InElasticityWeight: number) -> PhysicalProperties),
 }
 
 declare Axes: {
@@ -17205,10 +17233,7 @@ declare CFrame: {
 	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
 	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
 	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3?) -> CFrame),
-	new: (() -> CFrame)
-		& ((Position: Vector3) -> CFrame)
-		& ((Position: Vector3, Look: Vector3) -> CFrame)
-		& ((x: number, y: number, z: number) -> CFrame),
+	new: (() -> CFrame) & ((Position: Vector3) -> CFrame) & ((Position: Vector3, Look: Vector3) -> CFrame) & ((x: number, y: number, z: number) -> CFrame),
 }
 
 declare Faces: {
@@ -17250,20 +17275,15 @@ declare DateTime: {
 }
 
 declare NumberSequence: {
-	new: ((InValue: number) -> NumberSequence)
-		& ((InArrayValue: { any }) -> NumberSequence)
-		& ((n0: number, n1: number) -> NumberSequence),
+	new: ((InValue: number) -> NumberSequence) & ((InArrayValue: { any }) -> NumberSequence) & ((n0: number, n1: number) -> NumberSequence),
 }
 
 declare ColorSequence: {
-	new: ((color: Color3) -> ColorSequence)
-		& ((colorSequenceKeyPoints: { any }) -> ColorSequence)
-		& ((c0: Color3, c1: Color3) -> ColorSequence),
+	new: ((color: Color3) -> ColorSequence) & ((colorSequenceKeyPoints: { any }) -> ColorSequence) & ((c0: Color3, c1: Color3) -> ColorSequence),
 }
 
 declare NumberSequenceKeypoint: {
-	new: ((InTime: number, InValue: number) -> NumberSequenceKeypoint)
-		& ((InTime: number, InValue: number, InEnvelope: number) -> NumberSequenceKeypoint),
+	new: ((InTime: number, InValue: number) -> NumberSequenceKeypoint) & ((InTime: number, InValue: number, InEnvelope: number) -> NumberSequenceKeypoint),
 }
 
 declare ColorSequenceKeypoint: {
@@ -17294,10 +17314,9 @@ declare CatalogSearchParams: {
 }
 
 declare Font: {
-	new: ((family: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
-	fromEnum: ((font: EnumFont) -> Font),
-	fromName: ((name: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
-	fromId: ((id: number, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
+	fromId: ((id: number, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
+	fromName: ((name: string, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
+	new: ((family: string, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
 }
 
 declare FloatCurveKey: {
@@ -17582,10 +17601,8 @@ declare extern type EnumSoundPlayState extends EnumItem with end
 declare extern type EnumSoundPlayState_INTERNAL extends Enum with
 	Ended: EnumSoundPlayState
 	Paused: EnumSoundPlayState
-	PausedByProperty: EnumSoundPlayState
-	Played: EnumSoundPlayState
-	Resumed: EnumSoundPlayState
-	ResumedByProperty: EnumSoundPlayState
+	PendingDestroy: EnumSoundPlayState
+	Playing: EnumSoundPlayState
 	Stopped: EnumSoundPlayState
 	function GetEnumItems(self): { EnumSoundPlayState }
 	function FromName(self, Name: string): EnumSoundPlayState?
@@ -17627,19 +17644,20 @@ end
 declare extern type ActionRunner extends Instance with
 	function ChangeSpeedRate(self, InActionSequenceID: string, InSpeedRate: number): nil
 	function GetActionSequences(self): any
-	function Play(self, InActionSequenceID: string, TransitionTime: number, SpeedRate: number): nil
+	function Play(self): nil
+	function TransitionPlayback(self, InActionSequenceID: string, InTransitionTime: number, InSpeedRate: number): nil
 	function Stop(self, InActionSequenceID: string): nil
 	function StopAll(self): nil
-	Ended: ScriptSignal<>
-	Stopped: ScriptSignal<>
+	Ended: ScriptSignal<Model, string>
+	Stopped: ScriptSignal<Model, string>
 end
 declare extern type ActionSequence extends Instance with
 	function GetAllTrackInfos(self): any
-	function GetMarkerReachedSignal(self, MarkerName: string): ScriptSignal<...any>
+	function GetMarkerReachedSignal(self, MarkerName: string): ScriptSignal
 	function GetTrackInfo(self, TrackName: string, TrackType: EnumActionSequenceTrackType): any
-	function Hit(self, InCollisionEventName: string): ScriptSignal<...any>
-	function TriggerEnded(self, TriggerName: string): ScriptSignal<...any>
-	function TriggerStarted(self, TriggerName: string): ScriptSignal<...any>
+	function Hit(self, InCollisionEventName: string): ScriptSignal
+	function TriggerEnded(self, TriggerName: string): ScriptSignal
+	function TriggerStarted(self, TriggerName: string): ScriptSignal
 end
 declare extern type ActionSequenceService extends Instance with
 end
@@ -17669,8 +17687,9 @@ declare extern type SimulationBall extends PVInstance with
 	PathMarkerScale: number
 	PlaybackTime: number
 	Position: Vector3
+	RestingSpinSpeedThreshold: number
+	SimulationTraceChannel: EnumCollisionChannel
 	SlomoFactor: number
-	StaticObjectTypes: { any }
 	TextureId: string
 	TraceComplex: boolean
 	Transparency: number
@@ -17689,18 +17708,19 @@ declare extern type SimulationBall extends PVInstance with
 	function GetRemainedTimeForNextBounce(self): number
 	function GetServerWorldTime(self): number
 	function GetSpeedAtTime(self, Time: number): number
+	function GetSpinSpeedAtTime(self, Time: number): number
 	function GetStartTime(self): number
 	function IsValidBounceIndex(self, bounceIndex: number): boolean
 	function Pause(self): nil
-	function Play(self, bReset: boolean): nil
+	function Play(self, ResetPlaybackTime: boolean): nil
 	function ReSimulateSpinToTargetWithDelay(self, InDelaySeconds: number, InTargetPosition: Vector3, InDesiredSpeed: number, InSpinAxis: Vector3, InSpinSpeed_Rpm: number, InStepCount: number, UseDesiredSpeed: boolean): BallSimTargetResult
 	function ReSimulateToTargetWithDelay(self, InDelayTime: number, InTargetPosition: Vector3, InDesiredSpeed: number, InStepCount: number, UseDesiredSpeed: boolean): BallSimTargetResult
 	function ReSimulateWithDelay(self, InDelaySeconds: number, InDirection: Vector3, InSpeed_Kmh: number, InSpinAxis: Vector3, InSpinSpeed_Rpm: number, InStepCount: number): nil
 	function SetPlaybackTime(self, InPlaybackTime: number): nil
 	function Simulate(self, InBallSimParams: BallSimParams, AutoPlay: boolean): nil
 	function SimulateToTarget(self, InBallSimParams: BallSimParams, InTargetPosition: Vector3, UseDesiredSpeed: boolean, AutoPlay: boolean): BallSimTargetResult
-	function Stop(self): nil
-	Bounded: ScriptSignal<BallBounce>
+	function Stop(self, ResetBallCFrame: boolean): nil
+	Bounded: ScriptSignal<Instance, BallBounce>
 	Paused: ScriptSignal<>
 	Played: ScriptSignal<>
 	Stopped: ScriptSignal<>
@@ -17777,7 +17797,8 @@ end
 declare extern type BallSimTargetResult with
 	ActualSpeed: number
 	Direction: Vector3
-	HitTime: number
+	Solved: boolean
+	TargetReachedTime: number
 end
 declare extern type BallSnapshot with
 	CFrame: CFrame
@@ -17803,6 +17824,7 @@ declare extern type CollisionQueryParams with
 	IgnoreTouches: boolean
 	SkipNarrowPhase: boolean
 	TraceComplex: boolean
+	TraceGroupName: string
 	TraceIntoSubComponents: boolean
 end
 declare extern type CollisionResponseParams with
@@ -17880,3 +17902,53 @@ declare extern type TeleportResult with end
 declare BallSimTargetResult: {
 	bHit: boolean,
 }
+
+declare extern type EnumProgressBarFillDirection extends EnumItem with end
+declare extern type EnumProgressBarFillDirection_INTERNAL extends Enum with
+	BottomToTop: EnumProgressBarFillDirection
+	CenterHorizontal: EnumProgressBarFillDirection
+	CenterVertical: EnumProgressBarFillDirection
+	Clockwise: EnumProgressBarFillDirection
+	CounterClockwise: EnumProgressBarFillDirection
+	LeftToRight: EnumProgressBarFillDirection
+	RightToLeft: EnumProgressBarFillDirection
+	TopToBottom: EnumProgressBarFillDirection
+	function GetEnumItems(self): { EnumProgressBarFillDirection }
+	function FromName(self, Name: string): EnumProgressBarFillDirection?
+	function FromValue(self, Value: number): EnumProgressBarFillDirection?
+end
+
+declare extern type ProgressBar extends GuiObject with
+	ArcSize: number
+	CornerClipEnabled: boolean
+	FillColor3: Color3
+	FillCornerRadius: UDim
+	FillDirection: EnumProgressBarFillDirection
+	FillImage: string
+	FillTransparency: number
+	StartAngle: number
+	TrackColor3: Color3
+	TrackCornerRadius: UDim
+	TrackImage: string
+	TrackTransparency: number
+	Value: number
+end
+declare extern type VFXRecipe extends Instance with
+	AutoActivate: boolean
+	BaseLayer: { any }
+	DetailLayer: { any }
+	ExtraLayer: { any }
+	InfiniteLoop: boolean
+	LoopCount: number
+	LoopDuration: number
+	function GetParam(self, SourceName: string, ParamName: string): any
+	function GetParamAt(self, LayerName: string, Index: number, ParamName: string): any
+	function IsPlaying(self): boolean
+	function Play(self): nil
+	function SetParam(self, SourceName: string, ParamName: string, Value: any): nil
+	function SetParamAt(self, LayerName: string, Index: number, ParamName: string, Value: any): nil
+	function Stop(self): nil
+	Finished: ScriptSignal<>
+end
+
+declare extern type EnumTeleportResultType with end
