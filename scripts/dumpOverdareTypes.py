@@ -328,7 +328,47 @@ DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS = {
     ("TweenInfo", "new", "InRepeatCount"),
     ("TweenInfo", "new", "InReverses"),
     ("TweenInfo", "new", "InDelayTime"),
+    # Real Roblox (and, going by every actual UDim2.new(...) call site convention,
+    # OVERDARE too) allows any subset of these to be omitted, defaulting to 0 - confirmed
+    # against Roblox's original signature, same as the entries above.
+    ("UDim", "new", "Scale"),
+    ("UDim", "new", "Offset"),
+    ("UDim2", "new", "xScale"),
+    ("UDim2", "new", "xOffset"),
+    ("UDim2", "new", "yScale"),
+    ("UDim2", "new", "yOffset"),
+    # Found by systematically diffing every replaced datatype's constructor table against
+    # its pre-OVERDARE (Roblox-original) signature after the UDim2 fix above - Font.new's
+    # weight/style regressed the same way. Worth re-running that comparison after any
+    # future re-scrape rather than assuming this list is exhaustive.
+    ("Font", "new", "weight"),
+    ("Font", "new", "style"),
+    ("Font", "fromName", "weight"),
+    ("Font", "fromName", "style"),
+    ("Font", "fromId", "weight"),
+    ("Font", "fromId", "style"),
 }
+
+# docs.overdare.com titles these two datatype pages "Udim"/"Udim2" (lowercase d) in their own
+# H1 heading, even though every property/parameter type reference elsewhere on the site
+# correctly uses "UDim"/"UDim2" (the real Luau type names) - only the page's own title has the
+# wrong case. Left uncorrected, merge_into_base's exact-name matching can't find the existing
+# UDim/UDim2 blocks and appends a dead, wrongly-cased duplicate type instead of replacing the
+# real one (found via manual review of the merged output, not automated - worth spot-checking
+# for more of these after any future re-scrape).
+DATATYPE_NAME_ALIASES = {
+    "Udim": "UDim",
+    "Udim2": "UDim2",
+}
+
+
+def normalize_dump(dump):
+    """Apply DATATYPE_NAME_ALIASES to every scraped datatype's own name. Done once here
+    (not inline in scrape_all's loop) so it also covers dumps loaded via --from-json from
+    an older run scraped before this correction table existed."""
+    for dt in dump.get("datatypes", []):
+        dt["name"] = DATATYPE_NAME_ALIASES.get(dt["name"], dt["name"])
+    return dump
 
 
 def declare_property(prop):
@@ -759,6 +799,32 @@ def preserve_operator_overloads(new_block_lines, lines, start, end):
     return new_block_lines[:-1] + preserved + new_block_lines[-1:]
 
 
+CONSTRUCTOR_ENTRY_KEY_RE = re.compile(r'^\t(\["[^"]*"\]|\w+):')
+
+
+def preserve_missing_constructor_entries(new_block_lines, lines, start, end):
+    """A docs page sometimes documents only a subset of a datatype's real named
+    constructors/static constants - e.g. UDim2's page shows only `new`, omitting the
+    Roblox-inherited `fromScale`/`fromOffset` convenience wrappers that real call sites
+    still rely on (same failure mode as `preserve_operator_overloads`, just for named
+    constructor-table entries instead of operator methods). Carry over any entry whose key
+    doesn't appear at all in the freshly scraped block; a key present in both is left
+    alone - the new data wins there, so a genuine signature update still takes effect."""
+    new_keys = set()
+    for line in new_block_lines:
+        m = CONSTRUCTOR_ENTRY_KEY_RE.match(line)
+        if m:
+            new_keys.add(m.group(1))
+    preserved = []
+    for line in lines[start : end + 1]:
+        m = CONSTRUCTOR_ENTRY_KEY_RE.match(line)
+        if m and m.group(1) not in new_keys:
+            preserved.append(line)
+    if not preserved:
+        return new_block_lines
+    return new_block_lines[:-1] + preserved + new_block_lines[-1:]
+
+
 def merge_into_base(base_text, dump, log=print):
     lines = base_text.split("\n")
     lines = prune_services_metadata(lines, dump, log=log)
@@ -846,7 +912,7 @@ def merge_into_base(base_text, dump, log=print):
         block = declare_datatype_constructor(dt).rstrip("\n").split("\n")
         if dt["name"] in constructor_blocks:
             start, end = constructor_blocks[dt["name"]]
-            constructor_replacements[(start, end)] = block
+            constructor_replacements[(start, end)] = preserve_missing_constructor_entries(block, lines, start, end)
         else:
             datatypes_with_new_constructor.append(dt)
     lines = replace_line_ranges(lines, constructor_replacements)
@@ -917,6 +983,7 @@ def main():
             dump = json.load(f)
     else:
         dump = scrape_all(log=lambda msg: print(msg, file=sys.stderr))
+    dump = normalize_dump(dump)
 
     if args.dump_json:
         with open(args.dump_json, "w", encoding="utf-8") as f:

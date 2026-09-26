@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.14] - 2026-09-26
+
+### Fixed
+
+- Fixed `UDim`/`UDim2` silently never receiving any OVERDARE-specific merge since the very first OVERDARE port (`46d1132`, long before this fork's own history of dated fixes) - `docs.overdare.com` titles both pages "Udim"/"Udim2" (lowercase d) in their own H1 heading, while every other reference to the type on the site (property types, code samples) correctly uses "UDim"/"UDim2". The merge script's exact-name matching never recognized this as the same type, so every past merge silently appended a dead, wrongly-cased duplicate (`declare extern type Udim2 with ... end` / `declare Udim2: { ... }`) instead of updating the real `UDim`/`UDim2` - meaning the real ones have been serving pure, unmodified Roblox-original definitions this whole time. Added `DATATYPE_NAME_ALIASES` to `scripts/dumpOverdareTypes.py` to canonicalize the name before matching, and removed the two stale dead-duplicate blocks that had accumulated in `scripts/globalTypes.d.luau`/`.d.lua` from prior merges
+- Now that `UDim2` actually gets replaced by OVERDARE's docs, two follow-on issues surfaced and are also fixed: (1) `UDim`/`UDim2`'s constructor parameters would have become required instead of optional - the same "docs never mark a parameter optional" class of bug as `CFrame.lookAt`/`TweenInfo.new` (see `DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS`) - now covered by new entries in that table; (2) OVERDARE's `UDim2` docs page only documents the plain 4-number `new` overload, omitting the `fromScale`/`fromOffset` convenience constructors real code relies on constantly - added `preserve_missing_constructor_entries()` (mirroring the existing operator-overload carry-over) to `scripts/dumpOverdareTypes.py`, which keeps any named constructor/static-constant entry that doesn't appear at all in a freshly scraped block, for any datatype, not just this one
+- Systematically diffed every one of 1.69.13's 30 re-merged datatype constructor tables against their pre-OVERDARE (Roblox-original) signatures to check for more of the same "required instead of optional" regression beyond UDim2 - found and fixed six more on `Font.new`/`fromName`/`fromId`'s `weight`/`style` parameters, and confirmed `Font.fromEnum` (a whole missing overload, same class as `UDim2.fromScale`/`fromOffset`) is now recovered automatically by the `preserve_missing_constructor_entries()` fix above
+- Fixed `dumpOverdareTypes.py --from-json` not applying name/casing corrections that only ran inside the live-scrape code path, so re-running a merge from an already-saved `--dump-json` file (a supported, documented workflow) could reproduce bugs already fixed for a live scrape. Corrections now run once in `main()` via `normalize_dump()`, after loading the dump from either source
+
+### Note
+
+- OVERDARE's docs still don't list `Color3.fromHSV`/`Color3.fromHex` as of this scrape (confirmed by re-fetching the live page directly) - contrary to an internal note claiming they were added in 1.x, they were never actually present in any committed `globalTypes.d.luau`. Left unadded since there's no way to confirm from docs alone whether OVERDARE's runtime actually supports them; flagging here in case a user can confirm one way or the other
+- `UDim2`'s Roblox-only `Height`/`Width` property aliases (deprecated in Roblox itself in favor of `X`/`Y`) are dropped now that the real merge applies, since OVERDARE's docs enumerate `UDim2`'s properties exhaustively and don't list them - unlike the constructor-omission case above, a fully-enumerated property list is trusted as authoritative per this project's established convention (e.g. `TextLabel`'s `RichText`/`Bold` removal in 1.69.13)
+- The `UDim2.new(x: UDim, y: UDim)` overload (distinct from the 4-number overload, both previously joined under the same `new` key) is also dropped and NOT covered by the constructor-preservation fix above, since that only recovers entries whose key is entirely absent from the new scrape, not additional overloads competing for a key that does still exist. Low-impact (a rarely-used overload) but worth knowing about if someone hits it
+
 ## [1.69.13] - 2026-09-26
 
 ### Changed

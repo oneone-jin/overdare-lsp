@@ -7509,11 +7509,9 @@ declare extern type UDim with
 end
 
 declare extern type UDim2 with
-	Height: UDim
-	Width: UDim
 	X: UDim
 	Y: UDim
-	function Lerp(self, goal: UDim2, alpha: number): UDim2
+	function Lerp(self, GoalValue: UDim2, Alpha: number): UDim2
 	function __add(self, other: UDim2): UDim2
 	function __sub(self, other: UDim2): UDim2
 	function __unm(self): UDim2
@@ -17220,9 +17218,9 @@ declare Region3int16: {
 }
 
 declare UDim2: {
+	new: ((xScale: number?, xOffset: number?, yScale: number?, yOffset: number?) -> UDim2),
 	fromScale: ((xScale: number, yScale: number) -> UDim2),
 	fromOffset: ((xOffset: number, yOffset: number) -> UDim2),
-	new: ((x: UDim, y: UDim) -> UDim2) & ((xScale: number?, xOffset: number?, yScale: number?, yOffset: number?) -> UDim2),
 }
 
 declare CFrame: {
@@ -17314,9 +17312,10 @@ declare CatalogSearchParams: {
 }
 
 declare Font: {
-	fromId: ((id: number, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
-	fromName: ((name: string, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
-	new: ((family: string, weight: EnumFontWeight, style: EnumFontStyle) -> Font),
+	fromId: ((id: number, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
+	fromName: ((name: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
+	new: ((family: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
+	fromEnum: ((font: EnumFont) -> Font),
 }
 
 declare FloatCurveKey: {
@@ -17865,15 +17864,6 @@ declare extern type PredictProjectilePathResult with
 	PathDataArray: { any }
 	Time: number
 end
-declare extern type Udim with
-	Offset: number
-	Scale: number
-end
-declare extern type Udim2 with
-	X: UDim
-	Y: UDim
-	function Lerp(self, GoalValue: UDim2, Alpha: number): UDim2
-end
 
 declare BallSimParams: {
 	new: (() -> BallSimParams),
@@ -17889,12 +17879,6 @@ declare CollisionResponseParams: {
 }
 declare PredictProjectilePathParams: {
 	new: (() -> PredictProjectilePathParams),
-}
-declare Udim: {
-	new: ((Scale: number, Offset: number) -> Udim),
-}
-declare Udim2: {
-	new: ((xScale: number, xOffset: number, yScale: number, yOffset: number) -> Udim2),
 }
 
 declare extern type TeleportResult with end
