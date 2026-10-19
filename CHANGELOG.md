@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.20] - 2026-10-20
+
+### Removed
+
+- Roblox-only globals that OVERDARE's docs never use: `spawn`, `delay`/`Delay`, `Wait`, `tick`, `time`, `elapsedTime`, `version`, `printidentity`, `stats`, `settings`, `PluginManager`, `DebuggerManager`, `plugin`, `shared`, and the `DateTime`, `Random`, `Axes`, `Faces`, `PathWaypoint`, `Region3`, `Region3int16`, `Vector2int16`, `Vector3int16`, `Path2DControlPoint`, `SharedTable`, `User`, `Secret`, `SecurityCapabilities`, `DockWidgetPluginGuiInfo`, `CatalogSearchParams` and `ValueCurveKey`/`FloatCurveKey`/`RotationCurveKey` constructors. They no longer show up in autocomplete and now report "Unknown global". `wait`, `task`, `UserSettings()` and Luau's own `debug`/`utf8`/`collectgarbage` are kept
+
+### Fixed
+
+- Removed a leftover test stub that declared a fake global `player` (type `ODPlayer` with only `Name`/`Health`/`Kick`). An undefined `player` was silently accepted, and `player.UserId` etc. reported a misleading "Key not found in ODPlayer" error
+- `wait()` is no longer flagged as deprecated - it's what OVERDARE's own docs use throughout
+- `Enum.UIFlexMode` and `Enum.TableMajorAxis` are available again, so `UIFlexItem.FlexMode` and `UITableLayout.MajorAxis` can be assigned. OVERDARE's docs reference these enums from the class pages but have no page for the enums themselves; `scripts/dumpOverdareTypes.py` now keeps any enum an OVERDARE member refers to, as long as it's declared
+
 ## [1.69.19] - 2026-10-20
 
 ### Fixed

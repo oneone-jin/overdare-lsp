@@ -1031,7 +1031,10 @@ def prune_services_metadata(lines, dump, log=print):
 
     meta = json.loads(lines[0][len(METADATA_PREFIX):])
     od_class_names = {c["name"] for c in dump["classes"] if c["name"]}
-    od_enum_names = {e["name"] for e in dump.get("enums", []) if e["name"]}
+    od_enum_names = effective_enum_names(dump, "\n".join(lines))
+    undocumented = sorted(od_enum_names - {e["name"] for e in dump.get("enums", []) if e["name"]})
+    if undocumented:
+        log(f"[ok] Enums referenced by OVERDARE members but missing a docs page, kept: {undocumented}")
 
     for key, label in (("SERVICES", "Services"), ("CREATABLE_INSTANCES", "Creatable instances")):
         if key not in meta:
@@ -1084,13 +1087,33 @@ def prune_services_metadata(lines, dump, log=print):
     return lines
 
 
+ENUM_REF_RE = re.compile(r"\bEnum\.(\w+)")
+
+
+def effective_enum_names(dump, base_text):
+    """Documented enums plus enums an OVERDARE class/datatype member's type refers to
+    (`Enum.UIFlexMode` on UIFlexItem.FlexMode) whose own docs page is missing, as long as the
+    base file still declares it (`EnumX_INTERNAL`). Without this, such a property can't be
+    assigned at all - `Enum.UIFlexMode` was pruned out of the Enum global as "not OVERDARE"."""
+    documented = {e["name"] for e in dump.get("enums", []) if e["name"]}
+    referenced = set()
+    for owner in dump.get("classes", []) + dump.get("datatypes", []):
+        types = [p["type"] for p in owner.get("properties", [])]
+        for member in owner.get("methods", []) + owner.get("events", []):
+            types += [t for t, _n in member["params"]] + [member.get("return", "")]
+        for t in types:
+            referenced |= set(ENUM_REF_RE.findall(t or ""))
+    declared = set(re.findall(r"^declare extern type Enum(\w+)_INTERNAL extends Enum", base_text, re.M))
+    return documented | (referenced & declared)
+
+
 def prune_enum_list(text, dump, log=print):
     """`declare Enum: ENUM_LIST` (the `Enum.Foo` global table) is inherited verbatim from
     Roblox's dump and, unlike SERVICES/CREATABLE_INSTANCES/CLASSES, was never pruned by the
     per-enum block replacement above (that only replaces/appends matching entries, it never
     removes stale ones) - so `Enum.` autocomplete was suggesting hundreds of Roblox-only enum
     names. Rewrite the whole entry list to just the real OVERDARE enums."""
-    od_enum_names = sorted({e["name"] for e in dump.get("enums", []) if e["name"]})
+    od_enum_names = sorted(effective_enum_names(dump, text))
 
     m = re.search(r"type ENUM_LIST = \{\n(.*?)\n\} & \{ GetEnums:", text, re.DOTALL)
     if not m:

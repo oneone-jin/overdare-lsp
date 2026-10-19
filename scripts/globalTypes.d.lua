@@ -1,4 +1,4 @@
---#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "GetTextBoundsParams", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ScreenGui", "Script", "ScrollingFrame", "SimulationBall", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextBox", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "VFXPreset", "VFXRecipe", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "AnalyticsService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "MemoryStoreService", "MessagingService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "TeleportService", "TextService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AnalyticsService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStorePages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GetTextBoundsParams", "GlobalDataStore", "GuiBase2d", "GuiBase3d", "GuiButton", "GuiLabel", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MemoryStoreHashMap", "MemoryStoreHashMapPages", "MemoryStoreQueue", "MemoryStoreService", "MemoryStoreSortedMap", "MeshPart", "MessagingService", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProceduralModel", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextBox", "TextButton", "TextLabel", "TextService", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIComponent", "UIConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIGridStyleLayout", "UILayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "VFXRecipe", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnalyticsCustomFieldKeys", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "ButtonStyle", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "DraggingScrollBar", "EasingDirection", "EasingStyle", "ElasticBehavior", "FillDepthModeType", "FillDirection", "FontStyle", "FontWeight", "GradientTileMode", "GradientType", "HitboxType", "HorizontalAlignment", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidHealthDisplayType", "HumanoidStateType", "InfoType", "ItemLineAlignment", "KeyCode", "LineJoinMode", "Material", "MobilityMode", "NameOcclusion", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProgressBarFillDirection", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "ResamplerMode", "RollOffMode", "RotationType", "SafeAreaCompatibility", "ScaleType", "ScreenInsets", "ScrollBarInset", "ScrollingDirection", "ShadowDetailLevel", "SortDirection", "SortOrder", "SoundPlayState", "StartCorner", "StrokeSizingMode", "TextDirection", "TextTruncate", "TextXAlignment", "TextYAlignment", "UIFlexAlignment", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "VerticalScrollBarPosition", "ZIndexMode"], "FONTS": {"Anton": "ovdrassetid://900000166", "ArchivoBlack": "ovdrassetid://900000366", "Baloo2": "ovdrassetid://900000566", "Creepster": "ovdrassetid://900001166", "Eater": "ovdrassetid://900001366", "Fredoka": "ovdrassetid://900001566", "GreatVibes": "ovdrassetid://900002166", "GrenzeGotisch": "ovdrassetid://900002366", "Kalam": "ovdrassetid://900003366", "Michroma": "ovdrassetid://900003766", "Nosifer": "ovdrassetid://900003966", "NotoSans": "ovdrassetid://900004166", "Nunito": "ovdrassetid://900006066", "Orbitron": "ovdrassetid://900007766", "OverWacky": "ovdrassetid://900008466", "PatrickHand": "ovdrassetid://900008766", "PermanentMarker": "ovdrassetid://900008966", "PlayfairDisplay": "ovdrassetid://900009166", "PressStart2P": "ovdrassetid://900010466", "Roboto": "ovdrassetid://900010666", "Sono": "ovdrassetid://900012566", "Tomorrow": "ovdrassetid://900013366", "VarelaRound": "ovdrassetid://900015466", "VT323": "ovdrassetid://900015266"}, "BRICK_COLORS": ["Alder", "Artichoke", "Baby blue", "Beige", "Black", "Black metallic", "Br. reddish orange", "Br. yellowish green", "Br. yellowish orange", "Brick yellow", "Bright blue", "Bright bluish green", "Bright bluish violet", "Bright green", "Bright orange", "Bright purple", "Bright red", "Bright reddish lilac", "Bright reddish violet", "Bright violet", "Bright yellow", "Bronze", "Brown", "Burgundy", "Burlap", "Burnt Sienna", "Buttermilk", "CGA brown", "Cadet blue", "Camo", "Carnation pink", "Cashmere", "Cloudy grey", "Cocoa", "Cool yellow", "Copper", "Cork", "Crimson", "Curry", "Cyan", "Daisy orange", "Dark Curry", "Dark Royal blue", "Dark blue", "Dark green", "Dark grey", "Dark grey metallic", "Dark indigo", "Dark nougat", "Dark orange", "Dark red", "Dark stone grey", "Dark taupe", "Deep blue", "Deep orange", "Dirt brown", "Dove blue", "Dusty Rose", "Earth blue", "Earth green", "Earth orange", "Earth yellow", "Eggplant", "Electric blue", "Faded green", "Fawn brown", "Fire Yellow", "Flame reddish orange", "Flame yellowish orange", "Flint", "Fog", "Forest green", "Fossil", "Ghost grey", "Gold", "Grey", "Grime", "Gun metallic", "Hot pink", "Hurricane grey", "Institutional white", "Khaki", "Lapis", "Laurel green", "Lavender", "Lemon metalic", "Lig. Yellowich orange", "Lig. yellowish green", "Light Royal blue", "Light blue", "Light bluish green", "Light bluish violet", "Light brick yellow", "Light green (Mint)", "Light grey", "Light grey metallic", "Light lilac", "Light orange", "Light orange brown", "Light pink", "Light purple", "Light red", "Light reddish violet", "Light stone grey", "Light yellow", "Lilac", "Lily white", "Lime green", "Linen", "Magenta", "Maroon", "Mauve", "Med. bluish green", "Med. reddish violet", "Med. yellowish green", "Med. yellowish orange", "Medium Royal blue", "Medium blue", "Medium bluish violet", "Medium green", "Medium lilac", "Medium orange", "Medium red", "Medium stone grey", "Mid gray", "Mint", "Moss", "Mulberry", "Navy blue", "Neon green", "Neon orange", "New Yeller", "Nougat", "Olive", "Olivine", "Oyster", "Parsley green", "Pastel Blue", "Pastel blue-green", "Pastel brown", "Pastel green", "Pastel light blue", "Pastel orange", "Pastel violet", "Pastel yellow", "Pearl", "Persimmon", "Phosph. White", "Pine Cone", "Pink", "Plum", "Quill grey", "Really black", "Really blue", "Really red", "Red flip/flop", "Reddish brown", "Reddish lilac", "Royal blue", "Royal purple", "Rust", "Sage green", "Salmon", "Sand blue", "Sand blue metallic", "Sand green", "Sand red", "Sand violet", "Sand violet metallic", "Sand yellow", "Sand yellow metallic", "Sea green", "Seashell", "Shamrock", "Silver", "Silver flip/flop", "Slime green", "Smoky grey", "Steel blue", "Storm blue", "Sunrise", "Tawny", "Teal", "Terra Cotta", "Toothpaste", "Tr. Blue", "Tr. Bright bluish violet", "Tr. Brown", "Tr. Flu. Blue", "Tr. Flu. Green", "Tr. Flu. Red", "Tr. Flu. Reddish orange", "Tr. Flu. Yellow", "Tr. Green", "Tr. Lg blue", "Tr. Medi. reddish violet", "Tr. Red", "Tr. Yellow", "Transparent", "Turquoise", "Warm yellowish orange", "Wheat", "White", "Yellow flip/flop"]}
+--#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "GetTextBoundsParams", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ScreenGui", "Script", "ScrollingFrame", "SimulationBall", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextBox", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "VFXPreset", "VFXRecipe", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "AnalyticsService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "MemoryStoreService", "MessagingService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "TeleportService", "TextService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AnalyticsService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStorePages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GetTextBoundsParams", "GlobalDataStore", "GuiBase2d", "GuiBase3d", "GuiButton", "GuiLabel", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MemoryStoreHashMap", "MemoryStoreHashMapPages", "MemoryStoreQueue", "MemoryStoreService", "MemoryStoreSortedMap", "MeshPart", "MessagingService", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProceduralModel", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextBox", "TextButton", "TextLabel", "TextService", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIComponent", "UIConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIGridStyleLayout", "UILayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "VFXRecipe", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnalyticsCustomFieldKeys", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "ButtonStyle", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "DraggingScrollBar", "EasingDirection", "EasingStyle", "ElasticBehavior", "FillDepthModeType", "FillDirection", "FontStyle", "FontWeight", "GradientTileMode", "GradientType", "HitboxType", "HorizontalAlignment", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidHealthDisplayType", "HumanoidStateType", "InfoType", "ItemLineAlignment", "KeyCode", "LineJoinMode", "Material", "MobilityMode", "NameOcclusion", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProgressBarFillDirection", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "ResamplerMode", "RollOffMode", "RotationType", "SafeAreaCompatibility", "ScaleType", "ScreenInsets", "ScrollBarInset", "ScrollingDirection", "ShadowDetailLevel", "SortDirection", "SortOrder", "SoundPlayState", "StartCorner", "StrokeSizingMode", "TableMajorAxis", "TextDirection", "TextTruncate", "TextXAlignment", "TextYAlignment", "UIFlexAlignment", "UIFlexMode", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "VerticalScrollBarPosition", "ZIndexMode"], "FONTS": {"Anton": "ovdrassetid://900000166", "ArchivoBlack": "ovdrassetid://900000366", "Baloo2": "ovdrassetid://900000566", "Creepster": "ovdrassetid://900001166", "Eater": "ovdrassetid://900001366", "Fredoka": "ovdrassetid://900001566", "GreatVibes": "ovdrassetid://900002166", "GrenzeGotisch": "ovdrassetid://900002366", "Kalam": "ovdrassetid://900003366", "Michroma": "ovdrassetid://900003766", "Nosifer": "ovdrassetid://900003966", "NotoSans": "ovdrassetid://900004166", "Nunito": "ovdrassetid://900006066", "Orbitron": "ovdrassetid://900007766", "OverWacky": "ovdrassetid://900008466", "PatrickHand": "ovdrassetid://900008766", "PermanentMarker": "ovdrassetid://900008966", "PlayfairDisplay": "ovdrassetid://900009166", "PressStart2P": "ovdrassetid://900010466", "Roboto": "ovdrassetid://900010666", "Sono": "ovdrassetid://900012566", "Tomorrow": "ovdrassetid://900013366", "VarelaRound": "ovdrassetid://900015466", "VT323": "ovdrassetid://900015266"}, "BRICK_COLORS": ["Alder", "Artichoke", "Baby blue", "Beige", "Black", "Black metallic", "Br. reddish orange", "Br. yellowish green", "Br. yellowish orange", "Brick yellow", "Bright blue", "Bright bluish green", "Bright bluish violet", "Bright green", "Bright orange", "Bright purple", "Bright red", "Bright reddish lilac", "Bright reddish violet", "Bright violet", "Bright yellow", "Bronze", "Brown", "Burgundy", "Burlap", "Burnt Sienna", "Buttermilk", "CGA brown", "Cadet blue", "Camo", "Carnation pink", "Cashmere", "Cloudy grey", "Cocoa", "Cool yellow", "Copper", "Cork", "Crimson", "Curry", "Cyan", "Daisy orange", "Dark Curry", "Dark Royal blue", "Dark blue", "Dark green", "Dark grey", "Dark grey metallic", "Dark indigo", "Dark nougat", "Dark orange", "Dark red", "Dark stone grey", "Dark taupe", "Deep blue", "Deep orange", "Dirt brown", "Dove blue", "Dusty Rose", "Earth blue", "Earth green", "Earth orange", "Earth yellow", "Eggplant", "Electric blue", "Faded green", "Fawn brown", "Fire Yellow", "Flame reddish orange", "Flame yellowish orange", "Flint", "Fog", "Forest green", "Fossil", "Ghost grey", "Gold", "Grey", "Grime", "Gun metallic", "Hot pink", "Hurricane grey", "Institutional white", "Khaki", "Lapis", "Laurel green", "Lavender", "Lemon metalic", "Lig. Yellowich orange", "Lig. yellowish green", "Light Royal blue", "Light blue", "Light bluish green", "Light bluish violet", "Light brick yellow", "Light green (Mint)", "Light grey", "Light grey metallic", "Light lilac", "Light orange", "Light orange brown", "Light pink", "Light purple", "Light red", "Light reddish violet", "Light stone grey", "Light yellow", "Lilac", "Lily white", "Lime green", "Linen", "Magenta", "Maroon", "Mauve", "Med. bluish green", "Med. reddish violet", "Med. yellowish green", "Med. yellowish orange", "Medium Royal blue", "Medium blue", "Medium bluish violet", "Medium green", "Medium lilac", "Medium orange", "Medium red", "Medium stone grey", "Mid gray", "Mint", "Moss", "Mulberry", "Navy blue", "Neon green", "Neon orange", "New Yeller", "Nougat", "Olive", "Olivine", "Oyster", "Parsley green", "Pastel Blue", "Pastel blue-green", "Pastel brown", "Pastel green", "Pastel light blue", "Pastel orange", "Pastel violet", "Pastel yellow", "Pearl", "Persimmon", "Phosph. White", "Pine Cone", "Pink", "Plum", "Quill grey", "Really black", "Really blue", "Really red", "Red flip/flop", "Reddish brown", "Reddish lilac", "Royal blue", "Royal purple", "Rust", "Sage green", "Salmon", "Sand blue", "Sand blue metallic", "Sand green", "Sand red", "Sand violet", "Sand violet metallic", "Sand yellow", "Sand yellow metallic", "Sea green", "Seashell", "Shamrock", "Silver", "Silver flip/flop", "Slime green", "Smoky grey", "Steel blue", "Storm blue", "Sunrise", "Tawny", "Teal", "Terra Cotta", "Toothpaste", "Tr. Blue", "Tr. Bright bluish violet", "Tr. Brown", "Tr. Flu. Blue", "Tr. Flu. Green", "Tr. Flu. Red", "Tr. Flu. Reddish orange", "Tr. Flu. Yellow", "Tr. Green", "Tr. Lg blue", "Tr. Medi. reddish violet", "Tr. Red", "Tr. Yellow", "Transparent", "Turquoise", "Warm yellowish orange", "Wheat", "White", "Yellow flip/flop"]}
 
 
 type ContentId = string
@@ -44,9 +44,6 @@ declare utf8: {
 }
 
 declare function isnil<T>(value: T): boolean
-
-@[deprecated { use = "task.spawn" }]
-declare function spawn(callback: (dt: number, gt: number) -> ())
 
 type AdReward = any
 type AnimTrackMetadata = any
@@ -7238,11 +7235,13 @@ type ENUM_LIST = {
 	SoundPlayState: EnumSoundPlayState_INTERNAL,
 	StartCorner: EnumStartCorner_INTERNAL,
 	StrokeSizingMode: EnumStrokeSizingMode_INTERNAL,
+	TableMajorAxis: EnumTableMajorAxis_INTERNAL,
 	TextDirection: EnumTextDirection_INTERNAL,
 	TextTruncate: EnumTextTruncate_INTERNAL,
 	TextXAlignment: EnumTextXAlignment_INTERNAL,
 	TextYAlignment: EnumTextYAlignment_INTERNAL,
 	UIFlexAlignment: EnumUIFlexAlignment_INTERNAL,
+	UIFlexMode: EnumUIFlexMode_INTERNAL,
 	UserInputState: EnumUserInputState_INTERNAL,
 	UserInputType: EnumUserInputType_INTERNAL,
 	VFXImportance: EnumVFXImportance_INTERNAL,
@@ -7654,50 +7653,17 @@ declare extern type ValueCurveKey with
     LeftTangent: number
 end
 
-declare ValueCurveKey: {
-    new: (time: number, value: any, interpolation: EnumKeyInterpolationMode) -> ValueCurveKey
-}
 
 
-
-@[deprecated{ use = "task.wait" }]
 declare function wait(delay: number?): (number, number)
-@[deprecated{ use = "task.wait" }]
-declare function Wait(delay: number?): (number, number)
-
-@[deprecated{ use = "task.delay" }]
-declare function delay(delay: number?, callback: (dt: number, gt: number) -> ())
-@[deprecated{ use = "task.delay" }]
-declare function Delay(delay: number?, callback: (dt: number, gt: number) -> ())
-
-declare function elapsedTime(): number
-@[deprecated{ use = "elapsedTime" }]
-declare function ElapsedTime(): number
-
-declare function tick(): number
-declare function time(): number
-
-@deprecated declare function version(): string
-@[deprecated{ use = "version" }]
-declare function Version(): string
-
-@deprecated declare function printidentity(prefix: string?)
 
 @[deprecated{ use = "gcinfo" }]
 declare function collectgarbage(mode: "count"): number
 
-@[deprecated{ use = 'game:GetService("Stats")' }]
-declare function stats(): Stats
-@[deprecated{ use = 'game:GetService("Stats")' }]
-declare function Stats(): Stats
-
 declare script: LuaSourceContainer
-declare plugin: Plugin
 declare game: DataModel
 
 declare workspace: Workspace
-
-declare shared: any
 
 declare task: {
     synchronize: () -> (),
@@ -17239,10 +17205,6 @@ declare NumberRange: {
 	new: ((InMin: number, InMax: number) -> NumberRange),
 }
 
-declare PathWaypoint: {
-	new: ((position: Vector3, action: EnumPathWaypointAction, label: string?) -> PathWaypoint),
-}
-
 declare BrickColor: {
 	b: number,
 	g: number,
@@ -17258,10 +17220,6 @@ declare Vector2: {
 	new: ((x: number?, y: number?) -> Vector2),
 }
 
-declare Vector2int16: {
-	new: ((x: number?, y: number?) -> Vector2int16),
-}
-
 declare Color3: {
 	fromRGB: ((red: number?, green: number?, blue: number?) -> Color3),
 	new: ((red: number?, green: number?, blue: number?) -> Color3),
@@ -17273,18 +17231,6 @@ declare UDim: {
 
 declare PhysicalProperties: {
 	new: ((material: EnumMaterial) -> PhysicalProperties) & ((density: number, friction: number, elasticity: number) -> PhysicalProperties) & ((density: number, friction: number, elasticity: number, frictionWeight: number, elasticityWeight: number) -> PhysicalProperties),
-}
-
-declare Axes: {
-	new: ((...EnumAxis | EnumNormalId) -> Axes),
-}
-
-declare Region3: {
-	new: ((min: Vector3, max: Vector3) -> Region3),
-}
-
-declare Region3int16: {
-	new: ((min: Vector3int16, max: Vector3int16) -> Region3int16),
 }
 
 declare UDim2: {
@@ -17302,10 +17248,6 @@ declare CFrame: {
 	new: (() -> CFrame) & ((position: Vector3) -> CFrame) & ((position: Vector3, lookAt: Vector3) -> CFrame) & ((x: number, y: number, z: number) -> CFrame),
 }
 
-declare Faces: {
-	new: ((...EnumNormalId) -> Faces),
-}
-
 declare Rect: {
 	new: (() -> Rect) & ((min: Vector2, max: Vector2) -> Rect) & ((minX: number, minY: number, maxX: number, maxY: number) -> Rect),
 }
@@ -17319,25 +17261,8 @@ declare Vector3: {
 	new: ((x: number?, y: number?, z: number?) -> Vector3),
 }
 
-declare Vector3int16: {
-	new: ((x: number?, y: number?, z: number?) -> Vector3int16),
-}
-
-declare Random: {
-	new: ((seed: number?) -> Random),
-}
-
 declare TweenInfo: {
 	new: ((InTime: number?, InEasingStyle: EnumEasingStyle?, InEasingDirection: EnumEasingDirection?, InRepeatCount: number?, InReverses: boolean?, InDelayTime: number?) -> TweenInfo),
-}
-
-declare DateTime: {
-	now: (() -> DateTime),
-	fromUnixTimestamp: ((unixTimestamp: number) -> DateTime),
-	fromUnixTimestampMillis: ((unixTimestampMillis: number) -> DateTime),
-	fromUniversalTime: ((year: number?, month: number?, day: number?, hour: number?, minute: number?, second: number?, millisecond: number?) -> DateTime),
-	fromLocalTime: ((year: number?, month: number?, day: number?, hour: number?, minute: number?, second: number?, millisecond: number?) -> DateTime),
-	fromIsoDate: ((isoDate: string) -> DateTime),
 }
 
 declare NumberSequence: {
@@ -17364,43 +17289,10 @@ declare OverlapParams: {
 	new: (() -> OverlapParams),
 }
 
-declare DockWidgetPluginGuiInfo: {
-	new: ((initDockState: EnumInitialDockState?, initEnabled: boolean?, overrideEnabledRestore: boolean?, floatXSize: number?, floatYSize: number?, minWidth: number?, minHeight: number?) -> DockWidgetPluginGuiInfo),
-}
-
-declare CatalogSearchParams: {
-	new: (() -> CatalogSearchParams),
-}
-
 declare Font: {
 	fromId: ((id: number, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
 	fromName: ((name: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
 	new: ((family: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
-}
-
-declare FloatCurveKey: {
-	new: ((time: number, value: number, Interpolation: EnumKeyInterpolationMode) -> FloatCurveKey),
-}
-
-declare RotationCurveKey: {
-	new: ((time: number, value: CFrame, Interpolation: EnumKeyInterpolationMode) -> RotationCurveKey),
-}
-
-declare Secret: {
-}
-
-declare Path2DControlPoint: {
-	new: (() -> Path2DControlPoint) & ((position: UDim2) -> Path2DControlPoint) & ((position: UDim2, leftTangent: UDim2, rightTangent: UDim2) -> Path2DControlPoint),
-}
-
-declare SecurityCapabilities: {
-	new: ((...EnumSecurityCapability) -> SecurityCapabilities),
-	fromCurrent: (() -> SecurityCapabilities),
-}
-
-declare User: {
-	fromId: ((id: number) -> User) & ((id: number, domainType: EnumDomainType, domainId: number) -> User),
-	fromString: ((userStr: string) -> User),
 }
 
 
@@ -17424,34 +17316,8 @@ declare extern type GlobalSettings extends GenericSettings with
     function GetFVariable(self, name: string): string
 end
 
-declare SharedTable: {
-    new: () -> SharedTable,
-    new: (t: { [any]: any }?) -> SharedTable,
-    clear: (st: SharedTable) -> (),
-    clone: (st: SharedTable, deep: boolean?) -> SharedTable,
-    cloneAndFreeze: (st: SharedTable, deep: boolean?) -> SharedTable,
-    increment: (st: SharedTable, key: string | number, delta: number) -> number,
-    isFrozen: (st: SharedTable) -> boolean,
-    size: (st: SharedTable) -> number,
-    update: (st: SharedTable, key: string | number, f: (any) -> any) -> (),
-}
-
-declare function settings(): GlobalSettings
 declare function UserSettings(): UserSettings
 
-@[deprecated {use = "plugin"}]
-declare function PluginManager(): PluginManager
-
-@[deprecated {use = 'game:GetService("DebuggerManager")'}]
-declare function DebuggerManager(): DebuggerManager
-
-declare extern type ODPlayer with
-    Name: string
-    Health: number
-    function Kick(self, reason: string): ()
-end
-
-declare player: ODPlayer
 declare extern type EnumActionRunnerState extends EnumItem with end
 declare extern type EnumActionRunnerState_INTERNAL extends Enum with
 	Cancelled: EnumActionRunnerState
