@@ -1,4 +1,4 @@
---#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "GetTextBoundsParams", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ScreenGui", "Script", "ScrollingFrame", "SimulationBall", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UIGridLayout", "UIListLayout", "UIStroke", "VFXPreset", "VFXRecipe", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "TeleportService", "TextService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStorePages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GetTextBoundsParams", "GlobalDataStore", "GuiBase2d", "GuiButton", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProceduralModel", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextButton", "TextLabel", "TextService", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIGridLayout", "UIGridStyleLayout", "UIListLayout", "UIStroke", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "VFXRecipe", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "EasingDirection", "EasingStyle", "FillDepthModeType", "FillDirection", "FontStyle", "FontWeight", "HitboxType", "HorizontalAlignment", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidHealthDisplayType", "HumanoidStateType", "InfoType", "KeyCode", "LineJoinMode", "Material", "MobilityMode", "NameOcclusion", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProgressBarFillDirection", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "RollOffMode", "RotationType", "ScaleType", "ScrollingDirection", "ShadowDetailLevel", "SortOrder", "SoundPlayState", "StrokeSizingMode", "TextXAlignment", "TextYAlignment", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "ZIndexMode"], "FONTS": {"Anton": "ovdrassetid://900000166", "ArchivoBlack": "ovdrassetid://900000366", "Baloo2": "ovdrassetid://900000566", "Creepster": "ovdrassetid://900001166", "Eater": "ovdrassetid://900001366", "Fredoka": "ovdrassetid://900001566", "GreatVibes": "ovdrassetid://900002166", "GrenzeGotisch": "ovdrassetid://900002366", "Kalam": "ovdrassetid://900003366", "Michroma": "ovdrassetid://900003766", "Nosifer": "ovdrassetid://900003966", "NotoSans": "ovdrassetid://900004166", "Nunito": "ovdrassetid://900006066", "Orbitron": "ovdrassetid://900007766", "OverWacky": "ovdrassetid://900008466", "PatrickHand": "ovdrassetid://900008766", "PermanentMarker": "ovdrassetid://900008966", "PlayfairDisplay": "ovdrassetid://900009166", "PressStart2P": "ovdrassetid://900010466", "Roboto": "ovdrassetid://900010666", "Sono": "ovdrassetid://900012566", "Tomorrow": "ovdrassetid://900013366", "VarelaRound": "ovdrassetid://900015466", "VT323": "ovdrassetid://900015266"}, "BRICK_COLORS": ["Alder", "Artichoke", "Baby blue", "Beige", "Black", "Black metallic", "Br. reddish orange", "Br. yellowish green", "Br. yellowish orange", "Brick yellow", "Bright blue", "Bright bluish green", "Bright bluish violet", "Bright green", "Bright orange", "Bright purple", "Bright red", "Bright reddish lilac", "Bright reddish violet", "Bright violet", "Bright yellow", "Bronze", "Brown", "Burgundy", "Burlap", "Burnt Sienna", "Buttermilk", "CGA brown", "Cadet blue", "Camo", "Carnation pink", "Cashmere", "Cloudy grey", "Cocoa", "Cool yellow", "Copper", "Cork", "Crimson", "Curry", "Cyan", "Daisy orange", "Dark Curry", "Dark Royal blue", "Dark blue", "Dark green", "Dark grey", "Dark grey metallic", "Dark indigo", "Dark nougat", "Dark orange", "Dark red", "Dark stone grey", "Dark taupe", "Deep blue", "Deep orange", "Dirt brown", "Dove blue", "Dusty Rose", "Earth blue", "Earth green", "Earth orange", "Earth yellow", "Eggplant", "Electric blue", "Faded green", "Fawn brown", "Fire Yellow", "Flame reddish orange", "Flame yellowish orange", "Flint", "Fog", "Forest green", "Fossil", "Ghost grey", "Gold", "Grey", "Grime", "Gun metallic", "Hot pink", "Hurricane grey", "Institutional white", "Khaki", "Lapis", "Laurel green", "Lavender", "Lemon metalic", "Lig. Yellowich orange", "Lig. yellowish green", "Light Royal blue", "Light blue", "Light bluish green", "Light bluish violet", "Light brick yellow", "Light green (Mint)", "Light grey", "Light grey metallic", "Light lilac", "Light orange", "Light orange brown", "Light pink", "Light purple", "Light red", "Light reddish violet", "Light stone grey", "Light yellow", "Lilac", "Lily white", "Lime green", "Linen", "Magenta", "Maroon", "Mauve", "Med. bluish green", "Med. reddish violet", "Med. yellowish green", "Med. yellowish orange", "Medium Royal blue", "Medium blue", "Medium bluish violet", "Medium green", "Medium lilac", "Medium orange", "Medium red", "Medium stone grey", "Mid gray", "Mint", "Moss", "Mulberry", "Navy blue", "Neon green", "Neon orange", "New Yeller", "Nougat", "Olive", "Olivine", "Oyster", "Parsley green", "Pastel Blue", "Pastel blue-green", "Pastel brown", "Pastel green", "Pastel light blue", "Pastel orange", "Pastel violet", "Pastel yellow", "Pearl", "Persimmon", "Phosph. White", "Pine Cone", "Pink", "Plum", "Quill grey", "Really black", "Really blue", "Really red", "Red flip/flop", "Reddish brown", "Reddish lilac", "Royal blue", "Royal purple", "Rust", "Sage green", "Salmon", "Sand blue", "Sand blue metallic", "Sand green", "Sand red", "Sand violet", "Sand violet metallic", "Sand yellow", "Sand yellow metallic", "Sea green", "Seashell", "Shamrock", "Silver", "Silver flip/flop", "Slime green", "Smoky grey", "Steel blue", "Storm blue", "Sunrise", "Tawny", "Teal", "Terra Cotta", "Toothpaste", "Tr. Blue", "Tr. Bright bluish violet", "Tr. Brown", "Tr. Flu. Blue", "Tr. Flu. Green", "Tr. Flu. Red", "Tr. Flu. Reddish orange", "Tr. Flu. Yellow", "Tr. Green", "Tr. Lg blue", "Tr. Medi. reddish violet", "Tr. Red", "Tr. Yellow", "Transparent", "Turquoise", "Warm yellowish orange", "Wheat", "White", "Yellow flip/flop"]}
+--#METADATA#{"CREATABLE_INSTANCES": ["AngularVelocity", "Animation", "Animator", "Atmosphere", "Attachment", "Backpack", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreSetOptions", "Fill", "Folder", "Frame", "GetTextBoundsParams", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "IntValue", "LinearVelocity", "LocalScript", "MaterialVariant", "MeshPart", "Model", "ModuleScript", "NumberValue", "Outline", "Part", "ParticleEmitter", "Player", "PointLight", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ScreenGui", "Script", "ScrollingFrame", "SimulationBall", "Sound", "SoundGroup", "SpawnLocation", "SpotLight", "StringValue", "SurfaceGui", "Team", "TeleportOptions", "TextBox", "TextButton", "TextLabel", "Tool", "Trail", "Tween", "UIAspectRatioConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "VFXPreset", "VFXRecipe", "VectorForce", "WrapLayer", "WrapTarget"], "SERVICES": ["ActionSequenceService", "AnalyticsService", "CollectionService", "ContextActionService", "CoreGui", "DataStoreService", "HttpService", "Lighting", "LocalizationService", "MarketplaceService", "MaterialService", "MemoryStoreService", "MessagingService", "PhysicsService", "Players", "ProximityPromptService", "ReplicatedStorage", "RunService", "ServerScriptService", "ServerStorage", "SoundService", "StarterGui", "StarterPack", "StarterPlayer", "TeleportService", "TextService", "TweenService", "UserGameSettings", "UserInputService", "Workspace", "WorldRankService"], "CLASSES": ["ActionRunner", "ActionSequence", "ActionSequenceService", "AnalyticsService", "AngularVelocity", "Animation", "AnimationTrack", "Animator", "Atmosphere", "Attachment", "Backpack", "BackpackItem", "BasePart", "BaseScript", "Beam", "BillboardGui", "BindableEvent", "BindableFunction", "Bone", "BoolValue", "Camera", "CanvasGroup", "CharacterMesh", "CollectionService", "Constraint", "ContextActionService", "CoreGui", "DataModel", "DataStore", "DataStoreGetOptions", "DataStoreIncrementOptions", "DataStoreInfo", "DataStoreKeyInfo", "DataStoreKeyPages", "DataStoreListingPages", "DataStorePages", "DataStoreService", "DataStoreSetOptions", "Fill", "Folder", "FormFactorPart", "Frame", "GenericSettings", "GetTextBoundsParams", "GlobalDataStore", "GuiBase2d", "GuiBase3d", "GuiButton", "GuiLabel", "GuiObject", "HttpService", "Humanoid", "HumanoidDescription", "ImageButton", "ImageLabel", "InputObject", "Instance", "IntValue", "LayerCollector", "Light", "Lighting", "LinearVelocity", "LocalScript", "LocalizationService", "LuaSourceContainer", "MarketplaceService", "MaterialService", "MaterialVariant", "MemoryStoreHashMap", "MemoryStoreHashMapPages", "MemoryStoreQueue", "MemoryStoreService", "MemoryStoreSortedMap", "MeshPart", "MessagingService", "Model", "ModuleScript", "Mouse", "NumberValue", "OrderedDataStore", "Outline", "OverlayBase", "PVInstance", "Pages", "Part", "ParticleEmitter", "PhysicsService", "Player", "PlayerGui", "PlayerScripts", "Players", "PointLight", "ProceduralModel", "ProgressBar", "ProximityPrompt", "ProximityPromptService", "RemoteEvent", "RemoteFunction", "ReplicatedStorage", "RunService", "ScreenGui", "Script", "ScrollingFrame", "ServerScriptService", "ServerStorage", "ServiceProvider", "SimulationBall", "Skeleton", "Sound", "SoundGroup", "SoundService", "SpawnLocation", "SpotLight", "StarterCharacterScripts", "StarterGui", "StarterPack", "StarterPlayer", "StarterPlayerScripts", "StringValue", "SurfaceGui", "SurfaceGuiBase", "Team", "TeleportAsyncResult", "TeleportOptions", "TeleportService", "TextBox", "TextButton", "TextLabel", "TextService", "Tool", "Trail", "Translator", "Tween", "TweenBase", "TweenService", "UIAspectRatioConstraint", "UIComponent", "UIConstraint", "UICorner", "UIFlexItem", "UIGradient", "UIGridLayout", "UIGridStyleLayout", "UILayout", "UIListLayout", "UIPadding", "UIPageLayout", "UIScale", "UISizeConstraint", "UIStroke", "UITableLayout", "UITextSizeConstraint", "UserGameSettings", "UserInputService", "UserSettings", "VFXPreset", "VFXRecipe", "ValueBase", "VectorForce", "Workspace", "WorldRankService", "WorldRoot", "WrapLayer", "WrapTarget"], "ENUMS": ["ActionRunnerState", "ActionSequenceCameraShakeType", "ActionSequenceColliderType", "ActionSequenceSlotType", "ActionSequenceTrackType", "ActuatorRelativeTo", "AnalyticsCustomFieldKeys", "AnimationPriority", "ApplyStrokeMode", "AspectType", "AssetTypeVerification", "AutomaticSize", "BallState", "BorderMode", "BorderStrokePosition", "ButtonStyle", "CameraMode", "CameraType", "CollisionChannel", "CollisionResponse", "ContextActionResult", "CoreGuiType", "CreatorType", "DominantAxis", "DraggingScrollBar", "EasingDirection", "EasingStyle", "ElasticBehavior", "FillDepthModeType", "FillDirection", "FontStyle", "FontWeight", "GradientTileMode", "GradientType", "HitboxType", "HorizontalAlignment", "HttpContentType", "HumanoidDisplayDistanceType", "HumanoidHealthDisplayType", "HumanoidStateType", "InfoType", "ItemLineAlignment", "KeyCode", "LineJoinMode", "Material", "MobilityMode", "NameOcclusion", "NormalId", "PartType", "ParticleEmitterShape", "ParticleEmitterShapeInOut", "ParticleEmitterShapeStyle", "ParticleFlipbookLayout", "ParticleFlipbookMode", "ParticleOrientation", "PlaybackState", "ProductPurchaseDecision", "ProgressBarFillDirection", "ProximityPromptExclusivity", "ProximityPromptInputType", "RaycastFilterType", "ResamplerMode", "RollOffMode", "RotationType", "SafeAreaCompatibility", "ScaleType", "ScreenInsets", "ScrollBarInset", "ScrollingDirection", "ShadowDetailLevel", "SortDirection", "SortOrder", "SoundPlayState", "StartCorner", "StrokeSizingMode", "TextDirection", "TextTruncate", "TextXAlignment", "TextYAlignment", "UIFlexAlignment", "UserInputState", "UserInputType", "VFXImportance", "VFXPerformanceType", "VelocityConstraintMode", "VerticalAlignment", "VerticalScrollBarPosition", "ZIndexMode"], "FONTS": {"Anton": "ovdrassetid://900000166", "ArchivoBlack": "ovdrassetid://900000366", "Baloo2": "ovdrassetid://900000566", "Creepster": "ovdrassetid://900001166", "Eater": "ovdrassetid://900001366", "Fredoka": "ovdrassetid://900001566", "GreatVibes": "ovdrassetid://900002166", "GrenzeGotisch": "ovdrassetid://900002366", "Kalam": "ovdrassetid://900003366", "Michroma": "ovdrassetid://900003766", "Nosifer": "ovdrassetid://900003966", "NotoSans": "ovdrassetid://900004166", "Nunito": "ovdrassetid://900006066", "Orbitron": "ovdrassetid://900007766", "OverWacky": "ovdrassetid://900008466", "PatrickHand": "ovdrassetid://900008766", "PermanentMarker": "ovdrassetid://900008966", "PlayfairDisplay": "ovdrassetid://900009166", "PressStart2P": "ovdrassetid://900010466", "Roboto": "ovdrassetid://900010666", "Sono": "ovdrassetid://900012566", "Tomorrow": "ovdrassetid://900013366", "VarelaRound": "ovdrassetid://900015466", "VT323": "ovdrassetid://900015266"}, "BRICK_COLORS": ["Alder", "Artichoke", "Baby blue", "Beige", "Black", "Black metallic", "Br. reddish orange", "Br. yellowish green", "Br. yellowish orange", "Brick yellow", "Bright blue", "Bright bluish green", "Bright bluish violet", "Bright green", "Bright orange", "Bright purple", "Bright red", "Bright reddish lilac", "Bright reddish violet", "Bright violet", "Bright yellow", "Bronze", "Brown", "Burgundy", "Burlap", "Burnt Sienna", "Buttermilk", "CGA brown", "Cadet blue", "Camo", "Carnation pink", "Cashmere", "Cloudy grey", "Cocoa", "Cool yellow", "Copper", "Cork", "Crimson", "Curry", "Cyan", "Daisy orange", "Dark Curry", "Dark Royal blue", "Dark blue", "Dark green", "Dark grey", "Dark grey metallic", "Dark indigo", "Dark nougat", "Dark orange", "Dark red", "Dark stone grey", "Dark taupe", "Deep blue", "Deep orange", "Dirt brown", "Dove blue", "Dusty Rose", "Earth blue", "Earth green", "Earth orange", "Earth yellow", "Eggplant", "Electric blue", "Faded green", "Fawn brown", "Fire Yellow", "Flame reddish orange", "Flame yellowish orange", "Flint", "Fog", "Forest green", "Fossil", "Ghost grey", "Gold", "Grey", "Grime", "Gun metallic", "Hot pink", "Hurricane grey", "Institutional white", "Khaki", "Lapis", "Laurel green", "Lavender", "Lemon metalic", "Lig. Yellowich orange", "Lig. yellowish green", "Light Royal blue", "Light blue", "Light bluish green", "Light bluish violet", "Light brick yellow", "Light green (Mint)", "Light grey", "Light grey metallic", "Light lilac", "Light orange", "Light orange brown", "Light pink", "Light purple", "Light red", "Light reddish violet", "Light stone grey", "Light yellow", "Lilac", "Lily white", "Lime green", "Linen", "Magenta", "Maroon", "Mauve", "Med. bluish green", "Med. reddish violet", "Med. yellowish green", "Med. yellowish orange", "Medium Royal blue", "Medium blue", "Medium bluish violet", "Medium green", "Medium lilac", "Medium orange", "Medium red", "Medium stone grey", "Mid gray", "Mint", "Moss", "Mulberry", "Navy blue", "Neon green", "Neon orange", "New Yeller", "Nougat", "Olive", "Olivine", "Oyster", "Parsley green", "Pastel Blue", "Pastel blue-green", "Pastel brown", "Pastel green", "Pastel light blue", "Pastel orange", "Pastel violet", "Pastel yellow", "Pearl", "Persimmon", "Phosph. White", "Pine Cone", "Pink", "Plum", "Quill grey", "Really black", "Really blue", "Really red", "Red flip/flop", "Reddish brown", "Reddish lilac", "Royal blue", "Royal purple", "Rust", "Sage green", "Salmon", "Sand blue", "Sand blue metallic", "Sand green", "Sand red", "Sand violet", "Sand violet metallic", "Sand yellow", "Sand yellow metallic", "Sea green", "Seashell", "Shamrock", "Silver", "Silver flip/flop", "Slime green", "Smoky grey", "Steel blue", "Storm blue", "Sunrise", "Tawny", "Teal", "Terra Cotta", "Toothpaste", "Tr. Blue", "Tr. Bright bluish violet", "Tr. Brown", "Tr. Flu. Blue", "Tr. Flu. Green", "Tr. Flu. Red", "Tr. Flu. Reddish orange", "Tr. Flu. Yellow", "Tr. Green", "Tr. Lg blue", "Tr. Medi. reddish violet", "Tr. Red", "Tr. Yellow", "Transparent", "Turquoise", "Warm yellowish orange", "Wheat", "White", "Yellow flip/flop"]}
 
 
 type ContentId = string
@@ -1198,12 +1198,12 @@ declare extern type EnumButton_INTERNAL extends Enum with
 end
 declare extern type EnumButtonStyle extends EnumItem with end
 declare extern type EnumButtonStyle_INTERNAL extends Enum with
+	Button: EnumButtonStyle
 	Custom: EnumButtonStyle
-	RobloxButton: EnumButtonStyle
-	RobloxButtonDefault: EnumButtonStyle
-	RobloxRoundButton: EnumButtonStyle
-	RobloxRoundDefaultButton: EnumButtonStyle
-	RobloxRoundDropdownButton: EnumButtonStyle
+	Default: EnumButtonStyle
+	RoundButton: EnumButtonStyle
+	RoundDefaultButton: EnumButtonStyle
+	RoundDropdownButton: EnumButtonStyle
 	function GetEnumItems(self): { EnumButtonStyle }
 	function FromName(self, Name: string): EnumButtonStyle?
 	function FromValue(self, Value: number): EnumButtonStyle?
@@ -5248,8 +5248,11 @@ declare extern type EnumSavedQualitySetting_INTERNAL extends Enum with
 end
 declare extern type EnumScaleType extends EnumItem with end
 declare extern type EnumScaleType_INTERNAL extends Enum with
+	Crop: EnumScaleType
+	Fit: EnumScaleType
 	Slice: EnumScaleType
 	Stretch: EnumScaleType
+	Tile: EnumScaleType
 	function GetEnumItems(self): { EnumScaleType }
 	function FromName(self, Name: string): EnumScaleType?
 	function FromValue(self, Value: number): EnumScaleType?
@@ -7166,6 +7169,7 @@ type ENUM_LIST = {
 	ActionSequenceSlotType: EnumActionSequenceSlotType_INTERNAL,
 	ActionSequenceTrackType: EnumActionSequenceTrackType_INTERNAL,
 	ActuatorRelativeTo: EnumActuatorRelativeTo_INTERNAL,
+	AnalyticsCustomFieldKeys: EnumAnalyticsCustomFieldKeys_INTERNAL,
 	AnimationPriority: EnumAnimationPriority_INTERNAL,
 	ApplyStrokeMode: EnumApplyStrokeMode_INTERNAL,
 	AspectType: EnumAspectType_INTERNAL,
@@ -7174,6 +7178,7 @@ type ENUM_LIST = {
 	BallState: EnumBallState_INTERNAL,
 	BorderMode: EnumBorderMode_INTERNAL,
 	BorderStrokePosition: EnumBorderStrokePosition_INTERNAL,
+	ButtonStyle: EnumButtonStyle_INTERNAL,
 	CameraMode: EnumCameraMode_INTERNAL,
 	CameraType: EnumCameraType_INTERNAL,
 	CollisionChannel: EnumCollisionChannel_INTERNAL,
@@ -7182,12 +7187,16 @@ type ENUM_LIST = {
 	CoreGuiType: EnumCoreGuiType_INTERNAL,
 	CreatorType: EnumCreatorType_INTERNAL,
 	DominantAxis: EnumDominantAxis_INTERNAL,
+	DraggingScrollBar: EnumDraggingScrollBar_INTERNAL,
 	EasingDirection: EnumEasingDirection_INTERNAL,
 	EasingStyle: EnumEasingStyle_INTERNAL,
+	ElasticBehavior: EnumElasticBehavior_INTERNAL,
 	FillDepthModeType: EnumFillDepthModeType_INTERNAL,
 	FillDirection: EnumFillDirection_INTERNAL,
 	FontStyle: EnumFontStyle_INTERNAL,
 	FontWeight: EnumFontWeight_INTERNAL,
+	GradientTileMode: EnumGradientTileMode_INTERNAL,
+	GradientType: EnumGradientType_INTERNAL,
 	HitboxType: EnumHitboxType_INTERNAL,
 	HorizontalAlignment: EnumHorizontalAlignment_INTERNAL,
 	HttpContentType: EnumHttpContentType_INTERNAL,
@@ -7195,6 +7204,7 @@ type ENUM_LIST = {
 	HumanoidHealthDisplayType: EnumHumanoidHealthDisplayType_INTERNAL,
 	HumanoidStateType: EnumHumanoidStateType_INTERNAL,
 	InfoType: EnumInfoType_INTERNAL,
+	ItemLineAlignment: EnumItemLineAlignment_INTERNAL,
 	KeyCode: EnumKeyCode_INTERNAL,
 	LineJoinMode: EnumLineJoinMode_INTERNAL,
 	Material: EnumMaterial_INTERNAL,
@@ -7214,22 +7224,32 @@ type ENUM_LIST = {
 	ProximityPromptExclusivity: EnumProximityPromptExclusivity_INTERNAL,
 	ProximityPromptInputType: EnumProximityPromptInputType_INTERNAL,
 	RaycastFilterType: EnumRaycastFilterType_INTERNAL,
+	ResamplerMode: EnumResamplerMode_INTERNAL,
 	RollOffMode: EnumRollOffMode_INTERNAL,
 	RotationType: EnumRotationType_INTERNAL,
+	SafeAreaCompatibility: EnumSafeAreaCompatibility_INTERNAL,
 	ScaleType: EnumScaleType_INTERNAL,
+	ScreenInsets: EnumScreenInsets_INTERNAL,
+	ScrollBarInset: EnumScrollBarInset_INTERNAL,
 	ScrollingDirection: EnumScrollingDirection_INTERNAL,
 	ShadowDetailLevel: EnumShadowDetailLevel_INTERNAL,
+	SortDirection: EnumSortDirection_INTERNAL,
 	SortOrder: EnumSortOrder_INTERNAL,
 	SoundPlayState: EnumSoundPlayState_INTERNAL,
+	StartCorner: EnumStartCorner_INTERNAL,
 	StrokeSizingMode: EnumStrokeSizingMode_INTERNAL,
+	TextDirection: EnumTextDirection_INTERNAL,
+	TextTruncate: EnumTextTruncate_INTERNAL,
 	TextXAlignment: EnumTextXAlignment_INTERNAL,
 	TextYAlignment: EnumTextYAlignment_INTERNAL,
+	UIFlexAlignment: EnumUIFlexAlignment_INTERNAL,
 	UserInputState: EnumUserInputState_INTERNAL,
 	UserInputType: EnumUserInputType_INTERNAL,
 	VFXImportance: EnumVFXImportance_INTERNAL,
 	VFXPerformanceType: EnumVFXPerformanceType_INTERNAL,
 	VelocityConstraintMode: EnumVelocityConstraintMode_INTERNAL,
 	VerticalAlignment: EnumVerticalAlignment_INTERNAL,
+	VerticalScrollBarPosition: EnumVerticalScrollBarPosition_INTERNAL,
 	ZIndexMode: EnumZIndexMode_INTERNAL,
 } & { GetEnums: (self: ENUM_LIST) -> { Enum } }
 declare Enum: ENUM_LIST
@@ -7255,7 +7275,6 @@ end
 declare extern type CFrame with
 	Identity: CFrame
 	LookVector: Vector3
-	Orientation: Vector3
 	Position: Vector3
 	RightVector: Vector3
 	Rotation: CFrame
@@ -7272,9 +7291,9 @@ declare extern type CFrame with
 	function Lerp(self, goal: CFrame, alpha: number): CFrame
 	function PointToObjectSpace(self, v3: Vector3): Vector3
 	function PointToWorldSpace(self, v3: Vector3): Vector3
-	function ToEulerAnglesXYZ(self): ...any
-	function ToEulerAnglesYXZ(self): ...any
-	function ToOrientation(self): ...any
+	function ToEulerAnglesXYZ(self): (number, number, number)
+	function ToEulerAnglesYXZ(self): (number, number, number)
+	function ToOrientation(self): (number, number, number)
 	function VectorToObjectSpace(self, v3: Vector3): Vector3
 	function VectorToWorldSpace(self, v3: Vector3): Vector3
 	function __add(self, other: Vector3): CFrame
@@ -8515,27 +8534,8 @@ declare extern type AdvancedDragger extends Instance with
 end
 
 declare extern type AnalyticsService extends Instance with
-	@deprecated
-		function FireCustomEvent(self, player: Instance, eventCategory: string, customData: any): nil
-	@deprecated
-		function FireEvent(self, category: string, value: any): nil
-	@deprecated
-		function FireInGameEconomyEvent(self, player: Instance, itemName: string, economyAction: EnumAnalyticsEconomyAction, itemCategory: string, amount: number, currency: string, location: any, customData: any): nil
-	@deprecated
-		function FireLogEvent(self, player: Instance, logLevel: EnumAnalyticsLogLevel, message: string, debugInfo: any, customData: any): nil
-	@deprecated
-		function FirePlayerProgressionEvent(self, player: Instance, category: string, progressionStatus: EnumAnalyticsProgressionStatus, location: any, statistics: any, customData: any): nil
-	function GetDurationLoggerTimestamp(self): number
-	function GetPlayerSegmentsAsync(self, player: Player): { [string]: any }
 	function LogCustomEvent(self, player: Player, eventName: string, value: number?, customFields: { [string]: any }?): nil
-	function LogEconomyEvent(self, player: Player, flowType: EnumAnalyticsEconomyFlowType, currencyType: string, amount: number, endingBalance: number, transactionType: string, itemSku: string?, customFields: { [string]: any }?): nil
-	function LogFunnelStepEvent(self, player: Player, funnelName: string, funnelSessionId: string?, step: number?, stepName: string?, customFields: { [string]: any }?): nil
-	function LogJourneyEvent(self, player: Player, journeyName: string, nodeName: string, journeySessionId: string?, customFields: { [string]: any }?): nil
 	function LogOnboardingFunnelStepEvent(self, player: Player, step: number, stepName: string?, customFields: { [string]: any }?): nil
-	function LogProgressionCompleteEvent(self, player: Player, progressionPathName: string, level: number, levelName: string?, customFields: { [string]: any }?): nil
-	function LogProgressionEvent(self, player: Player, progressionPathName: string, status: EnumAnalyticsProgressionType, level: number, levelName: string?, customFields: { [string]: any }?): nil
-	function LogProgressionFailEvent(self, player: Player, progressionPathName: string, level: number, levelName: string?, customFields: { [string]: any }?): nil
-	function LogProgressionStartEvent(self, player: Player, progressionPathName: string, level: number, levelName: string?, customFields: { [string]: any }?): nil
 end
 
 declare extern type Animation extends Instance with
@@ -9740,6 +9740,7 @@ declare extern type CoreGui extends Instance with
 end
 
 declare extern type PlayerGui extends Instance with
+	function GetGuiObjectsAtPosition(self, x: number, y: number): { any }
 end
 
 declare extern type StarterGui extends Instance with
@@ -9819,6 +9820,7 @@ declare extern type BindableEvent extends Instance with
 end
 
 declare extern type BindableFunction extends Instance with
+	OnInvoke: any
 	function Invoke(self, ...: any): ...any
 end
 
@@ -10699,7 +10701,7 @@ end
 
 declare extern type DataStoreIncrementOptions extends Instance with
 	function GetMetadata(self): { [string]: any }
-	function SetMetadata(self, attributes: { [string]: any }): nil
+	function SetMetadata(self, InMetaDataTable: { [string]: any }): nil
 end
 
 declare extern type DataStoreInfo extends Instance with
@@ -10732,9 +10734,9 @@ declare extern type DataStoreOptions extends Instance with
 end
 
 declare extern type DataStoreService extends Instance with
-	function GetDataStore(self, name: string, scope: string?, options: Instance?): GlobalDataStore
+	function GetDataStore(self, InName: string, InScope: string?, InOption: Instance?): DataStore
 	function GetGlobalDataStore(self): GlobalDataStore
-	function GetOrderedDataStore(self, name: string, scope: string?): OrderedDataStore
+	function GetOrderedDataStore(self, InName: string, InScope: string?): OrderedDataStore
 end
 
 declare extern type DataStoreSetOptions extends Instance with
@@ -11451,15 +11453,15 @@ declare extern type GetTextBoundsParams extends Instance with
 end
 
 declare extern type GlobalDataStore extends Instance with
-	function GetAsync(self, key: string, options: DataStoreGetOptions?): ...any
-	function IncrementAsync(self, key: string, delta: number?, userIds: { any }?, options: DataStoreIncrementOptions?): any
-	function RemoveAsync(self, key: string): ...any
-	function SetAsync(self, key: string, value: any, userIds: any?, options: DataStoreSetOptions?): any
-	function UpdateAsync(self, key: string, transformFunction: any): ...any
+	function GetAsync(self, InKey: string, InOptions: DataStoreGetOptions?): ...any
+	function IncrementAsync(self, InKey: string, InDelta: number?, InUserIds: { any }?, InOptions: DataStoreIncrementOptions?): any
+	function RemoveAsync(self, InKey: string): ...any
+	function SetAsync(self, InKey: string, InValue: any, InUserIds: any?, InOptions: DataStoreSetOptions?): any
+	function UpdateAsync(self, InKey: string, InTransformFunction: any): ...any
 end
 
 declare extern type DataStore extends GlobalDataStore with
-	function ListKeysAsync(self, prefix: string?, pageSize: number?, cursor: string?, excludeDeleted: boolean?): DataStoreKeyPages
+	function ListKeysAsync(self, InPrefix: string?, InPageSize: number?, InCursor: string?, InExcludeDeleted: boolean?): DataStoreKeyPages
 end
 
 declare extern type OrderedDataStore extends GlobalDataStore with
@@ -11485,15 +11487,24 @@ end
 
 declare extern type GuiBase2d extends Instance with
 	AbsolutePosition: Vector2
+	AbsoluteRotation: number
 	AbsoluteSize: Vector2
 	AutoLocalize: boolean
+	ClippedRect: Rect
+	IsNotOccluded: boolean
+	RawRect2D: Rect
+	TotalGroupScale: number
 end
 
 declare extern type GuiObject extends GuiBase2d with
 	Active: boolean
 	AnchorPoint: Vector2
+	AutomaticSize: EnumAutomaticSize
 	BackgroundColor3: Color3
 	BackgroundTransparency: number
+	BorderColor3: Color3
+	BorderMode: EnumBorderMode
+	BorderSizePixel: number
 	ClipsDescendants: boolean
 	LayoutOrder: number
 	Position: UDim2
@@ -11506,41 +11517,64 @@ declare extern type GuiObject extends GuiBase2d with
 	InputEnded: ScriptSignal<InputObject>
 end
 
-declare extern type CanvasGroup extends GuiObject with
-	GroupColor3: Color3
-	GroupTransparency: number
-	ResolutionScale: number
-end
 
 declare extern type Frame extends GuiObject with
-	BorderColor3: Color3
-	BorderMode: EnumBorderMode
-	BorderPixelSize: number
+end
+declare extern type CanvasGroup extends Frame with
+	GroupColor3: Color3
+	GroupTransparency: number
 end
 
 declare extern type GuiButton extends GuiObject with
-	Activated: ScriptSignal<>
+	AutoButtonColor: boolean
+	Modal: boolean
+	Selected: boolean
+	Style: EnumButtonStyle
+	Activated: ScriptSignal<InputObject, number>
+	MouseButton1Click: ScriptSignal<>
+	MouseButton1Down: ScriptSignal<number, number>
+	MouseButton1Up: ScriptSignal<number, number>
+	MouseButton2Click: ScriptSignal<>
+	MouseButton2Down: ScriptSignal<number, number>
+	MouseButton2Up: ScriptSignal<number, number>
+	SecondaryActivated: ScriptSignal<InputObject>
 end
 
 declare extern type ImageButton extends GuiButton with
+	ContentImageSize: Vector2
 	HoverImage: string
 	Image: string
 	ImageColor3: Color3
+	ImageRectOffset: Vector2
+	ImageRectSize: Vector2
 	ImageTransparency: number
-	PressImage: string
+	IsLoaded: boolean
+	PressedImage: string
+	ResampleMode: EnumResamplerMode
 	ScaleType: EnumScaleType
 	SliceCenter: Rect
 	SliceScale: number
+	TileSize: UDim2
 end
 
 declare extern type TextButton extends GuiButton with
+	ContentText: string
 	FontFace: Font
+	LineHeight: number
 	LocalizedText: string
+	MaxVisibleGraphemes: number
+	RichText: boolean
 	Text: string
+	TextBounds: Vector2
 	TextColor3: Color3
+	TextDirection: EnumTextDirection
+	TextFits: boolean
 	TextScaled: boolean
 	TextSize: number
+	TextStrokeColor3: Color3
+	TextStrokeTransparency: number
 	TextTransparency: number
+	TextTruncate: EnumTextTruncate
 	TextWrapped: boolean
 	TextXAlignment: EnumTextXAlignment
 	TextYAlignment: EnumTextYAlignment
@@ -11549,23 +11583,39 @@ end
 declare extern type GuiLabel extends GuiObject with
 end
 
-declare extern type ImageLabel extends GuiObject with
+declare extern type ImageLabel extends GuiLabel with
+	ContentImageSize: Vector2
 	Image: string
 	ImageColor3: Color3
+	ImageRectOffset: Vector2
+	ImageRectSize: Vector2
 	ImageTransparency: number
+	IsLoaded: boolean
+	ResampleMode: EnumResamplerMode
 	ScaleType: EnumScaleType
 	SliceCenter: Rect
 	SliceScale: number
+	TileSize: UDim2
 end
 
-declare extern type TextLabel extends GuiObject with
+declare extern type TextLabel extends GuiLabel with
+	ContentText: string
 	FontFace: Font
+	LineHeight: number
 	LocalizedText: string
+	MaxVisibleGraphemes: number
+	RichText: boolean
 	Text: string
+	TextBounds: Vector2
 	TextColor3: Color3
+	TextDirection: EnumTextDirection
+	TextFits: boolean
 	TextScaled: boolean
 	TextSize: number
+	TextStrokeColor3: Color3
+	TextStrokeTransparency: number
 	TextTransparency: number
+	TextTruncate: EnumTextTruncate
 	TextWrapped: boolean
 	TextXAlignment: EnumTextXAlignment
 	TextYAlignment: EnumTextYAlignment
@@ -11578,64 +11628,63 @@ declare extern type ScrollingFrame extends GuiObject with
 	AbsoluteCanvasSize: Vector2
 	AbsoluteWindowSize: Vector2
 	AutomaticCanvasSize: EnumAutomaticSize
+	BottomImage: string
+	BottomImageContent: Content
 	CanvasPosition: Vector2
 	CanvasSize: UDim2
+	DraggingScrollBar: EnumDraggingScrollBar
+	ElasticBehavior: EnumElasticBehavior
+	HorizontalBarRect: Rect
+	HorizontalScrollBarInset: EnumScrollBarInset
+	MaxCanvasPosition: Vector2
+	MidImage: string
+	MidImageContent: Content
 	ScrollBarImageColor3: Color3
 	ScrollBarImageTransparency: number
 	ScrollBarThickness: number
 	ScrollingDirection: EnumScrollingDirection
 	ScrollingEnabled: boolean
+	ScrollRate: number
+	ScrollVelocity: Vector2
+	SmoothScroll: boolean
+	TopImage: string
+	TopImageContent: Content
+	VerticalBarRect: Rect
+	VerticalScrollBarInset: EnumScrollBarInset
+	VerticalScrollBarPosition: EnumVerticalScrollBarPosition
+	function ClearInertialScrolling(self): nil
+	function GetSampledInertialVelocity(self): Vector2
+	function GetScrollVelocity(self): Vector2
 	function MoveToSlot(self, SlotIndex: number): nil
+	function ResetScrollVelocity(self): nil
+	function ScrollToTop(self): nil
 end
 
 declare extern type TextBox extends GuiObject with
 	ClearTextOnFocus: boolean
-	ContentText: string
 	CursorPosition: number
-	FocusLost: ScriptSignal<(boolean, InputObject)>
-	Focused: ScriptSignal<()>
-	Font: EnumFont
 	FontFace: Font
 	LineHeight: number
-	LocalizationMatchIdentifier: string
-	LocalizationMatchedSourceText: string
-	ManualFocusRelease: boolean
-	MaxVisibleGraphemes: number
+	LocalizedPlaceholderText: string
 	MultiLine: boolean
-	OpenTypeFeatures: string
-	OpenTypeFeaturesError: string
-	OverlayNativeInput: boolean
 	PlaceholderColor3: Color3
 	PlaceholderText: string
-	ReturnKeyType: EnumReturnKeyType
-	ReturnPressedFromOnScreenKeyboard: ScriptSignal<()>
-	RichText: boolean
 	SelectionStart: number
-	ShouldEmitReturnEvents: boolean
-	ShouldEmitTabEvents: boolean
-	ShouldEmitUpAndDownArrowEvents: boolean
-	ShowNativeInput: boolean
 	Text: string
-	TextBounds: Vector2
 	TextColor3: Color3
-	TextDirection: EnumTextDirection
 	TextEditable: boolean
-	TextFits: boolean
-	TextInputType: EnumTextInputType
 	TextScaled: boolean
 	TextSize: number
-	TextStrokeColor3: Color3
-	TextStrokeTransparency: number
 	TextTransparency: number
-	TextTruncate: EnumTextTruncate
 	TextWrapped: boolean
 	TextXAlignment: EnumTextXAlignment
 	TextYAlignment: EnumTextYAlignment
 	function CaptureFocus(self): nil
 	function IsFocused(self): boolean
 	function ReleaseFocus(self, submitted: boolean?): nil
-	function ResetKeyboardMode(self): nil
-	function SetTextFromInput(self, text: string): nil
+	Focused: ScriptSignal<>
+	FocusLost: ScriptSignal<boolean, InputObject>
+	ReturnPressedFromOnScreenKeyboard: ScriptSignal<>
 end
 
 declare extern type TextChannelWindow extends GuiObject with
@@ -11727,7 +11776,14 @@ declare extern type QWidgetPluginGui extends PluginGui with
 end
 
 declare extern type ScreenGui extends LayerCollector with
+	ClipToDeviceSafeArea: boolean
 	DisplayOrder: number
+	IgnoreGuiInset: boolean
+	ResetOnSpawn: boolean
+	SafeAreaCompatibility: EnumSafeAreaCompatibility
+	ScreenInsets: EnumScreenInsets
+	TabKeyboardNavigation: boolean
+	function GetGuiObjectsAtPosition(self, x: number, y: number): { any }
 end
 
 declare extern type GuiMain extends ScreenGui with
@@ -11747,12 +11803,17 @@ end
 declare extern type BillboardGui extends SurfaceGuiBase with
 	CurrentDistance: number
 	DistanceLowerLimit: number
+	DistanceStep: number
 	DistanceUpperLimit: number
+	ExtentsOffset: Vector3
 	ExtentsOffsetWorldSpace: Vector3
+	Offset: Vector3
+	OffsetWorldSpace: Vector3
 	PlayerToHideFrom: Player
 	PositionOffset: Vector3
 	PositionOffsetWorldSpace: Vector3
 	SizeOffset: Vector2
+	function GetScreenSpaceBounds(self): Rect
 end
 
 declare extern type AdGui extends SurfaceGuiBase with
@@ -11770,13 +11831,11 @@ end
 
 declare extern type SurfaceGui extends SurfaceGuiBase with
 	Face: EnumNormalId
+	PixelsPerUnit: number
 	ZOffset: number
 end
 
-declare extern type GuiBase3d extends GuiBase with
-	Color3: Color3
-	Transparency: number
-	Visible: boolean
+declare extern type GuiBase3d extends Instance with
 end
 
 declare extern type FloorWire extends GuiBase3d with
@@ -13116,33 +13175,33 @@ declare extern type MemStorageService extends Instance with
 end
 
 declare extern type MemoryStoreHashMap extends Instance with
-	function GetAsync(self, key: string): any
-	function ListItemsAsync(self, count: number): MemoryStoreHashMapPages
-	function RemoveAsync(self, key: string): nil
-	function SetAsync(self, key: string, value: any, expiration: number): boolean
-	function UpdateAsync(self, key: string, transformFunction: ((...any) -> ...any), expiration: number): any
+	function GetAsync(self, InKey: string): any
+	function ListItemsAsync(self, InCount: number): MemoryStoreHashMapPages
+	function RemoveAsync(self, InKey: string): any
+	function SetAsync(self, InKey: string, InValue: any, InExpiration: any): any
+	function UpdateAsync(self, InKey: string, InTransformFunction: any, InExpiration: any): any
 end
 
 declare extern type MemoryStoreQueue extends Instance with
-	function AddAsync(self, value: any, expiration: number, priority: number?): nil
-	function GetSizeAsync(self, excludeInvisible: boolean?): number
-	function ReadAsync(self, count: number, allOrNothing: boolean?, waitTimeout: number?): ...any
-	function RemoveAsync(self, id: string): nil
+	function AddAsync(self, InValue: any, InExpiration: any, InPriority: number?): any
+	function GetSizeAsync(self, InExcludeInvisible: boolean?): any
+	function ReadAsync(self, InCount: number, InAllOrNothing: boolean?, InWaitTimeout: number?): ...any
+	function RemoveAsync(self, InReadId: string): any
 end
 
 declare extern type MemoryStoreService extends Instance with
-	function GetHashMap(self, name: string): MemoryStoreHashMap
-	function GetQueue(self, name: string, invisibilityTimeout: number?): MemoryStoreQueue
-	function GetSortedMap(self, name: string): MemoryStoreSortedMap
+	function GetHashMap(self, InName: string): MemoryStoreHashMap
+	function GetQueue(self, InName: string, InInvisibilityTimeout: number?): MemoryStoreQueue
+	function GetSortedMap(self, InName: string): MemoryStoreSortedMap
 end
 
 declare extern type MemoryStoreSortedMap extends Instance with
-	function GetAsync(self, key: string): ...any
-	function GetRangeAsync(self, direction: EnumSortDirection, count: number, exclusiveLowerBound: any, exclusiveUpperBound: any): { any }
-	function GetSizeAsync(self): number
-	function RemoveAsync(self, key: string): nil
-	function SetAsync(self, key: string, value: any, expiration: number, sortKey: any): boolean
-	function UpdateAsync(self, key: string, transformFunction: ((...any) -> ...any), expiration: number): ...any
+	function GetAsync(self, InKey: string): ...any
+	function GetRangeAsync(self, InDirection: any, InCount: number, InLowerBound: any, InUpperBound: any): any
+	function GetSizeAsync(self): any
+	function RemoveAsync(self, InKey: string): any
+	function SetAsync(self, InKey: string, InValue: any, InExpiration: any, InSortKey: any): any
+	function UpdateAsync(self, InKey: string, InTransformFunction: any, InExpiration: any): ...any
 end
 
 declare extern type Message extends Instance with
@@ -13173,8 +13232,8 @@ declare extern type MessageBusService extends Instance with
 end
 
 declare extern type MessagingService extends Instance with
-	function PublishAsync(self, topic: string, message: any): nil
-	function SubscribeAsync(self, topic: string, callback: ((...any) -> ...any)): ScriptConnection
+	function PublishAsync(self, InTopic: string, InMessage: any): nil
+	function SubscribeAsync(self, InTopic: string, InCallback: any): ScriptConnection
 end
 
 declare extern type MetaBreakpoint extends Instance with
@@ -13604,11 +13663,10 @@ declare extern type Camera extends Instance with
 	function GetLargestCutoffDistance(self, InIgnoreList: { any }): any
 	function ScreenPointToRay(self, x: number, y: number, depth: number?): Ray
 	function ViewportPointToRay(self, x: number, y: number, depth: number?): Ray
-	function WorldToViewportPoint(self, WorldPoint: Vector3): ...any
+	function WorldToViewportPoint(self, WorldPoint: Vector3): (Vector3, boolean)
 end
 
 declare extern type Model extends PVInstance with
-	CastShadow: boolean
 	PrimaryPart: BasePart
 	WorldPivot: CFrame
 	function GetPivot(self): CFrame
@@ -13801,7 +13859,7 @@ end
 declare extern type InventoryPages extends Pages with
 end
 
-declare extern type MemoryStoreHashMapPages extends Pages with
+declare extern type MemoryStoreHashMapPages extends DataStorePages with
 end
 
 declare extern type OutfitPages extends Pages with
@@ -14563,8 +14621,10 @@ declare extern type RemoteDebuggerServer extends Instance with
 end
 
 declare extern type RemoteFunction extends Instance with
-	function InvokeServer(self, ...: any): ...any
+	OnClientInvoke: any
+	OnServerInvoke: any
 	function InvokeClient(self, Player: Player, ...: any): ...any
+	function InvokeServer(self, ...: any): ...any
 end
 
 declare extern type RenderSettings extends Instance with
@@ -15291,10 +15351,13 @@ declare extern type StarterPlayer extends Instance with
 	CapsuleHeight: number
 	CapsuleRadius: number
 	CharacterMeshPos: Vector3
+	DisplayDistanceType: EnumHumanoidDisplayDistanceType
 	FallingDeceleration: number
 	FallingLateralFriction: number
 	GravityScale: number
 	GroundFriction: number
+	HealthDisplayDistance: number
+	HealthDisplayType: EnumHumanoidHealthDisplayType
 	IgnoreBaseRotation: boolean
 	JumpHeight: number
 	JumpPower: number
@@ -15302,6 +15365,7 @@ declare extern type StarterPlayer extends Instance with
 	MaxAcceleration: number
 	MaxJumpCount: number
 	MaxSlopeAngle: number
+	NameDisplayDistance: number
 	RotationSpeed: number
 	StompJumpMultiplier: number
 	UseJumpPower: boolean
@@ -16266,7 +16330,7 @@ declare extern type TextGenerator extends Instance with
 end
 
 declare extern type TextService extends Instance with
-	function GetTextBoundsAsync(self, InParams: any): any
+	function GetTextBoundsAsync(self, Params: Instance): Vector2
 end
 
 declare extern type TextSource extends Instance with
@@ -16367,6 +16431,7 @@ declare extern type Trail extends Instance with
 	Transparency: NumberSequence
 	Width: number
 	WidthScale: NumberSequence
+	function Clear(self): nil
 end
 
 declare extern type Translator extends Instance with
@@ -16400,6 +16465,8 @@ end
 
 declare extern type TweenService extends Instance with
 	function Create(self, Instance: Instance, TweenInfo: TweenInfo, PropertyTable: any): Instance
+	function GetValue(self, alpha: number, easingStyle: EnumEasingStyle, easingDirection: EnumEasingDirection): number
+	function SmoothDamp(self, current: any, target: any, velocity: any, smoothTime: number, maxSpeed: number, deltaTime: number): ...any
 end
 
 declare extern type UGCAvatarService extends Instance with
@@ -16477,13 +16544,13 @@ end
 declare extern type UIBase extends Instance with
 end
 
-declare extern type UIComponent extends UIBase with
+declare extern type UIComponent extends Instance with
 end
 
 declare extern type UIConstraint extends UIComponent with
 end
 
-declare extern type UIAspectRatioConstraint extends Instance with
+declare extern type UIAspectRatioConstraint extends UIConstraint with
 	AspectRatio: number
 	AspectType: EnumAspectType
 	DominantAxis: EnumDominantAxis
@@ -16560,7 +16627,7 @@ end
 declare extern type UILayout extends UIComponent with
 end
 
-declare extern type UIGridStyleLayout extends Instance with
+declare extern type UIGridStyleLayout extends UILayout with
 	AbsoluteContentSize: Vector2
 	FillDirection: EnumFillDirection
 	HorizontalAlignment: EnumHorizontalAlignment
@@ -16569,13 +16636,19 @@ declare extern type UIGridStyleLayout extends Instance with
 end
 
 declare extern type UIGridLayout extends UIGridStyleLayout with
+	AbsoluteCellCount: Vector2
+	AbsoluteCellSize: Vector2
 	CellPadding: UDim2
 	CellSize: UDim2
 	FillDirectionMaxCells: number
+	StartCorner: EnumStartCorner
 end
 
 declare extern type UIListLayout extends UIGridStyleLayout with
+	HorizontalFlex: EnumUIFlexAlignment
+	ItemLineAlignment: EnumItemLineAlignment
 	Padding: UDim
+	VerticalFlex: EnumUIFlexAlignment
 	Wraps: boolean
 end
 
@@ -16585,18 +16658,15 @@ declare extern type UIPageLayout extends UIGridStyleLayout with
 	CurrentPage: GuiObject
 	EasingDirection: EnumEasingDirection
 	EasingStyle: EnumEasingStyle
-	GamepadInputEnabled: boolean
 	Padding: UDim
-	PageEnter: ScriptSignal<Instance>
-	PageLeave: ScriptSignal<Instance>
-	ScrollWheelInputEnabled: boolean
-	Stopped: ScriptSignal<Instance>
-	TouchInputEnabled: boolean
 	TweenTime: number
-	function JumpTo(self, page: Instance): nil
-	function JumpToIndex(self, index: number): nil
+	function JumpTo(self, Page: Instance): nil
+	function JumpToIndex(self, Index: number): nil
 	function Next(self): nil
 	function Previous(self): nil
+	PageEnter: ScriptSignal<Instance>
+	PageLeave: ScriptSignal<Instance>
+	Stopped: ScriptSignal<Instance>
 end
 
 declare extern type UITableLayout extends UIGridStyleLayout with
@@ -16627,7 +16697,7 @@ declare extern type UIShadow extends UIComponent with
 	ZIndex: number
 end
 
-declare extern type UIStroke extends Instance with
+declare extern type UIStroke extends UIComponent with
 	ApplyStrokeMode: EnumApplyStrokeMode
 	BorderOffset: UDim
 	BorderStrokePosition: EnumBorderStrokePosition
@@ -17185,7 +17255,7 @@ declare Vector2: {
 	xAxis: Vector2,
 	yAxis: Vector2,
 	zero: Vector2,
-	new: ((x: number, y: number) -> Vector2),
+	new: ((x: number?, y: number?) -> Vector2),
 }
 
 declare Vector2int16: {
@@ -17193,8 +17263,8 @@ declare Vector2int16: {
 }
 
 declare Color3: {
-	fromRGB: ((red: number, green: number, blue: number) -> Color3),
-	new: ((red: number, green: number, blue: number) -> Color3),
+	fromRGB: ((red: number?, green: number?, blue: number?) -> Color3),
+	new: ((red: number?, green: number?, blue: number?) -> Color3),
 }
 
 declare UDim: {
@@ -17202,7 +17272,7 @@ declare UDim: {
 }
 
 declare PhysicalProperties: {
-	new: ((InMaterial: EnumMaterial) -> PhysicalProperties) & ((InMaterial: number, arg2: number, arg3: number) -> PhysicalProperties) & ((InDensity: number, InFriction: number, InElasticity: number, InFrictionWeight: number, InElasticityWeight: number) -> PhysicalProperties),
+	new: ((material: EnumMaterial) -> PhysicalProperties) & ((density: number, friction: number, elasticity: number) -> PhysicalProperties) & ((density: number, friction: number, elasticity: number, frictionWeight: number, elasticityWeight: number) -> PhysicalProperties),
 }
 
 declare Axes: {
@@ -17231,7 +17301,7 @@ declare CFrame: {
 	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
 	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
 	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3?) -> CFrame),
-	new: (() -> CFrame) & ((Position: Vector3) -> CFrame) & ((Position: Vector3, Look: Vector3) -> CFrame) & ((x: number, y: number, z: number) -> CFrame),
+	new: (() -> CFrame) & ((position: Vector3) -> CFrame) & ((position: Vector3, lookAt: Vector3) -> CFrame) & ((x: number, y: number, z: number) -> CFrame),
 }
 
 declare Faces: {
@@ -17248,7 +17318,7 @@ declare Vector3: {
 	yAxis: Vector3,
 	zAxis: Vector3,
 	zero: Vector3,
-	new: ((x: number, y: number, z: number) -> Vector3),
+	new: ((x: number?, y: number?, z: number?) -> Vector3),
 }
 
 declare Vector3int16: {
@@ -17273,19 +17343,19 @@ declare DateTime: {
 }
 
 declare NumberSequence: {
-	new: ((InValue: number) -> NumberSequence) & ((InArrayValue: { any }) -> NumberSequence) & ((n0: number, n1: number) -> NumberSequence),
+	new: (() -> NumberSequence) & ((value: number) -> NumberSequence) & ((start: number, finish: number) -> NumberSequence) & ((keypoints: { any }) -> NumberSequence),
 }
 
 declare ColorSequence: {
-	new: ((color: Color3) -> ColorSequence) & ((colorSequenceKeyPoints: { any }) -> ColorSequence) & ((c0: Color3, c1: Color3) -> ColorSequence),
+	new: (() -> ColorSequence) & ((color: Color3) -> ColorSequence) & ((start: Color3, finish: Color3) -> ColorSequence) & ((keypoints: { any }) -> ColorSequence),
 }
 
 declare NumberSequenceKeypoint: {
-	new: ((InTime: number, InValue: number) -> NumberSequenceKeypoint) & ((InTime: number, InValue: number, InEnvelope: number) -> NumberSequenceKeypoint),
+	new: (() -> NumberSequenceKeypoint) & ((time: number, value: number, envelope: number?) -> NumberSequenceKeypoint),
 }
 
 declare ColorSequenceKeypoint: {
-	new: ((Time: number, color: Color3) -> ColorSequenceKeypoint),
+	new: (() -> ColorSequenceKeypoint) & ((time: number, color: Color3) -> ColorSequenceKeypoint),
 }
 
 declare Content: {
@@ -17686,7 +17756,6 @@ declare extern type SimulationBall extends PVInstance with
 	PathMarkerScale: number
 	PlaybackTime: number
 	Position: Vector3
-	RestingSpinSpeedThreshold: number
 	SimulationTraceChannel: EnumCollisionChannel
 	SlomoFactor: number
 	TextureId: string

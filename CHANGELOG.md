@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.17] - 2026-10-20
+
+### Added
+
+- Re-synced `scripts/globalTypes.d.luau` with the latest OVERDARE API docs: 23 new classes (`MemoryStoreService` and its HashMap/Queue/SortedMap types, `MessagingService`, `AnalyticsService`, `TextBox`, `CanvasGroup`, `UICorner`, `UIPadding`, `UIGradient`, `UIScale`, `UIPageLayout`, `UITableLayout`, `UIFlexItem`, `UISizeConstraint`, `UITextSizeConstraint`, ...) and 17 new enums (`ButtonStyle`, `TextTruncate`, `SortDirection`, `GradientType`, `ScreenInsets`, `UIFlexAlignment`, ...), plus updated members on existing classes (`ScrollingFrame`, `ScreenGui`, `GuiButton`, `BillboardGui`, `TweenService.SmoothDamp`/`GetValue`, `ImageLabel`/`TextLabel` now extend `GuiLabel`, ...)
+- `game:GetService()` accepts `AnalyticsService`, `MemoryStoreService` and `MessagingService`, and `Instance.new()` accepts the new concrete UI classes above
+
+### Fixed
+
+- `GetDataStore`/`GetAsync`/`SetAsync`/`IncrementAsync`/`ListKeysAsync` and the new MemoryStore/Analytics methods no longer require their optional arguments. The docs renamed these parameters (`scope` -> `InScope`), so the optional-parameter overrides stopped matching
+- `NumberSequenceKeypoint.new(time, value)` works again without `envelope`
+- `BindableFunction:Invoke` and `RemoteFunction:InvokeServer`/`InvokeClient` accept any number of arguments again
+- `TweenService:SmoothDamp` accepts numbers/vectors (the docs' `Variant` type is now `any` instead of an empty stub type)
+- The scraper now handles column-aligned Markdown tables (`| :---: |`), which had put a bogus `----------------` entry into `Font.fromName` completion and dropped some return types (`CFrame:ToEulerAnglesXYZ` now returns `(number, number, number)`)
+- `Color3.new()`/`Color3.fromRGB()`/`Vector2.new()`/`Vector3.new()` accept omitted components again (they default to 0)
+- `DataStoreService:GetDataStore()` returns `DataStore`, so `ListKeysAsync` is available on the result
+
 ## [1.69.16] - 2026-09-26
 
 ### Added

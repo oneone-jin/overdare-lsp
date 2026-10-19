@@ -47,6 +47,8 @@ TYPE_ALIASES = {
     "bool": "boolean",
     "function": "(...any) -> ...any",
     "table": "{ any }",
+    # TweenService.SmoothDamp's "any numeric-like value" placeholder; no Variant page exists.
+    "Variant": "any",
 }
 
 
@@ -139,7 +141,8 @@ def split_sections(md, marker):
 
 def is_separator_row(line):
     cell = line.strip().strip("|")
-    return bool(cell) and set(cell.replace("|", "").strip()) <= set("- ")
+    # `:` covers column-alignment separators (`| :----: |`), e.g. the Font family table.
+    return bool(cell) and set(cell.replace("|", "").strip()) <= set("-: ")
 
 
 def parse_table_row_type_name(line):
@@ -378,6 +381,20 @@ DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS = {
     ("Font", "fromName", "style"),
     ("Font", "fromId", "weight"),
     ("Font", "fromId", "style"),
+    ("NumberSequenceKeypoint", "new", "envelope"),
+    # Every component defaults to 0 (`Color3.new()`, `Vector3.new()`), same as the pre-OVERDARE
+    # Roblox signatures.
+    ("Color3", "new", "red"),
+    ("Color3", "new", "green"),
+    ("Color3", "new", "blue"),
+    ("Color3", "fromRGB", "red"),
+    ("Color3", "fromRGB", "green"),
+    ("Color3", "fromRGB", "blue"),
+    ("Vector2", "new", "x"),
+    ("Vector2", "new", "y"),
+    ("Vector3", "new", "x"),
+    ("Vector3", "new", "y"),
+    ("Vector3", "new", "z"),
 }
 
 # docs.overdare.com titles these two datatype pages "Udim"/"Udim2" (lowercase d) in their own
@@ -436,6 +453,32 @@ METHOD_OPTIONAL_PARAMS = {
     ("GlobalDataStore", "IncrementAsync", "options"),
     ("OrderedDataStore", "GetSortedAsync", "minValue"),
     ("OrderedDataStore", "GetSortedAsync", "maxValue"),
+    # The docs later renamed most DataStore/MemoryStore params to an `In` prefix (`scope` ->
+    # `InScope`), which silently stopped every entry above from matching. Old names are kept
+    # in case they come back; found via the same positional optional->required diff.
+    ("DataStore", "ListKeysAsync", "InPrefix"),
+    ("DataStore", "ListKeysAsync", "InPageSize"),
+    ("DataStore", "ListKeysAsync", "InCursor"),
+    ("DataStore", "ListKeysAsync", "InExcludeDeleted"),
+    ("DataStoreService", "GetDataStore", "InScope"),
+    ("DataStoreService", "GetDataStore", "InOption"),
+    ("DataStoreService", "GetOrderedDataStore", "InScope"),
+    ("GlobalDataStore", "GetAsync", "InOptions"),
+    ("GlobalDataStore", "SetAsync", "InUserIds"),
+    ("GlobalDataStore", "SetAsync", "InOptions"),
+    ("GlobalDataStore", "IncrementAsync", "InDelta"),
+    ("GlobalDataStore", "IncrementAsync", "InUserIds"),
+    ("GlobalDataStore", "IncrementAsync", "InOptions"),
+    ("MemoryStoreQueue", "AddAsync", "InPriority"),
+    ("MemoryStoreQueue", "GetSizeAsync", "InExcludeInvisible"),
+    ("MemoryStoreQueue", "ReadAsync", "InAllOrNothing"),
+    ("MemoryStoreQueue", "ReadAsync", "InWaitTimeout"),
+    ("MemoryStoreService", "GetQueue", "InInvisibilityTimeout"),
+    ("AnalyticsService", "LogCustomEvent", "value"),
+    ("AnalyticsService", "LogCustomEvent", "customFields"),
+    ("AnalyticsService", "LogOnboardingFunnelStepEvent", "stepName"),
+    ("AnalyticsService", "LogOnboardingFunnelStepEvent", "customFields"),
+    ("TextBox", "ReleaseFocus", "submitted"),
 }
 
 # Same idea as METHOD_OPTIONAL_PARAMS, but for a method's *return* type - docs.overdare.com's
@@ -456,6 +499,13 @@ METHOD_NILABLE_RETURNS = {
     ("WorldRoot", "Spherecast"),
 }
 
+# Return types the docs state too broadly. Keyed by (owner name, method name).
+METHOD_RETURN_OVERRIDES = {
+    # Docs say GlobalDataStore, but the returned store also has DataStore's ListKeysAsync
+    # (DataStore extends GlobalDataStore; same as the pre-OVERDARE Roblox signature).
+    ("DataStoreService", "GetDataStore"): "DataStore",
+}
+
 
 def declare_property(prop):
     return f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])}\n"
@@ -463,6 +513,10 @@ def declare_property(prop):
 
 def declare_param(param_type, param_name, force_optional=False):
     resolved = resolve_doc_type(param_type)
+    # A literal `...` param name (`| \`any\` ... |`, e.g. BindableFunction.Invoke) is a
+    # variadic param, not a name to sanitize into `arg`.
+    if param_name and param_name.strip() == "..." and not resolved.startswith("..."):
+        resolved = "..." + resolved
     if resolved.startswith("..."):
         return "...: " + resolved[3:]  # e.g. "...any" -> "...: any" (variadic param syntax)
     if force_optional and not resolved.endswith("?"):
@@ -480,7 +534,7 @@ def declare_method(method, owner_name=None):
         for t, n in method["params"]
     )
     prefix = ", " if params else ""
-    ret = resolve_doc_type(method["return"])
+    ret = METHOD_RETURN_OVERRIDES.get((owner_name, method["name"])) or resolve_doc_type(method["return"])
     if (owner_name, method["name"]) in METHOD_NILABLE_RETURNS and not ret.endswith("?"):
         ret += "?"
     name = sanitize_identifier(method["name"], None)
@@ -829,11 +883,24 @@ EXTRA_CREATABLE_INSTANCES = {
     "VFXPreset",
     "VFXRecipe",
     "SimulationBall",
+    # Added to OVERDARE's docs after CREATABLE_INSTANCES was first pruned (concrete UI
+    # elements/components; abstract bases like UIComponent/UILayout/GuiLabel are left out).
+    "CanvasGroup",
+    "TextBox",
+    "UICorner",
+    "UIFlexItem",
+    "UIGradient",
+    "UIPadding",
+    "UIPageLayout",
+    "UIScale",
+    "UISizeConstraint",
+    "UITableLayout",
+    "UITextSizeConstraint",
 }
 
-# Same stale-base problem as above for GetService: TextService was added to OVERDARE's docs
-# after SERVICES was first pruned, so the intersection can't restore it by itself.
-EXTRA_SERVICES = {"TextService"}
+# Same stale-base problem as above for GetService: these were added to OVERDARE's docs
+# after SERVICES was first pruned, so the intersection can't restore them by itself.
+EXTRA_SERVICES = {"TextService", "AnalyticsService", "MemoryStoreService", "MessagingService"}
 
 
 def prune_services_metadata(lines, dump, log=print):
