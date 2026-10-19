@@ -8419,7 +8419,7 @@ declare extern type Instance with
 	function FindFirstAncestorOfClass(self, InClassName: string): Instance?
 	function FindFirstAncestorWhichIsA(self, InClassName: string): Instance?
 	function FindFirstChild(self, InName: string, recursive: boolean?): Instance?
-	function FindFirstChildOfClass(self, InClassName: string, Recursive: boolean): Instance?
+	function FindFirstChildOfClass(self, InClassName: string, Recursive: boolean?): Instance?
 	function GetAttribute(self, attribute: string): any
 	function GetAttributeChangedSignal(self, InAttributeName: string): ScriptSignal
 	function GetAttributes(self): { [string]: any }
@@ -8649,10 +8649,10 @@ declare extern type AnimationTrack extends Instance with
 	TimePosition: number
 	UpperBodyAnimation: boolean
 	function AdjustSpeed(self, InSpeed: number): nil
-	function AdjustWeight(self, InWeight: number, InFadeTime: number): nil
+	function AdjustWeight(self, InWeight: number?, InFadeTime: number?): nil
 	function GetMarkerReachedSignal(self, InName: string): ScriptSignal
-	function Play(self, InFadeTime: number, InWeight: number, InSpeed: number): nil
-	function Stop(self, InFadeTime: number): nil
+	function Play(self, InFadeTime: number?, InWeight: number?, InSpeed: number?): nil
+	function Stop(self, InFadeTime: number?): nil
 	DidLoop: ScriptSignal<>
 	Ended: ScriptSignal<>
 	KeyframeReached: ScriptSignal<string>
@@ -12200,11 +12200,11 @@ end
 
 declare extern type HttpService extends Instance with
 	HttpEnabled: boolean
-	function GenerateGUID(self, InWrapInCurlyBraces: boolean): string
-	function GetAsync(self, InUrl: string, InNoCache: boolean, InHeaders: any): string
+	function GenerateGUID(self, InWrapInCurlyBraces: boolean?): string
+	function GetAsync(self, InUrl: string, InNoCache: boolean?, InHeaders: any): string
 	function JSONDecode(self, InInput: string): any
 	function JSONEncode(self, InInput: any): string
-	function PostAsync(self, InUrl: string, InData: string, InContentType: EnumHttpContentType, InCompress: boolean, InHeaders: any): string
+	function PostAsync(self, InUrl: string, InData: string, InContentType: EnumHttpContentType?, InCompress: boolean?, InHeaders: any): string
 	function RequestAsync(self, InRequestOptions: { [string]: any }): any
 	function UrlEncode(self, InInput: string): string
 end
@@ -12247,7 +12247,7 @@ declare extern type Humanoid extends Instance with
 	WalkSpeed: number
 	WalkToPart: BasePart
 	WalkToPoint: Vector3
-	function ApplyDescription(self, InDescription: HumanoidDescription, InAssetTypeVerification: EnumAssetTypeVerification): nil
+	function ApplyDescription(self, InDescription: HumanoidDescription, InAssetTypeVerification: EnumAssetTypeVerification?): nil
 	function ChangeState(self, StateType: EnumHumanoidStateType): nil
 	function EquipTool(self, InTool: Instance): nil
 	function GetActionRunner(self): ActionRunner
@@ -12324,11 +12324,11 @@ declare extern type HumanoidDescription extends Instance with
 	WalkAnimation: string
 	WidthScale: number
 	function AddEmote(self, InName: string, InAssetId: string): nil
-	function GetAccessories(self, InIncludeRigidAccessories: boolean): ...any
+	function GetAccessories(self, InIncludeRigidAccessories: boolean?): ...any
 	function GetEmotes(self): any
 	function GetEquippedEmotes(self): ...any
 	function RemoveEmote(self, InName: string): nil
-	function SetAccessories(self, InAccessories: { any }, InIncludeRigidAccessories: boolean): nil
+	function SetAccessories(self, InAccessories: { any }, InIncludeRigidAccessories: boolean?): nil
 	function SetEmotes(self, InEmotes: any): nil
 	function SetEquippedEmotes(self, InEquippedEmotes: { any }): nil
 end
@@ -13185,7 +13185,7 @@ end
 declare extern type MemoryStoreQueue extends Instance with
 	function AddAsync(self, InValue: any, InExpiration: any, InPriority: number?): any
 	function GetSizeAsync(self, InExcludeInvisible: boolean?): any
-	function ReadAsync(self, InCount: number, InAllOrNothing: boolean?, InWaitTimeout: number?): ...any
+	function ReadAsync(self, InCount: number?, InAllOrNothing: boolean?, InWaitTimeout: number?): ...any
 	function RemoveAsync(self, InReadId: string): any
 end
 
@@ -13197,10 +13197,10 @@ end
 
 declare extern type MemoryStoreSortedMap extends Instance with
 	function GetAsync(self, InKey: string): ...any
-	function GetRangeAsync(self, InDirection: any, InCount: number, InLowerBound: any, InUpperBound: any): any
+	function GetRangeAsync(self, InDirection: any, InCount: number, InLowerBound: any?, InUpperBound: any?): any
 	function GetSizeAsync(self): any
 	function RemoveAsync(self, InKey: string): any
-	function SetAsync(self, InKey: string, InValue: any, InExpiration: any, InSortKey: any): any
+	function SetAsync(self, InKey: string, InValue: any, InExpiration: any, InSortKey: any?): any
 	function UpdateAsync(self, InKey: string, InTransformFunction: any, InExpiration: any): ...any
 end
 
@@ -13232,7 +13232,7 @@ declare extern type MessageBusService extends Instance with
 end
 
 declare extern type MessagingService extends Instance with
-	function PublishAsync(self, InTopic: string, InMessage: any): nil
+	function PublishAsync(self, InTopic: string, InMessage: any?): nil
 	function SubscribeAsync(self, InTopic: string, InCallback: any): ScriptConnection
 end
 
@@ -13722,14 +13722,14 @@ end
 
 declare extern type WorldRoot extends Instance with
 	AllowDebugDraw: boolean
-	function Blockcast(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
-	function BlockcastSingleByChannel(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
-	function BlockcastSingleByChannelName(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function Blockcast(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams?): RaycastResult?
+	function BlockcastSingleByChannel(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
+	function BlockcastSingleByChannelName(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
 	function BlockcastSingleByObject(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function BlockcastSingleByProfile(self, InCFrame: CFrame, InExtents: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
-	function Capsulecast(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult
-	function CapsulecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
-	function CapsulecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function Capsulecast(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, InRaycastParams: RaycastParams?): RaycastResult
+	function CapsulecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
+	function CapsulecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
 	function CapsulecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function CapsulecastSingleByProfile(self, InCFrame: CFrame, InRadius: number, InHalfHeight: number, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
 	function ClearDebugDraw(self): nil
@@ -13753,29 +13753,29 @@ declare extern type WorldRoot extends Instance with
 	function DrawSphere(self, InCenter: Vector3, InRadius: number, InColor: Color3, InSegments: number, InThickness: number, InLifeTime: number): nil
 	function DrawSpline(self, InPoints: { any }, InColor: Color3, InAlpha: number, InSamplesPerSegment: number, InThickness: number, InLifeTime: number): nil
 	function DrawString(self, InLocation: Vector3, InText: string, InColor: Color3, InDuration: number, InDrawShadow: boolean, InFontScale: number): nil
-	function GetPartBoundsInBox(self, InCenter: CFrame, InSize: Vector3, InOverlapParams: OverlapParams): { any }
-	function GetPartBoundsInBoxByChannel(self, InCenter: CFrame, InSize: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
-	function GetPartBoundsInBoxByChannelName(self, InCenter: CFrame, InSize: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
-	function GetPartBoundsInSphere(self, InCenter: CFrame, InRadius: number, InOverlapParams: OverlapParams): { any }
-	function GetPartBoundsInSphereByChannel(self, InCenter: CFrame, InRadius: number, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
-	function GetPartBoundsInSphereByChannelName(self, InCenter: CFrame, InRadius: number, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
-	function GetPartsInPart(self, InBasePart: BasePart, InOverlapParams: OverlapParams): { any }
-	function PredictProjectilePathByChannel(self, InTraceChannel: EnumCollisionChannel, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
-	function PredictProjectilePathByChannelName(self, ChannelDisplayName: string, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams): PredictProjectilePathResult
+	function GetPartBoundsInBox(self, InCenter: CFrame, InSize: Vector3, InOverlapParams: OverlapParams?): { any }
+	function GetPartBoundsInBoxByChannel(self, InCenter: CFrame, InSize: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
+	function GetPartBoundsInBoxByChannelName(self, InCenter: CFrame, InSize: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
+	function GetPartBoundsInSphere(self, InCenter: CFrame, InRadius: number, InOverlapParams: OverlapParams?): { any }
+	function GetPartBoundsInSphereByChannel(self, InCenter: CFrame, InRadius: number, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
+	function GetPartBoundsInSphereByChannelName(self, InCenter: CFrame, InRadius: number, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
+	function GetPartsInPart(self, InBasePart: BasePart, InOverlapParams: OverlapParams?): { any }
+	function PredictProjectilePathByChannel(self, InTraceChannel: EnumCollisionChannel, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams?): PredictProjectilePathResult
+	function PredictProjectilePathByChannelName(self, ChannelDisplayName: string, PredictParams: PredictProjectilePathParams, InResponseParams: CollisionResponseParams?): PredictProjectilePathResult
 	function PredictProjectilePathByObject(self, PredictParams: PredictProjectilePathParams, InObjectParams: CollisionObjectQueryParams): PredictProjectilePathResult
-	function Raycast(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
-	function RaycastMulti(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams): { any }
-	function RaycastMultiByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
-	function RaycastMultiByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): { any }
+	function Raycast(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams?): RaycastResult?
+	function RaycastMulti(self, InOrigin: Vector3, InDirection: Vector3, InRaycastParams: RaycastParams?): { any }
+	function RaycastMultiByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
+	function RaycastMultiByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): { any }
 	function RaycastMultiByObject(self, InOrigin: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): { any }
 	function RaycastMultiByProfile(self, InOrigin: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): { any }
-	function RaycastSingleByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
-	function RaycastSingleByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function RaycastSingleByChannel(self, InOrigin: Vector3, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
+	function RaycastSingleByChannelName(self, InOrigin: Vector3, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
 	function RaycastSingleByObject(self, InOrigin: Vector3, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function RaycastSingleByProfile(self, InOrigin: Vector3, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
-	function Spherecast(self, InOrigin: Vector3, InRadius: number, InDirection: Vector3, InRaycastParams: RaycastParams): RaycastResult?
-	function SpherecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
-	function SpherecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams, InResponseParams: CollisionResponseParams): RaycastResult
+	function Spherecast(self, InOrigin: Vector3, InRadius: number, InDirection: Vector3, InRaycastParams: RaycastParams?): RaycastResult?
+	function SpherecastSingleByChannel(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, TraceChannel: EnumCollisionChannel, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
+	function SpherecastSingleByChannelName(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ChannelDisplayName: string, InQueryParams: CollisionQueryParams?, InResponseParams: CollisionResponseParams?): RaycastResult
 	function SpherecastSingleByObject(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, InQueryParams: CollisionQueryParams, InObjectParams: CollisionObjectQueryParams): RaycastResult
 	function SpherecastSingleByProfile(self, InCFrame: CFrame, InRadius: number, InDirection: Vector3, ProfileName: string, InQueryParams: CollisionQueryParams): RaycastResult
 end
@@ -16004,7 +16004,7 @@ end
 
 declare extern type TeleportService extends Instance with
 	function ReserveServerAsync(self, InPlaceId: number): string
-	function TeleportAsync(self, InPlaceId: number, InPlayers: { any }, InOptions: TeleportOptions): nil
+	function TeleportAsync(self, InPlaceId: number, InPlayers: { any }, InOptions: TeleportOptions?): nil
 	TeleportInitFailed: ScriptSignal<Player, EnumTeleportResultType, string, number, TeleportOptions>
 end
 
@@ -17296,7 +17296,7 @@ declare CFrame: {
 	Angles: ((rx: number, ry: number, rz: number) -> CFrame),
 	fromEulerAnglesXYZ: ((rx: number, ry: number, rz: number) -> CFrame),
 	fromEulerAnglesYXZ: ((rx: number, ry: number, rz: number) -> CFrame),
-	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3) -> CFrame),
+	fromMatrix: ((pos: Vector3, vX: Vector3, vY: Vector3, vZ: Vector3?) -> CFrame),
 	fromOrientation: ((rx: number, ry: number, rz: number) -> CFrame),
 	lookAt: ((at: Vector3, lookAt: Vector3, up: Vector3?) -> CFrame),
 	new: (() -> CFrame) & ((position: Vector3) -> CFrame) & ((position: Vector3, lookAt: Vector3) -> CFrame) & ((x: number, y: number, z: number) -> CFrame),
@@ -17770,14 +17770,14 @@ declare extern type SimulationBall extends PVInstance with
 	function GetStartTime(self): number
 	function IsValidBounceIndex(self, bounceIndex: number): boolean
 	function Pause(self): nil
-	function Play(self, ResetPlaybackTime: boolean): nil
+	function Play(self, ResetPlaybackTime: boolean?): nil
 	function ReSimulateSpinToTargetWithDelay(self, InDelaySeconds: number, InTargetPosition: Vector3, InDesiredSpeed: number, InSpinAxis: Vector3, InSpinSpeed_Rpm: number, InStepCount: number, UseDesiredSpeed: boolean): BallSimTargetResult
 	function ReSimulateToTargetWithDelay(self, InDelayTime: number, InTargetPosition: Vector3, InDesiredSpeed: number, InStepCount: number, UseDesiredSpeed: boolean): BallSimTargetResult
 	function ReSimulateWithDelay(self, InDelaySeconds: number, InDirection: Vector3, InSpeed_Kmh: number, InSpinAxis: Vector3, InSpinSpeed_Rpm: number, InStepCount: number): nil
 	function SetPlaybackTime(self, InPlaybackTime: number): nil
 	function Simulate(self, InBallSimParams: BallSimParams, AutoPlay: boolean): nil
 	function SimulateToTarget(self, InBallSimParams: BallSimParams, InTargetPosition: Vector3, UseDesiredSpeed: boolean, AutoPlay: boolean): BallSimTargetResult
-	function Stop(self, ResetBallCFrame: boolean): nil
+	function Stop(self, ResetBallCFrame: boolean?): nil
 	Bounded: ScriptSignal<Instance, BallBounce>
 	Paused: ScriptSignal<>
 	Played: ScriptSignal<>

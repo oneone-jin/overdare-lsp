@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.19] - 2026-10-20
+
+### Fixed
+
+- Parameters the OVERDARE docs describe as optional no longer have to be passed: `AnimationTrack:Play()`/`Stop()`/`AdjustWeight()`, `workspace:Raycast(origin, direction)` and the rest of the `WorldRoot` cast/overlap methods' params arguments, `HttpService:GenerateGUID()`/`GetAsync()`/`PostAsync()`, `TeleportService:TeleportAsync()`'s options, `MemoryStoreQueue:ReadAsync()`'s count, `MessagingService:PublishAsync()`'s message, `Instance:FindFirstChildOfClass()`'s `recursive`, `CFrame.fromMatrix()`'s `vZ` and more
+
+### Changed
+
+- `scripts/dumpOverdareTypes.py` now reads optional parameters from the docs' parameter descriptions ("(Optional)", "If omitted, ...", "(default: ...)", vs. "Omitting it ... raises an error"), so the hand-maintained `METHOD_OPTIONAL_PARAMS`/`DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS` tables are only needed for parameters the docs say nothing about
+- `scripts/dumpOverdareTypes.py` now infers the `GetService()` whitelist from the docs (a `Service` name suffix, `GetService("X")` in any code sample, or an overview describing the class as a service), so new services no longer need to be added by hand. It also prints `Instance.new()` candidates for review, since the docs don't reliably say which classes are creatable
+
 ## [1.69.18] - 2026-10-20
 
 ### Removed

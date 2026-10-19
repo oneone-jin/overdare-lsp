@@ -164,6 +164,34 @@ def parse_params(body):
     return params
 
 
+# The docs never mark a parameter optional in its Type column, but the Description column
+# follows a consistent prose convention: "(Optional) ...", "If omitted, it is 1", "(default:
+# false)", "If not specified, the default settings apply" - vs. explicitly required: "Omitting
+# it or passing nil raises an error", "There is no default value". Measured against the
+# hand-curated METHOD_OPTIONAL_PARAMS: zero conflicts, and it found ~56 more real optional
+# params (AnimationTrack:Play, WorldRoot:Raycast's params, HttpService:GenerateGUID, ...).
+# Params whose prose says nothing either way (Vector3.new's x) still need the manual tables.
+PARAM_REQUIRED_RE = re.compile(r"omitting it( or passing nil)? raises an error|no default value|is required|must be (specified|provided)", re.I)
+PARAM_OPTIONAL_RE = re.compile(
+    r"\(optional\)|\boptional\b|if (it is )?(omitted|not specified|not provided|left blank)|when omitted"
+    r"|(is|are) used by default when|\(default:|defaults? (to|is|value)",
+    re.I,
+)
+PARAM_ROW_RE = re.compile(r"^\|\s*`([^`]*)`\s*([^|]*?)\s*\|(.*)\|\s*$")
+
+
+def parse_optional_param_names(body):
+    names = []
+    for line in body.splitlines():
+        m = PARAM_ROW_RE.match(line.strip())
+        if not m or is_separator_row(line):
+            continue
+        desc = m.group(3)
+        if not PARAM_REQUIRED_RE.search(desc) and PARAM_OPTIONAL_RE.search(desc):
+            names.append(unescape_md(m.group(2).strip()))
+    return names
+
+
 def parse_return(body):
     for line in body.splitlines():
         line = line.strip()
@@ -179,7 +207,10 @@ def parse_member_block(name, body, kind):
     subsections = split_sections(body, "#### ")
     params = parse_params(subsections["Parameters"]) if "Parameters" in subsections else []
     ret = parse_return(subsections["Return"]) if kind == "method" and "Return" in subsections else "void"
-    return {"name": name, "params": params, "return": ret}
+    member = {"name": name, "params": params, "return": ret}
+    if kind == "method" and "Parameters" in subsections:
+        member["optionalParams"] = parse_optional_param_names(subsections["Parameters"])
+    return member
 
 
 def parse_property_block(name, body):
@@ -218,9 +249,23 @@ def parse_class_page(md):
         if parent_m:
             parent = unescape_md(parent_m.group(1).strip())
 
-    _sections, properties, methods, events = parse_members(md)
+    sections, properties, methods, events = parse_members(md)
 
-    return {"name": name, "parent": parent, "properties": properties, "methods": methods, "events": events}
+    # Hints for the SERVICES/CREATABLE_INSTANCES metadata (see prune_services_metadata).
+    overview = sections.get("Overview", "").strip()
+    first_sentence = overview.split(".")[0]
+    service_hint = bool(re.search(r"\bservice\b", first_sentence, re.I))
+    not_creatable_hint = bool(re.search(r"cannot be created|abstract|base class", overview, re.I))
+
+    return {
+        "name": name,
+        "parent": parent,
+        "properties": properties,
+        "methods": methods,
+        "events": events,
+        "serviceHint": service_hint,
+        "notCreatableHint": not_creatable_hint,
+    }
 
 
 def parse_datatype_page(md):
@@ -232,11 +277,17 @@ def parse_datatype_page(md):
     # Constructors aren't only named "new" - e.g. Color3.fromRGB, CFrame.fromEulerAnglesXYZ/
     # lookAt are separate named static constructors alongside "new" overloads.
     constructors = []
+    # {constructor name: [param names the prose marks optional]}, merged across overloads.
+    constructor_optional_params = {}
     if "Constructors" in sections:
         for cname, cbody in split_sections_list(sections["Constructors"], "### "):
             subsections = split_sections(cbody, "#### ")
             params = parse_params(subsections["Parameters"]) if "Parameters" in subsections else []
             constructors.append((unescape_md(cname), params))
+            if "Parameters" in subsections:
+                optional = parse_optional_param_names(subsections["Parameters"])
+                if optional:
+                    constructor_optional_params.setdefault(unescape_md(cname), []).extend(optional)
 
     # The docs lump both real instance properties (Magnitude, X, Unit, ...) and static
     # namespace constants (identity, zero, one, xAxis, ...) under the same "## Properties"
@@ -254,6 +305,7 @@ def parse_datatype_page(md):
         "methods": methods,
         "events": events,
         "constructors": constructors,
+        "constructorOptionalParams": constructor_optional_params,
     }
 
 
@@ -294,16 +346,25 @@ def parse_font_families(md):
     return families
 
 
+GET_SERVICE_RE = re.compile(r"GetService\(\s*[\"'](\w+)[\"']")
+
+
 def scrape_all(log=print):
     log(f"Fetching {LLMS_TXT_URL}")
     llms_text = fetch(LLMS_TXT_URL)
     class_links, enum_links, datatype_links = get_english_links(llms_text)
     log(f"Found {len(class_links)} classes, {len(enum_links)} enums, {len(datatype_links)} datatypes")
 
+    # Every `GetService("X")` in any page's code samples - the strongest docs signal that X
+    # is a service (used for the SERVICES metadata whitelist).
+    get_service_names = set()
+
     classes = []
     for i, (name, url) in enumerate(sorted(class_links.items())):
         log(f"[{i + 1}/{len(class_links)}] class {name}")
-        classes.append(parse_class_page(fetch(url + ".md" if not url.endswith(".md") else url)))
+        md = fetch(url + ".md" if not url.endswith(".md") else url)
+        get_service_names |= set(GET_SERVICE_RE.findall(md))
+        classes.append(parse_class_page(md))
 
     enums = []
     for i, (name, url) in enumerate(sorted(enum_links.items())):
@@ -330,6 +391,7 @@ def scrape_all(log=print):
     for i, (name, url) in enumerate(sorted(datatype_links.items())):
         log(f"[{i + 1}/{len(datatype_links)}] datatype {name}")
         md = fetch(url + ".md" if not url.endswith(".md") else url)
+        get_service_names |= set(GET_SERVICE_RE.findall(md))
         datatypes.append(parse_datatype_page(md))
         if name == "Font":
             fonts = parse_font_families(md)
@@ -340,7 +402,14 @@ def scrape_all(log=print):
     log(f"Fetching {BRICK_COLORS_URL}")
     brick_colors = [c["Name"] for c in json.loads(fetch(BRICK_COLORS_URL))["BrickColors"]]
 
-    return {"classes": classes, "enums": enums, "datatypes": datatypes, "fonts": fonts, "brickColors": brick_colors}
+    return {
+        "classes": classes,
+        "enums": enums,
+        "datatypes": datatypes,
+        "fonts": fonts,
+        "brickColors": brick_colors,
+        "getServiceNames": sorted(get_service_names),
+    }
 
 
 # ---- Luau declaration generation (standalone-testable output) ----
@@ -530,7 +599,11 @@ def declare_param(param_type, param_name, force_optional=False):
 
 def declare_method(method, owner_name=None):
     params = ", ".join(
-        declare_param(t, n, force_optional=(owner_name, method["name"], n) in METHOD_OPTIONAL_PARAMS)
+        declare_param(
+            t,
+            n,
+            force_optional=(owner_name, method["name"], n) in METHOD_OPTIONAL_PARAMS or n in method.get("optionalParams", []),
+        )
         for t, n in method["params"]
     )
     prefix = ", " if params else ""
@@ -604,9 +677,15 @@ def declare_datatype_constructor(dt):
         out += f"\t{escape_name(prop['name'])}: {resolve_doc_type(prop['type'])},\n"
 
     overloads_by_name = {}
+    prose_optional = dt.get("constructorOptionalParams", {})
     for ctor_name, params in dt["constructors"]:
         param_list = ", ".join(
-            declare_param(t, n, force_optional=(dt["name"], ctor_name, n) in DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS)
+            declare_param(
+                t,
+                n,
+                force_optional=(dt["name"], ctor_name, n) in DATATYPE_CONSTRUCTOR_OPTIONAL_PARAMS
+                or n in prose_optional.get(ctor_name, []),
+            )
             for t, n in params
         )
         overloads_by_name.setdefault(ctor_name, []).append(f"(({param_list}) -> {dt['name']})")
@@ -898,9 +977,45 @@ EXTRA_CREATABLE_INSTANCES = {
     "UITextSizeConstraint",
 }
 
-# Same stale-base problem as above for GetService: these were added to OVERDARE's docs
-# after SERVICES was first pruned, so the intersection can't restore them by itself.
+# Same stale-base problem as above for GetService. Most new services are now picked up by
+# infer_services() below; these were pinned before that existed and are kept as a safety net.
 EXTRA_SERVICES = {"TextService", "AnalyticsService", "MemoryStoreService", "MessagingService"}
+
+# Classes infer_services() would otherwise flag: Player's overview mentions services, and
+# ServiceProvider is the abstract base of DataModel itself.
+NOT_SERVICES = {"Player", "ServiceProvider"}
+
+
+def infer_services(dump):
+    """Services according to the docs: any class whose name ends in "Service", that some
+    page's code sample fetches via `GetService("X")`, or whose overview's first sentence calls
+    it a service. Matched every curated SERVICES entry except StarterPack/UserGameSettings
+    (which the union with the existing list keeps), with no false positives beyond
+    NOT_SERVICES."""
+    class_names = {c["name"] for c in dump["classes"] if c["name"]}
+    inferred = {n for n in class_names if n.endswith("Service")}
+    inferred |= set(dump.get("getServiceNames", [])) & class_names
+    inferred |= {c["name"] for c in dump["classes"] if c["name"] and c.get("serviceHint")}
+    return inferred - NOT_SERVICES
+
+
+def creatable_candidates(dump, services, creatable):
+    """Classes the docs don't rule out as Instance.new-creatable (not a service, not described
+    as abstract/a base class/"cannot be created", not a parent of another class) that aren't
+    in CREATABLE_INSTANCES yet. The docs don't mark creatability reliably - runtime-only
+    objects like AnimationTrack/InputObject also pass these filters - so this is only a
+    review list, never applied automatically."""
+    parents = {c["parent"] for c in dump["classes"] if c.get("parent")}
+    return sorted(
+        c["name"]
+        for c in dump["classes"]
+        if c["name"]
+        and c["name"] not in services
+        and c["name"] not in creatable
+        and c["name"] not in parents
+        and c["name"] != "DataModel"
+        and not c.get("notCreatableHint")
+    )
 
 
 def prune_services_metadata(lines, dump, log=print):
@@ -927,9 +1042,20 @@ def prune_services_metadata(lines, dump, log=print):
             pruned |= EXTRA_CREATABLE_INSTANCES & od_class_names
         elif key == "SERVICES":
             pruned |= EXTRA_SERVICES & od_class_names
+            inferred = infer_services(dump)
+            added = sorted(inferred - pruned)
+            pruned |= inferred
+            if added:
+                log(f"[ok] Services inferred from docs and added: {added}")
         meta[key] = sorted(pruned)
         log(f"{label} (metadata whitelist): pruned {before} -> {len(meta[key])} "
             f"(kept only names that match a scraped OVERDARE class)")
+
+    if "SERVICES" in meta and "CREATABLE_INSTANCES" in meta:
+        candidates = creatable_candidates(dump, set(meta["SERVICES"]), set(meta["CREATABLE_INSTANCES"]))
+        if candidates:
+            log(f"[review] Instance.new candidates not in CREATABLE_INSTANCES (docs can't confirm - "
+                f"add real ones to EXTRA_CREATABLE_INSTANCES): {candidates}")
 
     # CLASSES: every real OVERDARE class, used by OverdareCompletion.cpp to filter
     # IsA/FindFirstChildOfClass/etc. autocomplete down from "every Instance-derived type
