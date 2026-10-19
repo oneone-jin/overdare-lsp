@@ -17289,8 +17289,6 @@ declare Region3int16: {
 
 declare UDim2: {
 	new: ((xScale: number?, xOffset: number?, yScale: number?, yOffset: number?) -> UDim2),
-	fromScale: ((xScale: number, yScale: number) -> UDim2),
-	fromOffset: ((xOffset: number, yOffset: number) -> UDim2),
 }
 
 declare CFrame: {
@@ -17358,13 +17356,6 @@ declare ColorSequenceKeypoint: {
 	new: (() -> ColorSequenceKeypoint) & ((time: number, color: Color3) -> ColorSequenceKeypoint),
 }
 
-declare Content: {
-	none: Content,
-	fromUri: ((uri: string) -> Content),
-	fromObject: ((object: Object) -> Content),
-	fromAssetId: ((assetId: number) -> Content),
-}
-
 declare RaycastParams: {
 	new: (() -> RaycastParams),
 }
@@ -17385,7 +17376,6 @@ declare Font: {
 	fromId: ((id: number, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
 	fromName: ((name: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
 	new: ((family: string, weight: EnumFontWeight?, style: EnumFontStyle?) -> Font),
-	fromEnum: ((font: EnumFont) -> Font),
 }
 
 declare FloatCurveKey: {
@@ -17951,10 +17941,6 @@ declare PredictProjectilePathParams: {
 }
 
 declare extern type TeleportResult with end
-
-declare BallSimTargetResult: {
-	bHit: boolean,
-}
 
 declare extern type EnumProgressBarFillDirection extends EnumItem with end
 declare extern type EnumProgressBarFillDirection_INTERNAL extends Enum with

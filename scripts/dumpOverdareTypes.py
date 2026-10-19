@@ -995,14 +995,19 @@ def preserve_operator_overloads(new_block_lines, lines, start, end):
 CONSTRUCTOR_ENTRY_KEY_RE = re.compile(r'^\t(\["[^"]*"\]|\w+):')
 
 
-def preserve_missing_constructor_entries(new_block_lines, lines, start, end):
-    """A docs page sometimes documents only a subset of a datatype's real named
-    constructors/static constants - e.g. UDim2's page shows only `new`, omitting the
-    Roblox-inherited `fromScale`/`fromOffset` convenience wrappers that real call sites
-    still rely on (same failure mode as `preserve_operator_overloads`, just for named
-    constructor-table entries instead of operator methods). Carry over any entry whose key
-    doesn't appear at all in the freshly scraped block; a key present in both is left
-    alone - the new data wins there, so a genuine signature update still takes effect."""
+# Named constructor/static-constant entries the docs omit but OVERDARE really supports, keyed
+# by (datatype name, entry key). Carrying over *every* missing entry (the old behaviour) kept
+# Roblox-only ones alive forever - UDim2.fromScale/fromOffset, Font.fromEnum, Content.fromUri
+# etc. aren't supported by OVERDARE. Only add an entry here once it's confirmed to exist.
+PRESERVED_CONSTRUCTOR_ENTRIES = set()
+
+
+def preserve_missing_constructor_entries(new_block_lines, lines, start, end, datatype_name):
+    """A docs page may document only a subset of a datatype's real named constructors/static
+    constants (same failure mode as `preserve_operator_overloads`, just for constructor-table
+    entries). Carry over an entry missing from the freshly scraped block only if it's listed
+    in PRESERVED_CONSTRUCTOR_ENTRIES; a key present in both is left alone - the new data wins
+    there, so a genuine signature update still takes effect."""
     new_keys = set()
     for line in new_block_lines:
         m = CONSTRUCTOR_ENTRY_KEY_RE.match(line)
@@ -1011,7 +1016,7 @@ def preserve_missing_constructor_entries(new_block_lines, lines, start, end):
     preserved = []
     for line in lines[start : end + 1]:
         m = CONSTRUCTOR_ENTRY_KEY_RE.match(line)
-        if m and m.group(1) not in new_keys:
+        if m and m.group(1) not in new_keys and (datatype_name, m.group(1)) in PRESERVED_CONSTRUCTOR_ENTRIES:
             preserved.append(line)
     if not preserved:
         return new_block_lines
@@ -1101,11 +1106,18 @@ def merge_into_base(base_text, dump, log=print):
     datatypes_with_new_constructor = []
     for dt in datatypes:
         if not dt["constructors"] and not dt.get("staticProperties"):
+            # The docs list nothing callable/static on the global, so a leftover table from
+            # an older base (e.g. Roblox's Content.fromUri) is dropped rather than kept.
+            if dt["name"] in constructor_blocks:
+                start, end = constructor_blocks[dt["name"]]
+                if end + 1 < len(lines) and lines[end + 1] == "":
+                    end += 1  # take the separating blank line with it
+                constructor_replacements[(start, end)] = []
             continue
         block = declare_datatype_constructor(dt).rstrip("\n").split("\n")
         if dt["name"] in constructor_blocks:
             start, end = constructor_blocks[dt["name"]]
-            constructor_replacements[(start, end)] = preserve_missing_constructor_entries(block, lines, start, end)
+            constructor_replacements[(start, end)] = preserve_missing_constructor_entries(block, lines, start, end, dt["name"])
         else:
             datatypes_with_new_constructor.append(dt)
     lines = replace_line_ranges(lines, constructor_replacements)

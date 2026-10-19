@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.69.18] - 2026-10-20
+
+### Removed
+
+- Roblox-only constructors OVERDARE doesn't support: `UDim2.fromScale`/`UDim2.fromOffset`, `Font.fromEnum`, the `Content` global (`Content.none`/`fromUri`/`fromObject`/`fromAssetId`) and a stray `BallSimTargetResult.bHit` global. `scripts/dumpOverdareTypes.py` used to carry over every constructor missing from the docs; it now keeps only entries listed in `PRESERVED_CONSTRUCTOR_ENTRIES`, and drops a datatype's global table when the docs list no constructors for it
+
 ## [1.69.17] - 2026-10-20
 
 ### Added
